@@ -363,7 +363,6 @@
             border-top-left-radius: 16px;
             border-top-right-radius: 4px;
         }
-        /* Подсветка сообщения при переходе по цитате */
         .chat-msg.highlighted .chat-msg-bubble {
             border-color: #e8df31 !important;
             box-shadow: 0 0 18px rgba(232, 223, 49, 0.45);
@@ -722,15 +721,38 @@
             padding: 10px 14px;
             color: #fff;
             font-size: 14px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             outline: none;
         }
         .custom-modal-input:focus { border-color: #e8df31; }
+        .vk-my-audios-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: #2787F5;
+            color: #fff !important;
+            text-decoration: none !important;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+        .vk-my-audios-btn:hover { background: #1c76de; }
+        .vk-modal-hint {
+            font-size: 11px;
+            color: #888;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
         .custom-modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 6px;
         }
         .btn-modal-cancel {
             background: #2b2b2b;
@@ -948,7 +970,7 @@
             <button type="button" class="chat-action-pill" onclick="attachCurrentLiveTrack()" title="Прикрепить трек, который сейчас играет в эфире">
                 <i class="fas fa-compact-disc"></i> В эфире
             </button>
-            <button type="button" class="chat-action-pill" onclick="openVkMusicModal()" title="Прикрепить музыку из ВК">
+            <button type="button" class="chat-action-pill" onclick="openVkMusicModal()" title="Прикрепить трек или плейлист из вашей музыки ВК">
                 <i class="fab fa-vk"></i> Музыка ВК
             </button>
             <button type="button" class="chat-action-pill" onclick="triggerPhotoSelect()" title="Прикрепить фотографию">
@@ -974,18 +996,24 @@
     </div>
 </div>
 
-<!-- Модальное окно для прикрепления музыки ВК -->
+<!-- Модальное окно для прикрепления трека или плейлиста из музыки ВК пользователя -->
 <div class="custom-modal-backdrop" id="vk-music-modal">
     <div class="custom-modal-box">
         <div class="custom-modal-title">
-            <span><i class="fab fa-vk"></i> Прикрепить музыку из ВК</span>
+            <span><i class="fab fa-vk"></i> Прикрепить из вашей музыки ВК</span>
             <i class="fas fa-times" style="cursor:pointer; color:#888;" onclick="closeVkMusicModal()"></i>
         </div>
-        <input type="text" class="custom-modal-input" id="vk-track-query" placeholder="Исполнитель и название трека (например: Enigma - Sadeness)">
-        <input type="text" class="custom-modal-input" id="vk-track-link" placeholder="Ссылка на трек или плейлист ВК (необязательно)">
+        <a id="vk-open-my-audios" href="https://vk.com/audio" target="_blank" rel="noopener noreferrer" class="vk-my-audios-btn">
+            <i class="fas fa-headphones"></i> Открыть мои аудиозаписи ВК
+        </a>
+        <div class="vk-modal-hint">
+            Откройте свои аудиозаписи или плейлист в ВК, скопируйте название трека или ссылку («Поделиться» → «Копировать ссылку») и вставьте ниже:
+        </div>
+        <input type="text" class="custom-modal-input" id="vk-track-query" placeholder="Название трека или плейлиста">
+        <input type="text" class="custom-modal-input" id="vk-track-link" placeholder="Ссылка на трек / плейлист ВК (vk.com/audio... или playlist/...)">
         <div class="custom-modal-actions">
             <button type="button" class="btn-modal-cancel" onclick="closeVkMusicModal()">Отмена</button>
-            <button type="button" class="btn-modal-confirm" onclick="confirmVkMusicAttach()">Прикрепить</button>
+            <button type="button" class="btn-modal-confirm" id="vk-attach-confirm-btn" onclick="confirmVkMusicAttach()">Прикрепить</button>
         </div>
     </div>
 </div>
@@ -1076,7 +1104,6 @@ var lastRenderedHash = "";
 var isSyncing = false;
 var lastHeartbeatSent = 0;
 
-// Постоянный идентификатор устройства/сессии для бан-листа и онлайна
 var deviceId = localStorage.getItem('chillout_did');
 if (!deviceId) {
     deviceId = 'd_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
@@ -1099,6 +1126,12 @@ function showChatNotice(msg) {
 function updateChatUserUI() {
     $('#chat-my-name').text(vkUser.name);
     $('#chat-my-avatar').attr('src', vkUser.avatar);
+    // Прямая ссылка на личные аудиозаписи текущего пользователя ВК
+    if (vkUser.id && vkUser.id !== 0) {
+        $('#vk-open-my-audios').attr('href', 'https://vk.com/audios' + vkUser.id);
+    } else {
+        $('#vk-open-my-audios').attr('href', 'https://vk.com/audio');
+    }
     updateAdminUI();
     applyBanStateUI();
 }
@@ -1227,7 +1260,11 @@ function setAttachment(att) {
     if (att.type === 'live') {
         content.html('<img class="chat-preview-thumb" src="' + att.cover + '"><div><b style="color:#e8df31;">Сейчас в эфире:</b> ' + escapeHtml(att.song) + '</div>');
     } else if (att.type === 'vkmusic') {
-        content.html('<i class="fab fa-vk" style="font-size:20px; color:#e8df31;"></i><div><b style="color:#e8df31;">Музыка ВК:</b> ' + escapeHtml(att.title) + '</div>');
+        var thumbHtml = att.cover
+            ? '<img class="chat-preview-thumb" src="' + att.cover + '">'
+            : '<i class="fab fa-vk" style="font-size:20px; color:#e8df31;"></i>';
+        var label = att.isPlaylist ? 'Плейлист ВК:' : 'Музыка ВК:';
+        content.html(thumbHtml + '<div><b style="color:#e8df31;">' + label + '</b> ' + escapeHtml(att.title) + '</div>');
     } else if (att.type === 'photo') {
         content.html('<img class="chat-preview-thumb" src="' + att.dataUrl + '"><div><b style="color:#e8df31;">Фотография</b> готова к отправке</div>');
     }
@@ -1272,17 +1309,70 @@ window.confirmVkMusicAttach = function() {
     var q = $('#vk-track-query').val().trim();
     var link = $('#vk-track-link').val().trim();
     if (!q && !link) {
-        alert('Укажите название трека или вставьте ссылку из ВК');
+        alert('Укажите название трека/плейлиста или вставьте ссылку из ВК');
         return;
     }
-    var title = q || 'Аудиозапись ВКонтакте';
-    var targetUrl = (link && /^https?:\/\//i.test(link)) ? link : ('https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(title));
-    setAttachment({
-        type: 'vkmusic',
-        title: title,
-        url: targetUrl
-    });
-    closeVkMusicModal();
+
+    var isPlaylist = /playlist|album/i.test(link);
+    var defaultTitle = isPlaylist
+        ? ('Плейлист из ВК (' + vkUser.name + ')')
+        : ('Трек из аудиозаписей (' + vkUser.name + ')');
+    var title = q || defaultTitle;
+
+    var myAudiosFallback = (vkUser.id && vkUser.id !== 0)
+        ? ('https://vk.com/audios' + vkUser.id)
+        : 'https://vk.com/audio';
+
+    var targetUrl = (link && /^https?:\/\//i.test(link))
+        ? link
+        : (q ? ('https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(q)) : myAudiosFallback);
+
+    var confirmBtn = $('#vk-attach-confirm-btn');
+    confirmBtn.prop('disabled', true).text('Поиск обложки...');
+
+    // Подтягиваем обложку по названию трека, если пользователь ввёл название
+    if (q && !isPlaylist) {
+        fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(q) + '&media=music&limit=1')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var coverUrl = (data && data.results && data.results.length > 0)
+                    ? data.results[0].artworkUrl100.replace('100x100', '300x300')
+                    : '';
+                setAttachment({
+                    type: 'vkmusic',
+                    title: title,
+                    url: targetUrl,
+                    cover: coverUrl,
+                    isPlaylist: isPlaylist,
+                    ownerName: vkUser.name
+                });
+            })
+            .catch(function() {
+                setAttachment({
+                    type: 'vkmusic',
+                    title: title,
+                    url: targetUrl,
+                    cover: '',
+                    isPlaylist: isPlaylist,
+                    ownerName: vkUser.name
+                });
+            })
+            .finally(function() {
+                confirmBtn.prop('disabled', false).text('Прикрепить');
+                closeVkMusicModal();
+            });
+    } else {
+        setAttachment({
+            type: 'vkmusic',
+            title: title,
+            url: targetUrl,
+            cover: '',
+            isPlaylist: isPlaylist,
+            ownerName: vkUser.name
+        });
+        confirmBtn.prop('disabled', false).text('Прикрепить');
+        closeVkMusicModal();
+    }
 };
 
 window.triggerPhotoSelect = function() {
@@ -1343,7 +1433,6 @@ function scrollChatBottom() {
     if (area) area.scrollTop = area.scrollHeight;
 }
 
-// Нормализация формата хранилища { messages, online, bans }
 function normalizeStore(raw) {
     var data = (raw && raw.record) ? raw.record : raw;
     if (Array.isArray(data)) {
@@ -1389,12 +1478,17 @@ function renderAttachmentHtml(att) {
     }
     if (att.type === 'vkmusic') {
         var vkUrl = escapeHtml(att.url || 'https://vk.com/audio');
+        var badgeText = att.isPlaylist ? 'Плейлист из ВК' : 'Из плейлиста ВК';
+        var subText = att.isPlaylist ? 'Открыть плейлист в ВК →' : 'Слушать в ВК →';
+        var mediaLeftHtml = att.cover
+            ? '<img class="chat-att-cover" src="' + escapeHtml(att.cover) + '" onerror="this.src=\'' + defImg + '\'">'
+            : '<div class="chat-att-icon-box"><i class="fab fa-vk"></i></div>';
         return '<a href="' + vkUrl + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
-                    '<div class="chat-att-icon-box"><i class="fab fa-vk"></i></div>' +
+                    mediaLeftHtml +
                     '<div class="chat-att-info">' +
-                        '<span class="chat-att-badge">Музыка ВКонтакте</span>' +
+                        '<span class="chat-att-badge"><i class="fab fa-vk"></i> ' + badgeText + '</span>' +
                         '<div class="chat-att-title">' + escapeHtml(att.title || '') + '</div>' +
-                        '<div class="chat-att-sub">Открыть в ВК →</div>' +
+                        '<div class="chat-att-sub">' + subText + '</div>' +
                     '</div>' +
                '</a>';
     }
@@ -1469,7 +1563,6 @@ function renderMessages(list, forceScroll) {
     }
 }
 
-// Делегирование кликов в списке сообщений
 $('#chat-messages').on('click', '.chat-reply-btn', function() {
     var msgId = $(this).data('msgid');
     var author = $(this).data('author');
@@ -1509,7 +1602,6 @@ function cleanStaleOnline(onlineMap) {
     return fresh;
 }
 
-// Синхронизация сообщений, онлайна и бан-листа
 function syncChatState(forceScroll, sendHeartbeat) {
     if (isSyncing) return;
     isSyncing = true;
@@ -1558,7 +1650,6 @@ function syncChatState(forceScroll, sendHeartbeat) {
     });
 }
 
-// Бан пользователя администратором (с удалением его последних сообщений)
 function banUserFromChat(author, uid, did) {
     if (!uid && !did) {
         alert("У этого старого сообщения нет идентификатора пользователя.");
@@ -1616,7 +1707,6 @@ function banUserFromChat(author, uid, did) {
     });
 }
 
-// Модальное окно управления бан-листом
 window.openBanListModal = function() {
     if (!isAdmin) return;
     renderBanListModal();
@@ -1680,7 +1770,6 @@ function unbanUserByIndex(banIdx) {
     });
 }
 
-// Удаление одного сообщения администратором
 function deleteSingleMessage(targetId, targetIdx) {
     if (isSyncing) return;
     isSyncing = true;
@@ -1723,7 +1812,6 @@ function deleteSingleMessage(targetId, targetIdx) {
     });
 }
 
-// Полная очистка чата администратором
 window.adminClearAllMessages = function() {
     if (!isAdmin) return;
     if (!confirm("Удалить всю переписку в чате?")) return;
@@ -1760,7 +1848,6 @@ window.adminClearAllMessages = function() {
     });
 };
 
-// Запуск таймера антифлуда на кнопке отправки
 function startAntifloodCooldown() {
     if (isAdmin) return;
     var sendBtn = $('#chat-send-btn');
@@ -1783,7 +1870,6 @@ function startAntifloodCooldown() {
     }, 1000);
 }
 
-// Отправка нового сообщения с проверкой антифлуда и бан-листа
 $('#chat-form').on('submit', function(e) {
     e.preventDefault();
     if (isSyncing) return;
@@ -1798,7 +1884,6 @@ $('#chat-form').on('submit', function(e) {
     var text = inp.val().trim();
     if (!text && !pendingAttachment) return;
 
-    // Проверка антифлуда
     var now = Date.now();
     if (!isAdmin) {
         var diffSec = Math.ceil((ANTIFLOOD_SECONDS * 1000 - (now - lastMsgSentTime)) / 1000);
@@ -1888,7 +1973,6 @@ $('#chat-form').on('submit', function(e) {
     });
 });
 
-// Первичная загрузка и периодический опрос
 syncChatState(true, false);
 setInterval(function() {
     if (activeTab === 'chat' && !isSyncing) {
