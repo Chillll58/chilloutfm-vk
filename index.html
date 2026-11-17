@@ -2,55 +2,76 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <!-- =========== META-TAGS FOR SEO =========== -->
-    <!-- Базовые metaтеги -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Предзагрузка критических ресурсов -->
     <link rel="preconnect" href="https://listen8.myradio24.com">
+    <link rel="preconnect" href="https://myradio24.com">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+
+    <!-- Базовые meta-теги -->
     <meta name="description" content="ChilloutFM - радиостанция для релаксации. Слушайте лучшую музыку в стиле Chillout и Lounge онлайн 24/7. Успокаивающие мелодии для работы, отдыха и сна.">
     <meta name="keywords" content="радио, chillout, lounge, релакс, музыка, онлайн, прослушивание, радиопоток, ChilloutFM">
     <meta name="author" content="ChilloutFM">
-    <meta name="robots" content="index, follow"> <!-- Разрешаем индексацию -->
+    <meta name="robots" content="index, follow">
 
-    <!-- Open Graph (для соцсетей: ВК, Facebook, Twitter) -->
+    <!-- Open Graph (только HTTPS) -->
     <meta property="og:title" content="ChilloutFM - Радио для релаксации">
     <meta property="og:description" content="Слушайте лучшую музыку в стиле Chillout и Lounge онлайн. Успокаивающие мелодии для работы, отдыха и сна.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="http://chilloutfm.ru/"> <!-- ✅ ЗАМЕНИТЕ НА СВОЙ URL -->
-    <meta property="og:image" content="http://chilloutfm.ru/wp-content/uploads/2018/11/Chillout-logo-250.png"> <!-- ✅ ЗАМЕНИТЕ НА СВОЙ ЛОГО (путь к изображению) -->
+    <meta property="og:url" content="https://vk.com/chillou_fm">
+    <meta property="og:image" content="https://imgs.su/upload/671/2340987012.png">
     <meta property="og:site_name" content="ChilloutFM">
     <meta property="og:locale" content="ru_RU">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ChilloutFM - Радио для релаксации">
-    <meta name="twitter:description" content="Слушайте лучшую музыку в стиле Chillout и Lounge онлайн. Успокаивающие мелодии для работы, отдыха и сна.">
-    <meta name="twitter:image" content="http://chilloutfm.ru/wp-content/uploads/2018/11/Chillout-logo-250.png"> <!-- ✅ ЗАМЕНИТЕ НА СВОЙ ЛОГО -->
+    <meta name="twitter:description" content="Слушайте лучшую музыку в стиле Chillout и Lounge онлайн.">
+    <meta name="twitter:image" content="https://imgs.su/upload/671/2340987012.png">
 
-    <!-- Favicon (иконка сайта в браузере) -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"> <!-- Для iOS -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest"> <!-- Для PWA (опционально) -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Favicon (по HTTPS) -->
+    <link rel="icon" type="image/png" href="https://imgs.su/upload/671/2340987012.png">
+    <link rel="apple-touch-icon" href="https://imgs.su/upload/671/2340987012.png">
+
     <title>ChilloutFM App</title>
+
+    <!-- VK Bridge (обязательно для VK Mini Apps) -->
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <script>
+        if (typeof vkBridge !== 'undefined') {
+            vkBridge.send('VKWebAppInit').catch(function(e) {
+                console.warn('VKWebAppInit error:', e);
+            });
+        }
+    </script>
+
+    <!-- Шрифты и библиотеки -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         body { 
             font-family: 'Open Sans', sans-serif; 
-            margin: 0; padding: 0; 
+            margin: 0; 
+            padding: 0; 
             background: #121212; 
             color: #fff; 
             padding-top: 90px; 
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
         /* ==================== ПЛЕЕР ==================== */
-        .radio-player-container { position: fixed; top: 0; left: 0; z-index: 99999; display: flex; align-items: center; justify-content: space-between; background-color: #090909; color: #ffffff; 
-                                height: 90px; width: 100%; box-sizing: border-box; border-bottom: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+        .radio-player-container { 
+            position: fixed; top: 0; left: 0; z-index: 99999; 
+            display: flex; align-items: center; justify-content: space-between; 
+            background-color: #090909; color: #ffffff; 
+            height: 90px; width: 100%; box-sizing: border-box; 
+            border-bottom: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.6); 
+        }
         .player-left { display: flex; align-items: center; padding-left: 20px; flex-shrink: 0; }
         .station-logo img { width: 50px; height: 50px; border-radius: 50%; margin-right: 12px; object-fit: cover; }
         .station-title { margin: 0; font-size: 16px; font-weight: 600; color: #fff; line-height: 1.2; }
@@ -65,7 +86,7 @@
         .controls-row { display: flex; align-items: center; width: 100%; justify-content: center; }
         .artist-circle { width: 44px; height: 44px; border: 1px solid #555; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; overflow: hidden; background: #1a1a1a; flex-shrink: 0; }
         #artist-cover-img { width: 100%; height: 100%; object-fit: cover; }
-        .control-btn { font-size: 22px; margin-right: 20px; cursor: pointer; color: #ccc; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; border-radius: 50%; flex-shrink: 0; transition: 0.2s; }
+        .control-btn { font-size: 22px; margin-right: 20px; cursor: pointer; color: #ccc; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; border-radius: 50%; flex-shrink: 0; transition: 0.2s; user-select: none; }
         .control-btn:hover { color: #e8df31; border-color: #e8df31; transform: scale(1.05); }
         .volume-container { display: flex; align-items: center; width: 120px; }
         .volume-slider { -webkit-appearance: none; width: 100%; height: 5px; background: #333; border-radius: 3px; outline: none; cursor: pointer; }
@@ -75,15 +96,30 @@
         .menu-item:hover { color: #fff; }
         .menu-icon { font-size: 18px; margin-bottom: 3px; }
         .menu-text { font-size: 10px; text-transform: uppercase; font-weight: 600; }
-        @media (max-width: 700px) { .player-left, .status-label, .volume-container, .station-divider { display: none !important; } .radio-player-container { padding: 0 10px; height: 80px; } body { padding-top: 80px; } .player-center { flex-direction: row; justify-content: flex-start; padding: 0; } .controls-row { width: auto; margin-right: 10px; } .artist-circle { margin-right: 10px; width: 48px; height: 48px; } .control-btn { margin-right: 0; width: 40px; height: 40px; font-size: 16px; background: #222; border: none; } .track-info-top { display: block; overflow: hidden; white-space: nowrap; margin-bottom: 0; } .track-name { font-size: 14px; animation: marquee 10s linear infinite; display: inline-block; padding-left: 100%; } .player-right { margin-left: auto; } }
+
+        @media (max-width: 700px) { 
+            .player-left, .status-label, .volume-container, .station-divider { display: none !important; } 
+            .radio-player-container { padding: 0 10px; height: 80px; } 
+            body { padding-top: 80px; } 
+            .player-center { flex-direction: row; justify-content: flex-start; padding: 0; } 
+            .controls-row { width: auto; margin-right: 10px; } 
+            .artist-circle { margin-right: 10px; width: 48px; height: 48px; } 
+            .control-btn { margin-right: 0; width: 40px; height: 40px; font-size: 16px; background: #222; border: none; } 
+            .track-info-top { display: block; overflow: hidden; white-space: nowrap; margin-bottom: 0; } 
+            .track-name { font-size: 14px; animation: marquee 10s linear infinite; display: inline-block; padding-left: 100%; } 
+            .player-right { margin-left: auto; } 
+        }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
         /* ==================== ВКЛАДКИ ==================== */
         .tabs { display: flex; justify-content: center; background: #1a1a1a; padding: 10px 0; border-bottom: 1px solid #333; position: sticky; top: 90px; z-index: 90; }
-        .tab { padding: 8px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; }
+        @media (max-width: 700px) { .tabs { top: 80px; } }
+        .tab { padding: 8px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; user-select: none; }
         .tab.active { color: #e8df31; border-bottom: 2px solid #e8df31; }
         .content { display: none; padding-bottom: 40px; }
         .content.active { display: block; }
-        /* ==================== ДИЗАЙН ГЛАВНОЙ СТРАНИЦЫ ==================== */
+
+        /* ==================== ГЛАВНАЯ ==================== */
         .immersive-artist-section { position: relative; padding: 60px 0; overflow: hidden; background: #111; color: #fff; min-height: 600px; display: flex; align-items: center; }
         .immersive-bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(40px) brightness(0.4); transform: scale(1.1); z-index: 1; transition: background-image 1s ease-in-out; }
         .immersive-content { position: relative; z-index: 2; }
@@ -99,36 +135,38 @@
         #live-artist-bio { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 20px; min-height: 50px; }
         .platform-btn { display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 30px; background: rgba(255,255,255,0.1); color: #fff !important; text-decoration: none !important; font-size: 13px; font-weight: 600; margin: 0 5px 10px 5px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
         .platform-btn:hover { background: #fff; color: #000 !important; transform: translateY(-2px); }
-        .custom-button { padding: 10px 30px; border-radius: 30px; background: #e8df31; color:#000; border:none; font-weight:bold; }
+        .custom-button { padding: 10px 30px; border-radius: 30px; background: #e8df31; color:#000; border:none; font-weight:bold; text-decoration: none; display: inline-block; }
         .donate-btn-wrapper { text-align: center; margin-bottom: 40px; }
-        .donate-main-btn { display: inline-flex; padding: 8px 20px; font-size: 12px; font-weight: 700; background: linear-gradient(45deg, #e8df31, #d4c91f); color: #000 !important; text-decoration: none !important; border-radius: 30px; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(232, 223, 49, 0.3); transition: all 0.3s; }
+        .donate-main-btn { display: inline-flex; align-items: center; padding: 8px 20px; font-size: 12px; font-weight: 700; background: linear-gradient(45deg, #e8df31, #d4c91f); color: #000 !important; text-decoration: none !important; border-radius: 30px; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(232, 223, 49, 0.3); transition: all 0.3s; }
         .donate-main-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(232, 223, 49, 0.5); }
         .donate-main-btn i { margin-right: 8px; font-size: 14px; }
         @media (max-width: 991px) {
-            .immersive-artist-section { padding: 60px 0; text-align: center; }
-            .immersive-info { padding-left: 0; padding-top: 40px; }
-            .immersive-cover-wrap { width: 80%; max-width: 280px; }
+            .immersive-artist-section { padding: 40px 0; text-align: center; }
+            .immersive-info { padding-left: 0; padding-top: 30px; }
+            .immersive-cover-wrap { width: 80%; max-width: 260px; }
             .immersive-label { justify-content: center; }
             #live-artist-name { font-size: 32px; }
         }
+
         /* ==================== ПЛЕЙЛИСТ ==================== */
         .list-container { max-width: 800px; margin: 0 auto; padding: 20px; }
         #playlist-list { max-height: calc(100vh - 250px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #333 #121212; }
         #playlist-list::-webkit-scrollbar { width: 6px; }
         #playlist-list::-webkit-scrollbar-track { background: #121212; }
         #playlist-list::-webkit-scrollbar-thumb { background-color: #333; border-radius: 3px; }
-        .playlist-header-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; margin-bottom: 20px; }
+        .playlist-header-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .playlist-header-row h3 { margin: 0; font-size: 16px; text-transform: uppercase; font-weight: 700; color: #888; }
-        .archive-link { color: #e8df31; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid #e8df31; padding: 6px 12px; border-radius: 20px; transition: all 0.2s; }
+        .archive-link { color: #e8df31; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid #e8df31; padding: 6px 12px; border-radius: 20px; transition: all 0.2s; display: inline-block; }
         .archive-link:hover { background: #e8df31; color: #000; }
         .archive-link i { margin-left: 5px; }
-        .list-container .row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #222; transition: background 0.2s; border-radius: 8px; margin: 0 0 5px 0;}
+        .list-container .row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #222; transition: background 0.2s; border-radius: 8px; margin: 0 0 5px 0; }
         .list-container .row:hover { background: #1e1e1e; }
         .time-col { font-size: 11px; color: #888; font-weight: 600; min-width: 40px; text-align: center; margin-right: 15px; }
         .mini-cover { width: 50px; height: 50px; background: #333; border-radius: 6px; margin-right: 15px; object-fit: cover; flex-shrink: 0; }
         .info { flex: 1; overflow: hidden; }
         .info b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; margin-bottom: 3px; }
         .info span { font-size: 12px; color: #888; }
+
         /* ==================== КОНТАКТЫ ==================== */
         .contacts-wrapper { background: url('https://images.unsplash.com/photo-1492560704071-7826278858ab?auto=format&fit=crop&w=1000&q=80') center center no-repeat; background-size: cover; position: relative; width: 100%; max-width: 750px; height: auto; min-height: calc(100vh - 140px); margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 40px 20px 20px 20px; color: #fff; text-align: center; }
         .contacts-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1; }
@@ -148,12 +186,17 @@
     </style>
 </head>
 <body>
-<audio id="stream" preload="none"></audio>
+
+<audio id="stream" preload="none" crossorigin="anonymous"></audio>
+
 <!-- 1. ВЕРХНИЙ ПЛЕЕР -->
 <div class="radio-player-container">
     <div class="player-left">
         <div class="station-logo"><img src="https://imgs.su/upload/671/2340987012.png" alt="Logo"></div>
-        <div class="station-info"><h2 class="station-title">ChilloutFM</h2><div class="station-genre">Chillout / Lounge</div></div>
+        <div class="station-info">
+            <h2 class="station-title">ChilloutFM</h2>
+            <div class="station-genre">Chillout / Lounge</div>
+        </div>
         <div class="station-divider"></div>
     </div>
     <div class="player-center">
@@ -162,15 +205,19 @@
             <div id="track-marquee"><span class="track-name" data-myinfo="song">Загрузка...</span></div>
         </div>
         <div class="controls-row">
-            <div class="artist-circle"><img id="artist-cover-img" src="https://imgs.su/upload/671/2340987012.png"></div>
+            <div class="artist-circle"><img id="artist-cover-img" src="https://imgs.su/upload/671/2340987012.png" alt="Cover"></div>
             <div class="control-btn" id="play-btn">▶</div>
             <div class="volume-container"><input type="range" min="0" max="100" value="80" class="volume-slider" id="vol-slider"></div>
         </div>
     </div>
     <div class="player-right">
-        <div class="menu-item" id="vk-btn"><div class="menu-icon">⌖</div><div class="menu-text">Поиск</div></div>
+        <div class="menu-item" id="vk-btn">
+            <div class="menu-icon">⌖</div>
+            <div class="menu-text">Поиск</div>
+        </div>
     </div>
 </div>
+
 <!-- ВКЛАДКИ -->
 <div class="tabs">
     <div class="tab active" onclick="sw('live', this)">Главная</div>
@@ -178,14 +225,15 @@
     <div class="tab" onclick="sw('chat', this)">Чат</div>
     <div class="tab" onclick="sw('contacts', this)">Контакты</div>
 </div>
-<!-- 1. ГЛАВНАЯ (НОВЫЙ ДИЗАЙН) -->
+
+<!-- 1. ГЛАВНАЯ -->
 <div id="live" class="content active">
     <section class="immersive-artist-section" id="currentartist">
         <div class="immersive-bg-layer" id="artist-bg-layer" style="background-image: url('https://imgs.su/upload/671/2340987012.png');"></div>
         <div class="container immersive-content">
             <div class="row align-items-center">
                 <div class="col-12 donate-btn-wrapper">
-                    <a href="https://vk.com/chillou_fm?w=app6471849_-46701989" target="_blank" class="donate-main-btn">
+                    <a href="https://vk.com/chillou_fm?w=app6471849_-46701989" target="_blank" rel="noopener noreferrer" class="donate-main-btn">
                         <i class="fas fa-coffee"></i> Админу на кофе
                     </a>
                 </div>
@@ -202,11 +250,11 @@
                         <div id="live-artist-bio"><p>Ожидание данных...</p></div>
                         <div id="controls-container" class="text-center">
                             <div id="artist-links" style="display:none; margin-top: 10px; margin-bottom: 25px;">
-                                <a id="btn-sc" href="#" target="_blank" class="platform-btn">SoundCloud</a>
-                                <a id="btn-sp" href="#" target="_blank" class="platform-btn">Spotify</a>
-                                <a id="btn-gl" href="#" target="_blank" class="platform-btn">Google</a>
+                                <a id="btn-sc" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">SoundCloud</a>
+                                <a id="btn-sp" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Spotify</a>
+                                <a id="btn-gl" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Google</a>
                             </div>
-                            <a id="live-wiki-link" href="#" target="_blank" class="custom-button" style="display: none; margin-bottom: 25px;">Подробнее</a>
+                            <a id="live-wiki-link" href="#" target="_blank" rel="noopener noreferrer" class="custom-button" style="display: none; margin-bottom: 25px;">Подробнее</a>
                         </div>
                     </div>
                 </div>
@@ -214,27 +262,30 @@
         </div>
     </section>
 </div>
+
 <!-- 2. ПЛЕЙЛИСТ -->
 <div id="playlist" class="content">
     <div class="list-container">
         <div class="playlist-header-row">
             <h3>История эфира</h3>
             <div>
-                <a href="https://myradio24.com/ru/table/8795" target="_blank" class="archive-link" style="margin-right: 15px;">Заказать песню</a>
-                <a href="https://the-radio.ru/playlist/chilloutfm-r2350" target="_blank" class="archive-link">Архив эфира <i class="fas fa-external-link-alt"></i></a>
+                <a href="https://myradio24.com/ru/table/8795" target="_blank" rel="noopener noreferrer" class="archive-link" style="margin-right: 10px;">Заказать песню</a>
+                <a href="https://the-radio.ru/playlist/chilloutfm-r2350" target="_blank" rel="noopener noreferrer" class="archive-link">Архив эфира <i class="fas fa-external-link-alt"></i></a>
             </div>
         </div>
         <div id="playlist-list" data-myinfo="htmlsongs">
-             <p style="text-align:center; color:#888; padding: 20px;">Загрузка истории...</p>
+            <p style="text-align:center; color:#888; padding: 20px;">Загрузка истории...</p>
         </div>
     </div>
 </div>
+
 <!-- 3. ЧАТ -->
 <div id="chat" class="content">
     <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
         <div id="chatovod232163"></div>
     </div>
 </div>
+
 <!-- 4. КОНТАКТЫ -->
 <div id="contacts" class="content">
     <div class="contacts-wrapper">
@@ -242,12 +293,12 @@
         <div class="contacts-content">
             <h2 style="margin-bottom:30px; font-weight:800; text-transform:uppercase;">Наши контакты</h2>
             <div class="footer-socials">
-                <a href="https://vk.com/chillou_fm" target="_blank" class="social-link" title="ВКонтакте"><i class="fab fa-vk"></i></a>
-                <a href="https://max.ru/chillou_fm" target="_blank" class="social-link" title="MAX"><img src="https://imgs.su/upload/820/278324543.png" class="max-icon-img" alt="MAX"></a>
-                <a href="https://t.me/Chillout_FM" target="_blank" class="social-link" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://vk.com/chillou_fm" target="_blank" rel="noopener noreferrer" class="social-link" title="ВКонтакте"><i class="fab fa-vk"></i></a>
+                <a href="https://max.ru/chillou_fm" target="_blank" rel="noopener noreferrer" class="social-link" title="MAX"><img src="https://imgs.su/upload/820/278324543.png" class="max-icon-img" alt="MAX"></a>
+                <a href="https://t.me/Chillout_FM" target="_blank" rel="noopener noreferrer" class="social-link" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
             </div>
             <div class="footer-contacts-wrap">
-                <div class="contact-item"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-label">Адрес студии</span><a href="https://goo.gl/maps/MffLXrykgBz" target="_blank">г. Сургут, ул. Лермонтова 6/2</a></div>
+                <div class="contact-item"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-label">Адрес студии</span><a href="https://goo.gl/maps/MffLXrykgBz" target="_blank" rel="noopener noreferrer">г. Сургут, ул. Лермонтова 6/2</a></div>
                 <div class="contact-item"><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-label">Почта</span><a href="mailto:support@chilloutfm.ru">support@chilloutfm.ru</a></div>
                 <div class="contact-item"><span class="contact-icon"><i class="fas fa-phone-alt"></i></span><span class="contact-label">Телефон</span><a href="tel:+79226583167">+7 (922) 658-31-67</a></div>
             </div>
@@ -255,6 +306,7 @@
         </div>
     </div>
 </div>
+
 <script>
 // --- ПЕРЕМЕННЫЕ И ОСНОВНЫЕ ФУНКЦИИ ---
 var defImg = "https://imgs.su/upload/671/2340987012.png";
@@ -263,8 +315,8 @@ var playBtn = document.getElementById('play-btn');
 var volSlider = document.getElementById('vol-slider');
 var isPlay = false;
 var lastArtist = ""; 
+var chatLoaded = false;
 
-// Инициализация стартовой громкости
 audio.volume = volSlider.value / 100;
 
 // --- ВКЛАДКИ ---
@@ -273,12 +325,24 @@ window.sw = function(id, el) {
     $('#' + id).addClass('active');
     $('.tab').removeClass('active');
     $(el).addClass('active');
-}
+
+    if (id === 'chat' && !chatLoaded) {
+        chatLoaded = true;
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.charset = "UTF-8";
+        po.async = true;
+        po.src = 'https://chilloutfm.chatovod.ru/widget.js?height=450&divId=chatovod232163';
+        document.body.appendChild(po);
+    }
+};
+
 // --- УПРАВЛЕНИЕ ПЛЕЕРОМ ---
 playBtn.addEventListener('click', function() {
     if (isPlay) {
         audio.pause(); 
-        audio.src = ""; 
+        audio.removeAttribute('src');
+        audio.load();
         playBtn.innerHTML = "▶"; 
         playBtn.style.color = "#ccc"; 
         playBtn.style.borderColor = "#444";
@@ -287,87 +351,123 @@ playBtn.addEventListener('click', function() {
         audio.src = "https://listen8.myradio24.com/8795";
         audio.load();
         var p = audio.play();
-        if(p !== undefined) {
-            p.then(() => {
+        if (p !== undefined) {
+            p.then(function() {
                 playBtn.innerHTML = "||"; 
                 playBtn.style.color = "#e8df31"; 
                 playBtn.style.borderColor = "#e8df31";
                 isPlay = true;
-            }).catch(e => { 
+            }).catch(function(e) { 
                 console.error("Ошибка воспроизведения:", e);
                 isPlay = false; 
             });
         }
     }
 });
-volSlider.addEventListener('input', function() { audio.volume = this.value / 100; });
+
+volSlider.addEventListener('input', function() { 
+    audio.volume = this.value / 100; 
+});
+
 $('#vk-btn').on('click', function() {
     var txt = $('[data-myinfo="song"]').text();
-    window.open("https://vk.com/search?c[section]=audio&c[q]=" + encodeURIComponent(txt), '_blank');
+    if (!txt || txt === "Загрузка...") return;
+    window.open("https://vk.com/search?c[section]=audio&c[q]=" + encodeURIComponent(txt), '_blank', 'noopener,noreferrer');
 });
+
 // --- JS ДЛЯ ГЛАВНОЙ СТРАНИЦЫ И ПЛЕЙЛИСТА ---
-function truncateText(str, len) { return (!str || str.length <= len) ? str : str.substr(0, str.lastIndexOf(" ", len)) + "..."; }
-function getCleanName(name) { return name.split(/\s+(?:feat\.?|ft\.?|x|&|vs\.?|pres\.?)\s+/i)[0].trim(); }
+function truncateText(str, len) { 
+    return (!str || str.length <= len) ? str : str.substr(0, str.lastIndexOf(" ", len)) + "..."; 
+}
+
+function getCleanName(name) { 
+    return name.split(/\s+(?:feat\.?|ft\.?|x|&|vs\.?|pres\.?)\s+/i)[0].trim(); 
+}
+
 function updateSearchButtons(artist) {
     var clean = getCleanName(artist);
     $('#btn-sc').attr('href', 'https://soundcloud.com/search?q=' + encodeURIComponent(clean));
     $('#btn-sp').attr('href', 'https://open.spotify.com/search/' + encodeURIComponent(clean));
     $('#btn-gl').attr('href', 'https://www.google.com/search?q=' + encodeURIComponent(artist + ' music'));
 }
+
 function doImageSearch(query, callback) {
-    fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=album&limit=1`)
-    .then(res => res.json()).then(data => {
+    fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(query) + '&media=music&entity=album&limit=1')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
         if (data.results && data.results.length > 0) {
             var artUrl = data.results[0].artworkUrl100.replace('100x100', '600x600');
             $('#live-artist-img').attr('src', artUrl);
             $('#artist-bg-layer').css('background-image', 'url(' + artUrl + ')');
             callback(true);
-        } else { callback(false); }
-    }).catch(() => callback(false));
+        } else { 
+            callback(false); 
+        }
+    }).catch(function() { callback(false); });
 }
+
 function fetchImage(artistName) {
-    doImageSearch(artistName, success => {
-        if(!success) {
+    doImageSearch(artistName, function(success) {
+        if (!success) {
             var clean = getCleanName(artistName);
-            if(clean !== artistName) doImageSearch(clean, ()=>{});
-            else { 
+            if (clean !== artistName) {
+                doImageSearch(clean, function(cleanSuccess) {
+                    if (!cleanSuccess) {
+                        $('#live-artist-img').attr('src', defImg);
+                        $('#artist-bg-layer').css('background-image', 'url(' + defImg + ')');
+                    }
+                });
+            } else { 
                 $('#live-artist-img').attr('src', defImg);
                 $('#artist-bg-layer').css('background-image', 'url(' + defImg + ')');
             }
         }
     });
 }
+
 function tryWiki(term, callback) {
-    fetch(`https://ru.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles=${encodeURIComponent(term)}&origin=*`)
-    .then(res => res.json()).then(data => {
+    fetch('https://ru.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles=' + encodeURIComponent(term) + '&origin=*')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
         var page = data.query.pages, pageId = Object.keys(page)[0];
-        if (pageId != "-1" && page[pageId].extract) {
-            displayBio(page[pageId].extract, `https://ru.wikipedia.org/?curid=${pageId}`);
+        if (pageId !== "-1" && page[pageId].extract) {
+            displayBio(page[pageId].extract, 'https://ru.wikipedia.org/?curid=' + pageId);
             callback(true);
-        } else { callback(false); }
-    }).catch(() => callback(false));
+        } else { 
+            callback(false); 
+        }
+    }).catch(function() { callback(false); });
 }
+
 function displayBio(text, link) {
     $('#live-artist-bio').html('<p>' + truncateText(text.replace(/<[^>]*>/g, ''), 300) + '</p>').css('opacity', '1');
-    if(link) $('#live-wiki-link').attr('href', link).show();
+    if (link) $('#live-wiki-link').attr('href', link).show();
     $('#artist-links').hide();
 }
+
 function showDefaultText(artist) {
-    $('#live-artist-bio').html(`<p>Прямо сейчас на <b>ChilloutFM</b> звучит трек от исполнителя <b>${artist}</b>.</p>`).css('opacity', '1');
+    $('#live-artist-bio').html('<p>Прямо сейчас на <b>ChilloutFM</b> звучит трек от исполнителя <b>' + artist + '</b>.</p>').css('opacity', '1');
     $('#live-wiki-link').hide();
     $('#artist-links').show();
 }
+
 function startBioSearch(fullName) {
     $('#live-artist-bio').css('opacity', '0.5').html('<p>Поиск информации...</p>');
     $('#live-wiki-link, #artist-links').hide();
-    tryWiki(fullName, found => {
-        if(!found) {
+    tryWiki(fullName, function(found) {
+        if (!found) {
             var clean = getCleanName(fullName);
-            if(clean !== fullName) tryWiki(clean, foundClean => { if(!foundClean) showDefaultText(fullName); });
-            else showDefaultText(fullName);
+            if (clean !== fullName) {
+                tryWiki(clean, function(foundClean) { 
+                    if (!foundClean) showDefaultText(fullName); 
+                });
+            } else {
+                showDefaultText(fullName);
+            }
         }
     });
 }
+
 var my_init_updateinfo = function(info) {
     function expand_song(songObj) {
         if (!songObj || !songObj.song) return;
@@ -386,16 +486,18 @@ var my_init_updateinfo = function(info) {
     $('#live-track-title').text(info.songtitle || "Музыка для души");
     var smallCoverUrl = (info.img && info.img !== "img/no_cover.jpg") ? "https://myradio24.com/" + info.img : defImg;
     $('#artist-cover-img').attr('src', smallCoverUrl);
-    var songs = info.songs; var htmlsongs = ""; 
-    if(songs && songs.length > 0) {
-        songs.forEach(song => {
-            if(Array.isArray(song)) song = {time:song[0], song:song[1], img:song[2]};
+
+    var songs = info.songs; 
+    var htmlsongs = ""; 
+    if (songs && songs.length > 0) {
+        songs.forEach(function(song) {
+            if (Array.isArray(song)) song = {time: song[0], song: song[1], img: song[2]};
             expand_song(song);
-            htmlsongs = `<div class="row">
-                            <div class="time-col">${song.time.substr(0, 5)}</div>
-                            <img class="mini-cover" src="https://myradio24.com/${song.img}" onerror="this.src='${defImg}'">
-                            <div class="info"><b>${song.artist}</b><span>${song.songtitle}</span></div>
-                        </div>` + htmlsongs;
+            htmlsongs = '<div class="row">' +
+                            '<div class="time-col">' + song.time.substr(0, 5) + '</div>' +
+                            '<img class="mini-cover" src="https://myradio24.com/' + song.img + '" onerror="this.src=\'' + defImg + '\'">' +
+                            '<div class="info"><b>' + song.artist + '</b><span>' + song.songtitle + '</span></div>' +
+                        '</div>' + htmlsongs;
         });
     } else {
         htmlsongs = "<p style='text-align:center; color:#888;'>История временно недоступна.</p>";
@@ -403,37 +505,30 @@ var my_init_updateinfo = function(info) {
     info.htmlsongs = htmlsongs;
     $('[data-myinfo]').each(function() {
         var key = $(this).data('myinfo');
-        if(key && info[key] !== undefined) $(this).html(info[key]); 
+        if (key && info[key] !== undefined) $(this).html(info[key]); 
     });
-}
+};
 </script>
-<!-- СКРИПТЫ MYRADIO24 И CHATOVOD -->
-<script src="https://myradio24.com/player/player.js?v3.31" data-radio="8795" data-interval="15" data-vmid="27410" data-lang="ru"></script>
-<script type="text/javascript">
-(function() {
-    var po = document.createElement('script');
-    po.type = 'text/javascript'; po.charset = "UTF-8"; po.async = true;
-    po.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//chilloutfm.chatovod.ru/widget.js?height=450&divId=chatovod232163';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(po, s);
-})();
-</script>
-    <!-- Yandex.Metrika -->
-    <script type="text/javascript" >
-       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-       m[i].l=1*new Date();
-       for (var j = 0; j < document.scripts.length; j++) if (document.scripts[j].src === r) return;
-       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-       ym(12345678, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-       });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/111323010" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika -->
+<!-- СКРИПТ MYRADIO24 -->
+<script src="https://myradio24.com/player/player.js?v3.31" data-radio="8795" data-interval="15" data-vmid="27410" data-lang="ru"></script>
+
+<!-- Yandex.Metrika -->
+<script type="text/javascript">
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) if (document.scripts[j].src === r) return;
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(111323010, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111323010" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
 </body>
 </html>
