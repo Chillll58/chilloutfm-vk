@@ -186,15 +186,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 24px;
+            padding: 10px 16px;
             background: #181818;
             border-bottom: 1px solid #282828;
             flex-shrink: 0;
+            gap: 8px;
         }
         .chat-topbar-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            min-width: 0;
         }
         .chat-online-dot {
             width: 9px;
@@ -202,20 +204,75 @@
             border-radius: 50%;
             background: #4caf50;
             box-shadow: 0 0 8px #4caf50;
+            flex-shrink: 0;
         }
         .chat-room-title {
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+        .chat-online-badge {
+            background: rgba(76, 175, 80, 0.14);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            color: #81c784;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 14px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .chat-topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .chat-admin-btn {
+            background: #222;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .chat-admin-btn:hover { border-color: #e8df31; color: #fff; }
+        .chat-admin-btn.active {
+            background: rgba(255, 82, 82, 0.15);
+            border-color: #ff5252;
+            color: #ff5252;
+        }
+        .chat-admin-extra {
+            display: none;
+            background: #2a1d1d;
+            border: 1px solid rgba(255, 82, 82, 0.4);
+            color: #ff8a80;
+            border-radius: 20px;
+            padding: 5px 9px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .chat-admin-extra:hover { background: #ff5252; color: #fff; }
+        .chat-admin-extra.visible { display: inline-flex; align-items: center; gap: 4px; }
         .chat-user-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             background: #222;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 12px;
             color: #ccc;
@@ -230,23 +287,48 @@
             border-radius: 50%;
             object-fit: cover;
         }
+        @media (max-width: 600px) {
+            #chat-my-name { max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .chat-room-title { display: none; }
+            .chat-admin-label { display: none; }
+        }
+
+        /* Уведомление об антифлуде / статусе */
+        .chat-toast-notice {
+            display: none;
+            position: absolute;
+            top: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 82, 82, 0.92);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+
         .chat-messages-area {
             flex: 1;
             overflow-y: auto;
-            padding: 20px 24px;
+            padding: 18px 20px;
             display: flex;
             flex-direction: column;
             gap: 14px;
             scrollbar-width: thin;
             scrollbar-color: #333 #121212;
+            scroll-behavior: smooth;
         }
         .chat-messages-area::-webkit-scrollbar { width: 6px; }
         .chat-messages-area::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         .chat-msg {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            max-width: 78%;
+            gap: 10px;
+            max-width: 85%;
             animation: msgFadeIn 0.2s ease;
         }
         @keyframes msgFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -255,8 +337,8 @@
             flex-direction: row-reverse;
         }
         .chat-msg-avatar {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
             flex-shrink: 0;
@@ -265,13 +347,15 @@
         .chat-msg-bubble {
             background: #1e1e1e;
             border: 1px solid #2b2b2b;
-            padding: 10px 14px;
+            padding: 9px 13px;
             border-radius: 16px;
             border-top-left-radius: 4px;
             color: #eee;
             font-size: 14px;
             line-height: 1.45;
             word-break: break-word;
+            position: relative;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
         }
         .chat-msg.own .chat-msg-bubble {
             background: #272515;
@@ -279,11 +363,24 @@
             border-top-left-radius: 16px;
             border-top-right-radius: 4px;
         }
+        /* Подсветка сообщения при переходе по цитате */
+        .chat-msg.highlighted .chat-msg-bubble {
+            border-color: #e8df31 !important;
+            box-shadow: 0 0 18px rgba(232, 223, 49, 0.45);
+            background-color: #302d16 !important;
+        }
+
         .chat-msg-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 12px;
             margin-bottom: 4px;
+        }
+        .chat-msg-meta {
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
         .chat-msg-author {
             font-weight: 700;
@@ -294,31 +391,260 @@
             font-size: 10px;
             color: #777;
         }
-        .chat-emoji-bar {
+        .chat-msg-actions {
             display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .chat-reply-btn {
+            background: transparent;
+            border: none;
+            color: #777;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 2px 5px;
+            border-radius: 4px;
+            transition: 0.15s;
+        }
+        .chat-reply-btn:hover { color: #e8df31; background: rgba(255,255,255,0.06); }
+        .chat-mod-btn {
+            background: rgba(255, 82, 82, 0.14);
+            border: 1px solid rgba(255, 82, 82, 0.35);
+            color: #ff5252;
+            font-size: 10px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: 0.15s;
+        }
+        .chat-mod-btn:hover { background: #ff5252; color: #fff; }
+        .chat-ban-btn {
+            background: rgba(255, 152, 0, 0.14);
+            border: 1px solid rgba(255, 152, 0, 0.35);
+            color: #ffb74d;
+            font-size: 10px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: 0.15s;
+        }
+        .chat-ban-btn:hover { background: #ff9800; color: #000; }
+
+        /* Кликабельная цитата ответа внутри сообщения */
+        .chat-quote-box {
+            background: rgba(255, 255, 255, 0.06);
+            border-left: 3px solid #e8df31;
+            border-radius: 6px;
+            padding: 5px 9px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #bbb;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .chat-quote-box:hover {
+            background: rgba(232, 223, 49, 0.14);
+        }
+        .chat-quote-box:active {
+            transform: scale(0.99);
+        }
+        .chat-quote-author {
+            font-weight: 700;
+            color: #e8df31;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 1px;
+        }
+        .chat-quote-jump-hint {
+            font-size: 9px;
+            color: #888;
+            font-weight: 400;
+        }
+        .chat-quote-text {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 240px;
+        }
+
+        /* Карточка вложения в сообщении */
+        .chat-att-track {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 8px 10px;
+            margin-top: 6px;
+            text-decoration: none !important;
+            color: #fff !important;
+            transition: 0.2s;
+        }
+        .chat-att-track:hover {
+            border-color: #e8df31;
+            background: rgba(232, 223, 49, 0.08);
+        }
+        .chat-att-cover {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #2a2a2a;
+        }
+        .chat-att-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background: #2c2a14;
+            color: #e8df31;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .chat-att-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .chat-att-badge {
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #e8df31;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .chat-att-title {
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+        }
+        .chat-att-sub {
+            font-size: 11px;
+            color: #999;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-att-photo {
+            margin-top: 6px;
+            max-width: 240px;
+            max-height: 220px;
+            border-radius: 12px;
+            display: block;
+            cursor: pointer;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Панель предпросмотра ответа и вложения */
+        .chat-preview-strip {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 20px;
+            background: #1d1c12;
+            border-top: 1px solid rgba(232, 223, 49, 0.3);
+            font-size: 12px;
+            color: #eee;
+            flex-shrink: 0;
+        }
+        .chat-preview-strip.active { display: flex; }
+        .chat-preview-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            min-width: 0;
+        }
+        .chat-preview-thumb {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .chat-preview-remove {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 2px 8px;
+            flex-shrink: 0;
+        }
+        .chat-preview-remove:hover { color: #ff5252; }
+
+        /* Панель инструментов и эмодзи */
+        .chat-tools-bar {
+            display: flex;
+            align-items: center;
             gap: 8px;
-            padding: 8px 24px 0 24px;
+            padding: 8px 20px 0 20px;
             background: #161616;
             border-top: 1px solid #262626;
             overflow-x: auto;
+            flex-shrink: 0;
+            scrollbar-width: none;
+        }
+        .chat-tools-bar::-webkit-scrollbar { display: none; }
+        .chat-action-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #232323;
+            border: 1px solid #383838;
+            color: #e8df31;
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.15s;
+            flex-shrink: 0;
+        }
+        .chat-action-pill:hover {
+            background: #e8df31;
+            color: #000;
+            border-color: #e8df31;
+        }
+        .chat-tools-divider {
+            width: 1px;
+            height: 18px;
+            background: #333;
             flex-shrink: 0;
         }
         .chat-emoji-btn {
             background: #222;
             border: 1px solid #303030;
             border-radius: 14px;
-            padding: 3px 10px;
-            font-size: 15px;
+            padding: 3px 9px;
+            font-size: 14px;
             cursor: pointer;
             transition: 0.15s;
             user-select: none;
+            flex-shrink: 0;
         }
         .chat-emoji-btn:hover { background: #333; transform: scale(1.08); }
+
         .chat-input-bar {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 24px 16px 24px;
+            gap: 10px;
+            padding: 10px 20px 14px 20px;
             background: #161616;
             flex-shrink: 0;
         }
@@ -334,14 +660,17 @@
             transition: 0.2s;
         }
         .chat-input-field:focus { border-color: #e8df31; background: #262626; }
+        .chat-input-field:disabled { opacity: 0.5; cursor: not-allowed; }
         .chat-send-btn {
-            width: 44px;
+            min-width: 44px;
             height: 44px;
-            border-radius: 50%;
+            padding: 0 12px;
+            border-radius: 22px;
             background: #e8df31;
             color: #000;
             border: none;
-            font-size: 16px;
+            font-size: 15px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -349,8 +678,106 @@
             flex-shrink: 0;
             transition: 0.2s;
         }
-        .chat-send-btn:hover { transform: scale(1.06); background: #f2e93d; }
-        .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .chat-send-btn:hover:not(:disabled) { transform: scale(1.05); background: #f2e93d; }
+        .chat-send-btn:disabled { opacity: 0.45; cursor: not-allowed; background: #555; color: #ccc; }
+
+        /* Модальные окна */
+        .custom-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.82);
+            z-index: 100000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .custom-modal-backdrop.active { display: flex; }
+        .custom-modal-box {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 18px;
+            padding: 22px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .custom-modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: #e8df31;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .custom-modal-input {
+            width: 100%;
+            background: #262626;
+            border: 1px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+        .custom-modal-input:focus { border-color: #e8df31; }
+        .custom-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-modal-cancel {
+            background: #2b2b2b;
+            color: #ccc;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 18px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .btn-modal-confirm {
+            background: #e8df31;
+            color: #000;
+            font-weight: 700;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .ban-list-scroll {
+            overflow-y: auto;
+            max-height: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .ban-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #252525;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+        .btn-unban {
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
 
         /* ==================== КОНТАКТЫ ==================== */
         .contacts-wrapper { background: url('https://images.unsplash.com/photo-1492560704071-7826278858ab?auto=format&fit=crop&w=1000&q=80') center center no-repeat; background-size: cover; position: relative; width: 100%; max-width: 750px; height: auto; min-height: calc(100vh - 140px); margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 40px 20px 20px 20px; color: #fff; text-align: center; }
@@ -373,6 +800,7 @@
 <body>
 
 <audio id="stream" preload="none" crossorigin="anonymous"></audio>
+<input type="file" id="chat-photo-input" accept="image/*" style="display: none;">
 
 <!-- 1. ВЕРХНИЙ ПЛЕЕР -->
 <div class="radio-player-container">
@@ -467,15 +895,31 @@
 <!-- 3. ЧАТ НА ВСЮ СТРАНИЦУ -->
 <div id="chat" class="content">
     <div class="fullpage-chat">
+        <div class="chat-toast-notice" id="chat-toast"></div>
+
         <div class="chat-topbar">
             <div class="chat-topbar-left">
                 <span class="chat-online-dot"></span>
-                <span class="chat-room-title">Чат эфира ChilloutFM</span>
+                <span class="chat-room-title">Чат эфира</span>
+                <span class="chat-online-badge" title="Слушатели сейчас в чате">
+                    <i class="fas fa-headphones-alt"></i> <span id="chat-online-count">1</span>
+                </span>
             </div>
-            <div class="chat-user-badge" id="chat-user-profile" title="Нажмите, чтобы изменить имя">
-                <img id="chat-my-avatar" src="https://imgs.su/upload/671/2340987012.png" alt="Avatar">
-                <span id="chat-my-name">Гость</span>
-                <i class="fas fa-pen" style="font-size: 10px; color: #888;"></i>
+            <div class="chat-topbar-right">
+                <button type="button" class="chat-admin-extra" id="chat-banlist-btn" onclick="openBanListModal()" title="Управление бан-листом">
+                    <i class="fas fa-user-slash"></i> <span id="chat-ban-count">0</span>
+                </button>
+                <button type="button" class="chat-admin-extra" id="chat-clear-all-btn" onclick="adminClearAllMessages()" title="Очистить всю историю чата">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button type="button" class="chat-admin-btn" id="chat-admin-toggle" onclick="toggleAdminMode()" title="Режим модератора">
+                    <i class="fas fa-shield-alt"></i> <span class="chat-admin-label">Админ</span>
+                </button>
+                <div class="chat-user-badge" id="chat-user-profile" title="Нажмите, чтобы изменить имя">
+                    <img id="chat-my-avatar" src="https://imgs.su/upload/671/2340987012.png" alt="Avatar">
+                    <span id="chat-my-name">Гость</span>
+                    <i class="fas fa-pen" style="font-size: 10px; color: #888;"></i>
+                </div>
             </div>
         </div>
 
@@ -483,7 +927,34 @@
             <p style="text-align:center; color:#777; margin-top: 20px;">Загрузка сообщений...</p>
         </div>
 
-        <div class="chat-emoji-bar">
+        <!-- Предпросмотр ответа пользователю -->
+        <div class="chat-preview-strip" id="chat-reply-preview">
+            <div class="chat-preview-info" id="chat-reply-preview-content"></div>
+            <button type="button" class="chat-preview-remove" onclick="clearReply()" title="Отменить ответ">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Предпросмотр прикрепляемого трека или фото -->
+        <div class="chat-preview-strip" id="chat-attach-preview">
+            <div class="chat-preview-info" id="chat-attach-preview-content"></div>
+            <button type="button" class="chat-preview-remove" onclick="clearAttachment()" title="Убрать вложение">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Кнопки прикрепления и быстрые смайлы -->
+        <div class="chat-tools-bar">
+            <button type="button" class="chat-action-pill" onclick="attachCurrentLiveTrack()" title="Прикрепить трек, который сейчас играет в эфире">
+                <i class="fas fa-compact-disc"></i> В эфире
+            </button>
+            <button type="button" class="chat-action-pill" onclick="openVkMusicModal()" title="Прикрепить музыку из ВК">
+                <i class="fab fa-vk"></i> Музыка ВК
+            </button>
+            <button type="button" class="chat-action-pill" onclick="triggerPhotoSelect()" title="Прикрепить фотографию">
+                <i class="fas fa-camera"></i> Фото
+            </button>
+            <div class="chat-tools-divider"></div>
             <button type="button" class="chat-emoji-btn" onclick="addEmoji('👋')">👋</button>
             <button type="button" class="chat-emoji-btn" onclick="addEmoji('🔥')">🔥</button>
             <button type="button" class="chat-emoji-btn" onclick="addEmoji('🎧')">🎧</button>
@@ -501,6 +972,43 @@
             </button>
         </form>
     </div>
+</div>
+
+<!-- Модальное окно для прикрепления музыки ВК -->
+<div class="custom-modal-backdrop" id="vk-music-modal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-title">
+            <span><i class="fab fa-vk"></i> Прикрепить музыку из ВК</span>
+            <i class="fas fa-times" style="cursor:pointer; color:#888;" onclick="closeVkMusicModal()"></i>
+        </div>
+        <input type="text" class="custom-modal-input" id="vk-track-query" placeholder="Исполнитель и название трека (например: Enigma - Sadeness)">
+        <input type="text" class="custom-modal-input" id="vk-track-link" placeholder="Ссылка на трек или плейлист ВК (необязательно)">
+        <div class="custom-modal-actions">
+            <button type="button" class="btn-modal-cancel" onclick="closeVkMusicModal()">Отмена</button>
+            <button type="button" class="btn-modal-confirm" onclick="confirmVkMusicAttach()">Прикрепить</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно управления бан-листом -->
+<div class="custom-modal-backdrop" id="banlist-modal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-title">
+            <span><i class="fas fa-user-slash"></i> Бан-лист чата</span>
+            <i class="fas fa-times" style="cursor:pointer; color:#888;" onclick="closeBanListModal()"></i>
+        </div>
+        <div class="ban-list-scroll" id="banlist-container">
+            <p style="color:#888; font-size:13px; text-align:center;">Список заблокированных пуст</p>
+        </div>
+        <div class="custom-modal-actions">
+            <button type="button" class="btn-modal-cancel" onclick="closeBanListModal()">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для просмотра фото в полный размер -->
+<div class="custom-modal-backdrop" id="photo-view-modal" onclick="this.classList.remove('active')">
+    <img id="photo-view-full" src="" style="max-width: 95%; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
 </div>
 
 <!-- 4. КОНТАКТЫ -->
@@ -533,6 +1041,18 @@ var volSlider = document.getElementById('vol-slider');
 var isPlay = false;
 var lastArtist = ""; 
 var activeTab = "live";
+var currentLiveTrack = { song: "ChilloutFM", artist: "ChilloutFM", title: "Музыка для души", cover: defImg };
+var pendingAttachment = null;
+var pendingReply = null;
+
+// --- НАСТРОЙКИ АДМИНИСТРАТОРА И АНТИФЛУДА ---
+var ADMIN_PASS = "chillout2026";
+var ANTIFLOOD_SECONDS = 3;
+var isAdmin = localStorage.getItem('chillout_is_admin') === '1';
+var lastMsgSentTime = 0;
+var lastMsgTextSent = "";
+var floodTimerInterval = null;
+var currentBanList = [];
 
 audio.volume = volSlider.value / 100;
 
@@ -544,7 +1064,7 @@ window.sw = function(id, el) {
     $('.tab').removeClass('active');
     $(el).addClass('active');
     if (id === 'chat') {
-        loadChatMessages(true);
+        syncChatState(true, true);
     }
 };
 
@@ -553,18 +1073,93 @@ var JSONBIN_ID = "6afc41feffd5d16053c8448b";
 var JSONBIN_KEY = "$2a$10$BU0xNWjHOC.I.1WfQ2bd2uiijAnAlfOQU9EAlmIh2UbXBHJ7lJpTW";
 var JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_ID;
 var lastRenderedHash = "";
-var isSendingMsg = false;
+var isSyncing = false;
+var lastHeartbeatSent = 0;
+
+// Постоянный идентификатор устройства/сессии для бан-листа и онлайна
+var deviceId = localStorage.getItem('chillout_did');
+if (!deviceId) {
+    deviceId = 'd_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    localStorage.setItem('chillout_did', deviceId);
+}
 
 var savedName = localStorage.getItem('chillout_chat_name');
 if (savedName && vkUser.name === "Гость") {
     vkUser.name = savedName;
 }
 
+function showChatNotice(msg) {
+    var el = $('#chat-toast');
+    el.stop(true, true).text(msg).fadeIn(150);
+    setTimeout(function() {
+        el.fadeOut(300);
+    }, 2600);
+}
+
 function updateChatUserUI() {
     $('#chat-my-name').text(vkUser.name);
     $('#chat-my-avatar').attr('src', vkUser.avatar);
+    updateAdminUI();
+    applyBanStateUI();
+}
+
+function updateAdminUI() {
+    if (isAdmin) {
+        $('#chat-admin-toggle').addClass('active').html('<i class="fas fa-shield-alt"></i> <span class="chat-admin-label">Админ</span>');
+        $('#chat-clear-all-btn, #chat-banlist-btn').addClass('visible');
+    } else {
+        $('#chat-admin-toggle').removeClass('active').html('<i class="fas fa-shield-alt"></i> <span class="chat-admin-label">Админ</span>');
+        $('#chat-clear-all-btn, #chat-banlist-btn').removeClass('visible');
+    }
+    $('#chat-ban-count').text(currentBanList.length);
 }
 updateChatUserUI();
+
+function isCurrentUserBanned() {
+    if (isAdmin) return false;
+    return currentBanList.some(function(b) {
+        if (vkUser.id && vkUser.id !== 0 && b.uid && b.uid === vkUser.id) return true;
+        if (b.did && b.did === deviceId) return true;
+        return false;
+    });
+}
+
+function applyBanStateUI() {
+    var inp = $('#chat-input');
+    var btn = $('#chat-send-btn');
+    if (isCurrentUserBanned()) {
+        inp.prop('disabled', true).attr('placeholder', 'Вы заблокированы в чате администратором');
+        btn.prop('disabled', true);
+    } else {
+        inp.prop('disabled', false).attr('placeholder', 'Написать в эфирный чат...');
+        if (!floodTimerInterval && !isSyncing) {
+            btn.prop('disabled', false);
+        }
+    }
+}
+
+window.toggleAdminMode = function() {
+    if (isAdmin) {
+        isAdmin = false;
+        localStorage.removeItem('chillout_is_admin');
+        updateAdminUI();
+        applyBanStateUI();
+        lastRenderedHash = "";
+        syncChatState(false, false);
+    } else {
+        var pass = prompt("Введите пароль администратора:");
+        if (pass === ADMIN_PASS) {
+            isAdmin = true;
+            localStorage.setItem('chillout_is_admin', '1');
+            updateAdminUI();
+            applyBanStateUI();
+            lastRenderedHash = "";
+            syncChatState(false, false);
+        } else if (pass !== null) {
+            alert("Неверный пароль");
+        }
+    }
+};
 
 $('#chat-user-profile').on('click', function() {
     var newName = prompt("Введите ваше имя для чата:", vkUser.name);
@@ -576,13 +1171,166 @@ $('#chat-user-profile').on('click', function() {
 });
 
 window.addEmoji = function(emoji) {
+    if (isCurrentUserBanned()) return;
     var inp = document.getElementById('chat-input');
     inp.value += emoji;
     inp.focus();
 };
 
+// --- ОТВЕТЫ ПОЛЬЗОВАТЕЛЯМ И КЛИКАБЕЛЬНЫЙ ПЕРЕХОД К ЦИТАТЕ ---
+window.setReplyTo = function(msgId, author, text) {
+    if (isCurrentUserBanned()) return;
+    var cleanSnippet = (text && text.trim()) ? text.trim() : "Вложение";
+    if (cleanSnippet.length > 80) cleanSnippet = cleanSnippet.substr(0, 80) + "...";
+    pendingReply = {
+        msgId: msgId,
+        author: author,
+        text: cleanSnippet
+    };
+    $('#chat-reply-preview-content').html(
+        '<i class="fas fa-reply" style="color:#e8df31;"></i>' +
+        '<div><b style="color:#e8df31;">Ответ ' + escapeHtml(author) + ':</b> ' + escapeHtml(cleanSnippet) + '</div>'
+    );
+    $('#chat-reply-preview').addClass('active');
+    $('#chat-input').focus();
+};
+
+window.clearReply = function() {
+    pendingReply = null;
+    $('#chat-reply-preview').removeClass('active');
+    $('#chat-reply-preview-content').empty();
+};
+
+window.jumpToQuotedMessage = function(targetMsgId) {
+    if (!targetMsgId) {
+        showChatNotice("Исходное сообщение недоступно");
+        return;
+    }
+    var targetEl = document.getElementById('msg_' + targetMsgId);
+    if (!targetEl) {
+        showChatNotice("Исходное сообщение уже ушло из истории чата");
+        return;
+    }
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    $(targetEl).addClass('highlighted');
+    setTimeout(function() {
+        $(targetEl).removeClass('highlighted');
+    }, 1600);
+};
+
+// --- ВЛОЖЕНИЯ В ЧАТ ---
+function setAttachment(att) {
+    if (isCurrentUserBanned()) return;
+    pendingAttachment = att;
+    var box = $('#chat-attach-preview');
+    var content = $('#chat-attach-preview-content');
+    if (att.type === 'live') {
+        content.html('<img class="chat-preview-thumb" src="' + att.cover + '"><div><b style="color:#e8df31;">Сейчас в эфире:</b> ' + escapeHtml(att.song) + '</div>');
+    } else if (att.type === 'vkmusic') {
+        content.html('<i class="fab fa-vk" style="font-size:20px; color:#e8df31;"></i><div><b style="color:#e8df31;">Музыка ВК:</b> ' + escapeHtml(att.title) + '</div>');
+    } else if (att.type === 'photo') {
+        content.html('<img class="chat-preview-thumb" src="' + att.dataUrl + '"><div><b style="color:#e8df31;">Фотография</b> готова к отправке</div>');
+    }
+    box.addClass('active');
+    $('#chat-input').focus();
+}
+
+window.clearAttachment = function() {
+    pendingAttachment = null;
+    $('#chat-attach-preview').removeClass('active');
+    $('#chat-attach-preview-content').empty();
+    $('#chat-photo-input').val('');
+};
+
+window.attachCurrentLiveTrack = function() {
+    var rawSong = $('[data-myinfo="song"]').first().text().trim();
+    if (!rawSong || rawSong === "Загрузка...") {
+        rawSong = currentLiveTrack.song;
+    }
+    var cover = $('#live-artist-img').attr('src') || defImg;
+    setAttachment({
+        type: 'live',
+        song: rawSong,
+        cover: cover,
+        url: 'https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(rawSong)
+    });
+};
+
+window.openVkMusicModal = function() {
+    if (isCurrentUserBanned()) return;
+    $('#vk-track-query').val('');
+    $('#vk-track-link').val('');
+    $('#vk-music-modal').addClass('active');
+    setTimeout(function() { $('#vk-track-query').focus(); }, 100);
+};
+
+window.closeVkMusicModal = function() {
+    $('#vk-music-modal').removeClass('active');
+};
+
+window.confirmVkMusicAttach = function() {
+    var q = $('#vk-track-query').val().trim();
+    var link = $('#vk-track-link').val().trim();
+    if (!q && !link) {
+        alert('Укажите название трека или вставьте ссылку из ВК');
+        return;
+    }
+    var title = q || 'Аудиозапись ВКонтакте';
+    var targetUrl = (link && /^https?:\/\//i.test(link)) ? link : ('https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(title));
+    setAttachment({
+        type: 'vkmusic',
+        title: title,
+        url: targetUrl
+    });
+    closeVkMusicModal();
+};
+
+window.triggerPhotoSelect = function() {
+    if (isCurrentUserBanned()) return;
+    document.getElementById('chat-photo-input').click();
+};
+
+document.getElementById('chat-photo-input').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+        var img = new Image();
+        img.onload = function() {
+            var maxSide = 480;
+            var w = img.width;
+            var h = img.height;
+            if (w > maxSide || h > maxSide) {
+                if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
+                else { w = Math.round(w * maxSide / h); h = maxSide; }
+            }
+            var canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            var compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+            setAttachment({
+                type: 'photo',
+                dataUrl: compressedDataUrl
+            });
+        };
+        img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+
+window.openPhotoModal = function(src) {
+    $('#photo-view-full').attr('src', src);
+    $('#photo-view-modal').addClass('active');
+};
+
 function escapeHtml(text) {
     return $('<div>').text(text).html();
+}
+
+function escapeAttr(text) {
+    return String(text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function formatTime(ts) {
@@ -595,9 +1343,70 @@ function scrollChatBottom() {
     if (area) area.scrollTop = area.scrollHeight;
 }
 
+// Нормализация формата хранилища { messages, online, bans }
+function normalizeStore(raw) {
+    var data = (raw && raw.record) ? raw.record : raw;
+    if (Array.isArray(data)) {
+        return { messages: data, online: {}, bans: [] };
+    }
+    if (data && typeof data === 'object') {
+        return {
+            messages: Array.isArray(data.messages) ? data.messages : [],
+            online: (data.online && typeof data.online === 'object') ? data.online : {},
+            bans: Array.isArray(data.bans) ? data.bans : []
+        };
+    }
+    return { messages: [], online: {}, bans: [] };
+}
+
+function updateOnlineCounter(onlineMap) {
+    var now = Date.now();
+    var count = 0;
+    if (onlineMap) {
+        Object.keys(onlineMap).forEach(function(k) {
+            if (now - onlineMap[k] < 35000) {
+                count++;
+            }
+        });
+    }
+    if (count < 1) count = 1;
+    $('#chat-online-count').text(count);
+}
+
+function renderAttachmentHtml(att) {
+    if (!att || !att.type) return '';
+    if (att.type === 'live') {
+        var safeUrl = escapeHtml(att.url || 'https://vk.com/audio');
+        var safeCover = escapeHtml(att.cover || defImg);
+        return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
+                    '<img class="chat-att-cover" src="' + safeCover + '" onerror="this.src=\'' + defImg + '\'">' +
+                    '<div class="chat-att-info">' +
+                        '<span class="chat-att-badge"><i class="fas fa-broadcast-tower"></i> Сейчас в эфире</span>' +
+                        '<div class="chat-att-title">' + escapeHtml(att.song || '') + '</div>' +
+                        '<div class="chat-att-sub">Найти трек в ВК →</div>' +
+                    '</div>' +
+               '</a>';
+    }
+    if (att.type === 'vkmusic') {
+        var vkUrl = escapeHtml(att.url || 'https://vk.com/audio');
+        return '<a href="' + vkUrl + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
+                    '<div class="chat-att-icon-box"><i class="fab fa-vk"></i></div>' +
+                    '<div class="chat-att-info">' +
+                        '<span class="chat-att-badge">Музыка ВКонтакте</span>' +
+                        '<div class="chat-att-title">' + escapeHtml(att.title || '') + '</div>' +
+                        '<div class="chat-att-sub">Открыть в ВК →</div>' +
+                    '</div>' +
+               '</a>';
+    }
+    if (att.type === 'photo' && att.dataUrl) {
+        return '<img class="chat-att-photo" src="' + att.dataUrl + '" onclick="openPhotoModal(this.src)" alt="Фото">';
+    }
+    return '';
+}
+
 function renderMessages(list, forceScroll) {
     if (!Array.isArray(list)) return;
-    var hash = JSON.stringify(list);
+    var hash = JSON.stringify(list) + '_' + (isAdmin ? '1' : '0');
     if (hash === lastRenderedHash && !forceScroll) return;
     lastRenderedHash = hash;
 
@@ -605,16 +1414,51 @@ function renderMessages(list, forceScroll) {
     var wasAtBottom = (area[0].scrollHeight - area[0].scrollTop - area[0].clientHeight) < 80;
     area.empty();
 
-    list.forEach(function(m) {
-        var isOwn = (m.uid && m.uid === vkUser.id && vkUser.id !== 0) || (m.author === vkUser.name && m.uid !== -1);
-        var html = '<div class="chat-msg ' + (isOwn ? 'own' : '') + '">' +
+    list.forEach(function(m, idx) {
+        var msgId = m.id || ('idx_' + idx + '_' + (m.time || 0));
+        var isOwn = (m.uid && m.uid === vkUser.id && vkUser.id !== 0) || (m.did && m.did === deviceId && m.uid !== -1) || (m.author === vkUser.name && m.uid !== -1);
+        
+        var quoteHtml = '';
+        if (m.reply && m.reply.author) {
+            var targetIdAttr = escapeAttr(m.reply.msgId || '');
+            quoteHtml = '<div class="chat-quote-box" data-jumpid="' + targetIdAttr + '" title="Нажмите, чтобы перейти к сообщению">' +
+                            '<span class="chat-quote-author">' +
+                                '<span><i class="fas fa-reply"></i> ' + escapeHtml(m.reply.author) + '</span>' +
+                                '<span class="chat-quote-jump-hint">перейти ↑</span>' +
+                            '</span>' +
+                            '<span class="chat-quote-text">' + escapeHtml(m.reply.text || '') + '</span>' +
+                        '</div>';
+        }
+
+        var textHtml = m.text ? '<div>' + escapeHtml(m.text) + '</div>' : '';
+        var attHtml = renderAttachmentHtml(m.att);
+        var snippetForReply = m.text || (m.att && m.att.song) || (m.att && m.att.title) || (m.att && m.att.type === 'photo' ? 'Фотография' : '');
+
+        var adminBtnsHtml = '';
+        if (isAdmin && m.uid !== -1) {
+            adminBtnsHtml =
+                '<button type="button" class="chat-ban-btn" data-author="' + escapeAttr(m.author || 'Слушатель') + '" data-uid="' + (m.uid || 0) + '" data-did="' + escapeAttr(m.did || '') + '" title="Забанить пользователя"><i class="fas fa-ban"></i></button>' +
+                '<button type="button" class="chat-mod-btn" data-msgid="' + escapeAttr(msgId) + '" data-idx="' + idx + '" title="Удалить сообщение"><i class="fas fa-trash"></i></button>';
+        } else if (isAdmin) {
+            adminBtnsHtml = '<button type="button" class="chat-mod-btn" data-msgid="' + escapeAttr(msgId) + '" data-idx="' + idx + '" title="Удалить сообщение"><i class="fas fa-trash"></i></button>';
+        }
+
+        var html = '<div class="chat-msg ' + (isOwn ? 'own' : '') + '" id="msg_' + escapeAttr(msgId) + '">' +
                         '<img class="chat-msg-avatar" src="' + (m.avatar || defImg) + '" onerror="this.src=\'' + defImg + '\'">' +
                         '<div class="chat-msg-bubble">' +
                             '<div class="chat-msg-header">' +
-                                '<span class="chat-msg-author">' + escapeHtml(m.author || "Слушатель") + '</span>' +
-                                '<span class="chat-msg-time">' + formatTime(m.time || Date.now()) + '</span>' +
+                                '<div class="chat-msg-meta">' +
+                                    '<span class="chat-msg-author">' + escapeHtml(m.author || "Слушатель") + '</span>' +
+                                    '<span class="chat-msg-time">' + formatTime(m.time || Date.now()) + '</span>' +
+                                '</div>' +
+                                '<div class="chat-msg-actions">' +
+                                    '<button type="button" class="chat-reply-btn" data-msgid="' + escapeAttr(msgId) + '" data-author="' + escapeAttr(m.author || 'Слушатель') + '" data-snippet="' + escapeAttr(snippetForReply) + '" title="Ответить"><i class="fas fa-reply"></i></button>' +
+                                    adminBtnsHtml +
+                                '</div>' +
                             '</div>' +
-                            '<div>' + escapeHtml(m.text || "") + '</div>' +
+                            quoteHtml +
+                            textHtml +
+                            attHtml +
                         '</div>' +
                    '</div>';
         area.append(html);
@@ -625,7 +1469,51 @@ function renderMessages(list, forceScroll) {
     }
 }
 
-function loadChatMessages(forceScroll) {
+// Делегирование кликов в списке сообщений
+$('#chat-messages').on('click', '.chat-reply-btn', function() {
+    var msgId = $(this).data('msgid');
+    var author = $(this).data('author');
+    var snippet = $(this).data('snippet');
+    setReplyTo(msgId, author, snippet);
+});
+
+$('#chat-messages').on('click', '.chat-quote-box', function() {
+    var jumpId = $(this).data('jumpid');
+    jumpToQuotedMessage(jumpId);
+});
+
+$('#chat-messages').on('click', '.chat-mod-btn', function() {
+    if (!isAdmin) return;
+    var targetId = $(this).data('msgid');
+    var targetIdx = parseInt($(this).data('idx'), 10);
+    deleteSingleMessage(targetId, targetIdx);
+});
+
+$('#chat-messages').on('click', '.chat-ban-btn', function() {
+    if (!isAdmin) return;
+    var author = $(this).data('author');
+    var uid = parseInt($(this).data('uid'), 10) || 0;
+    var did = $(this).data('did') || '';
+    banUserFromChat(author, uid, did);
+});
+
+function cleanStaleOnline(onlineMap) {
+    var now = Date.now();
+    var fresh = {};
+    Object.keys(onlineMap || {}).forEach(function(k) {
+        if (now - onlineMap[k] < 35000) {
+            fresh[k] = onlineMap[k];
+        }
+    });
+    fresh[deviceId] = now;
+    return fresh;
+}
+
+// Синхронизация сообщений, онлайна и бан-листа
+function syncChatState(forceScroll, sendHeartbeat) {
+    if (isSyncing) return;
+    isSyncing = true;
+
     fetch(JSONBIN_URL + '/latest', {
         method: 'GET',
         headers: {
@@ -634,39 +1522,52 @@ function loadChatMessages(forceScroll) {
         }
     })
     .then(function(r) { return r.json(); })
-    .then(function(data) {
-        var list = Array.isArray(data) ? data : (data && Array.isArray(data.record) ? data.record : null);
-        if (list) {
-            renderMessages(list, forceScroll);
+    .then(function(raw) {
+        var store = normalizeStore(raw);
+        currentBanList = store.bans;
+        updateAdminUI();
+        applyBanStateUI();
+
+        var now = Date.now();
+        var needHeartbeat = sendHeartbeat || (now - lastHeartbeatSent > 15000);
+
+        if (needHeartbeat && activeTab === 'chat') {
+            store.online = cleanStaleOnline(store.online);
+            updateOnlineCounter(store.online);
+            renderMessages(store.messages, forceScroll);
+            lastHeartbeatSent = now;
+
+            return fetch(JSONBIN_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_KEY
+                },
+                body: JSON.stringify(store)
+            });
+        } else {
+            updateOnlineCounter(store.online);
+            renderMessages(store.messages, forceScroll);
         }
     })
     .catch(function(err) {
-        console.warn("Ошибка загрузки чата:", err);
+        console.warn("Ошибка синхронизации чата:", err);
+    })
+    .finally(function() {
+        isSyncing = false;
     });
 }
 
-$('#chat-form').on('submit', function(e) {
-    e.preventDefault();
-    if (isSendingMsg) return;
+// Бан пользователя администратором (с удалением его последних сообщений)
+function banUserFromChat(author, uid, did) {
+    if (!uid && !did) {
+        alert("У этого старого сообщения нет идентификатора пользователя.");
+        return;
+    }
+    if (!confirm('Забанить пользователя «' + author + '» и удалить его сообщения?')) return;
+    if (isSyncing) return;
+    isSyncing = true;
 
-    var inp = $('#chat-input');
-    var sendBtn = $('#chat-send-btn');
-    var text = inp.val().trim();
-    if (!text) return;
-
-    isSendingMsg = true;
-    sendBtn.prop('disabled', true);
-    inp.val('');
-
-    var msgObj = {
-        author: vkUser.name,
-        avatar: vkUser.avatar,
-        text: text,
-        time: Date.now(),
-        uid: vkUser.id
-    };
-
-    // Сначала получаем свежий список из JSONBin, чтобы не затереть чужие сообщения
     fetch(JSONBIN_URL + '/latest', {
         method: 'GET',
         headers: {
@@ -675,39 +1576,323 @@ $('#chat-form').on('submit', function(e) {
         }
     })
     .then(function(r) { return r.json(); })
-    .then(function(data) {
-        var currentList = Array.isArray(data) ? data : (data && Array.isArray(data.record) ? data.record : []);
-        currentList.push(msgObj);
-        if (currentList.length > 60) {
-            currentList = currentList.slice(-60);
+    .then(function(raw) {
+        var store = normalizeStore(raw);
+        var alreadyBanned = store.bans.some(function(b) {
+            return (uid && b.uid === uid) || (did && b.did === did);
+        });
+        if (!alreadyBanned) {
+            store.bans.push({
+                author: author,
+                uid: uid,
+                did: did,
+                time: Date.now()
+            });
         }
+        store.messages = store.messages.filter(function(m) {
+            if (uid && uid !== 0 && m.uid === uid) return false;
+            if (did && m.did === did) return false;
+            return true;
+        });
+        store.online = cleanStaleOnline(store.online);
+
         return fetch(JSONBIN_URL, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Master-Key': JSONBIN_KEY
             },
-            body: JSON.stringify(currentList)
-        }).then(function() { return currentList; });
+            body: JSON.stringify(store)
+        }).then(function() { return store; });
     })
-    .then(function(updatedList) {
-        renderMessages(updatedList, true);
-    })
-    .catch(function(err) {
-        console.error("Ошибка отправки:", err);
+    .then(function(updatedStore) {
+        currentBanList = updatedStore.bans;
+        updateAdminUI();
+        renderMessages(updatedStore.messages, false);
+        showChatNotice('Пользователь ' + author + ' заблокирован');
     })
     .finally(function() {
-        isSendingMsg = false;
-        sendBtn.prop('disabled', false);
-        inp.focus();
+        isSyncing = false;
+    });
+}
+
+// Модальное окно управления бан-листом
+window.openBanListModal = function() {
+    if (!isAdmin) return;
+    renderBanListModal();
+    $('#banlist-modal').addClass('active');
+};
+
+window.closeBanListModal = function() {
+    $('#banlist-modal').removeClass('active');
+};
+
+function renderBanListModal() {
+    var box = $('#banlist-container');
+    box.empty();
+    if (!currentBanList || currentBanList.length === 0) {
+        box.html('<p style="color:#888; font-size:13px; text-align:center; margin:15px 0;">Список заблокированных пуст</p>');
+        return;
+    }
+    currentBanList.forEach(function(b, idx) {
+        var idInfo = b.uid ? ('VK ID: ' + b.uid) : 'Гость';
+        var item = $('<div class="ban-list-item"></div>');
+        item.append('<div><b>' + escapeHtml(b.author || 'Пользователь') + '</b><div style="font-size:11px; color:#888;">' + idInfo + '</div></div>');
+        var unbanBtn = $('<button type="button" class="btn-unban">Разбанить</button>');
+        unbanBtn.on('click', function() { unbanUserByIndex(idx); });
+        item.append(unbanBtn);
+        box.append(item);
+    });
+}
+
+function unbanUserByIndex(banIdx) {
+    if (!isAdmin || isSyncing) return;
+    isSyncing = true;
+
+    fetch(JSONBIN_URL + '/latest', {
+        method: 'GET',
+        headers: {
+            'X-Master-Key': JSONBIN_KEY,
+            'X-Bin-Meta': 'false'
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(raw) {
+        var store = normalizeStore(raw);
+        store.bans.splice(banIdx, 1);
+        store.online = cleanStaleOnline(store.online);
+        return fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_KEY
+            },
+            body: JSON.stringify(store)
+        }).then(function() { return store; });
+    })
+    .then(function(updatedStore) {
+        currentBanList = updatedStore.bans;
+        updateAdminUI();
+        renderBanListModal();
+    })
+    .finally(function() {
+        isSyncing = false;
+    });
+}
+
+// Удаление одного сообщения администратором
+function deleteSingleMessage(targetId, targetIdx) {
+    if (isSyncing) return;
+    isSyncing = true;
+
+    fetch(JSONBIN_URL + '/latest', {
+        method: 'GET',
+        headers: {
+            'X-Master-Key': JSONBIN_KEY,
+            'X-Bin-Meta': 'false'
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(raw) {
+        var store = normalizeStore(raw);
+        var filtered = store.messages.filter(function(m, idx) {
+            if (m.id && m.id === targetId) return false;
+            if (!m.id && idx === targetIdx) return false;
+            return true;
+        });
+        store.messages = filtered;
+        store.online = cleanStaleOnline(store.online);
+
+        return fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_KEY
+            },
+            body: JSON.stringify(store)
+        }).then(function() { return store; });
+    })
+    .then(function(updatedStore) {
+        renderMessages(updatedStore.messages, false);
+    })
+    .catch(function(err) {
+        console.error("Ошибка удаления сообщения:", err);
+    })
+    .finally(function() {
+        isSyncing = false;
+    });
+}
+
+// Полная очистка чата администратором
+window.adminClearAllMessages = function() {
+    if (!isAdmin) return;
+    if (!confirm("Удалить всю переписку в чате?")) return;
+    if (isSyncing) return;
+    isSyncing = true;
+
+    var freshStore = {
+        messages: [{
+            id: 'sys_' + Date.now(),
+            author: "ChilloutFM",
+            avatar: defImg,
+            text: "Чат очищен администратором.",
+            time: Date.now(),
+            uid: -1
+        }],
+        online: cleanStaleOnline({}),
+        bans: currentBanList
+    };
+
+    fetch(JSONBIN_URL, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_KEY
+        },
+        body: JSON.stringify(freshStore)
+    })
+    .then(function() {
+        renderMessages(freshStore.messages, true);
+        updateOnlineCounter(freshStore.online);
+    })
+    .finally(function() {
+        isSyncing = false;
+    });
+};
+
+// Запуск таймера антифлуда на кнопке отправки
+function startAntifloodCooldown() {
+    if (isAdmin) return;
+    var sendBtn = $('#chat-send-btn');
+    var remaining = ANTIFLOOD_SECONDS;
+    sendBtn.prop('disabled', true).text(remaining + 'с');
+
+    if (floodTimerInterval) clearInterval(floodTimerInterval);
+    floodTimerInterval = setInterval(function() {
+        remaining--;
+        if (remaining <= 0) {
+            clearInterval(floodTimerInterval);
+            floodTimerInterval = null;
+            sendBtn.html('<i class="fas fa-paper-plane"></i>');
+            if (!isCurrentUserBanned() && !isSyncing) {
+                sendBtn.prop('disabled', false);
+            }
+        } else {
+            sendBtn.text(remaining + 'с');
+        }
+    }, 1000);
+}
+
+// Отправка нового сообщения с проверкой антифлуда и бан-листа
+$('#chat-form').on('submit', function(e) {
+    e.preventDefault();
+    if (isSyncing) return;
+
+    if (isCurrentUserBanned()) {
+        showChatNotice("Вы заблокированы в чате");
+        return;
+    }
+
+    var inp = $('#chat-input');
+    var sendBtn = $('#chat-send-btn');
+    var text = inp.val().trim();
+    if (!text && !pendingAttachment) return;
+
+    // Проверка антифлуда
+    var now = Date.now();
+    if (!isAdmin) {
+        var diffSec = Math.ceil((ANTIFLOOD_SECONDS * 1000 - (now - lastMsgSentTime)) / 1000);
+        if (diffSec > 0) {
+            showChatNotice("Не так быстро! Подождите " + diffSec + " сек.");
+            return;
+        }
+        if (text && text === lastMsgTextSent && !pendingAttachment && (now - lastMsgSentTime < 20000)) {
+            showChatNotice("Не отправляйте одинаковые сообщения подряд");
+            return;
+        }
+    }
+
+    isSyncing = true;
+    sendBtn.prop('disabled', true);
+
+    var msgObj = {
+        id: 'm_' + now + '_' + Math.random().toString(36).substr(2, 5),
+        author: vkUser.name,
+        avatar: vkUser.avatar,
+        text: text,
+        att: pendingAttachment,
+        reply: pendingReply,
+        time: now,
+        uid: vkUser.id,
+        did: deviceId
+    };
+
+    inp.val('');
+    clearAttachment();
+    clearReply();
+
+    fetch(JSONBIN_URL + '/latest', {
+        method: 'GET',
+        headers: {
+            'X-Master-Key': JSONBIN_KEY,
+            'X-Bin-Meta': 'false'
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(raw) {
+        var store = normalizeStore(raw);
+        currentBanList = store.bans;
+        if (isCurrentUserBanned()) {
+            applyBanStateUI();
+            throw new Error("USER_BANNED");
+        }
+
+        store.messages.push(msgObj);
+        if (store.messages.length > 40) {
+            store.messages = store.messages.slice(-40);
+        }
+        store.online = cleanStaleOnline(store.online);
+        lastHeartbeatSent = Date.now();
+
+        return fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_KEY
+            },
+            body: JSON.stringify(store)
+        }).then(function() { return store; });
+    })
+    .then(function(updatedStore) {
+        lastMsgSentTime = Date.now();
+        lastMsgTextSent = text;
+        updateOnlineCounter(updatedStore.online);
+        renderMessages(updatedStore.messages, true);
+        startAntifloodCooldown();
+    })
+    .catch(function(err) {
+        if (err && err.message === "USER_BANNED") {
+            showChatNotice("Вы заблокированы в чате");
+        } else {
+            console.error("Ошибка отправки:", err);
+        }
+    })
+    .finally(function() {
+        isSyncing = false;
+        if (!floodTimerInterval && !isCurrentUserBanned()) {
+            sendBtn.prop('disabled', false).html('<i class="fas fa-paper-plane"></i>');
+        }
+        if (!isCurrentUserBanned()) {
+            inp.focus();
+        }
     });
 });
 
-// Первичная загрузка и автообновление каждые 4 секунды при открытой вкладке чата
-loadChatMessages(true);
+// Первичная загрузка и периодический опрос
+syncChatState(true, false);
 setInterval(function() {
-    if (activeTab === 'chat' && !isSendingMsg) {
-        loadChatMessages(false);
+    if (activeTab === 'chat' && !isSyncing) {
+        syncChatState(false, false);
     }
 }, 4000);
 
@@ -773,6 +1958,7 @@ function doImageSearch(query, callback) {
             var artUrl = data.results[0].artworkUrl100.replace('100x100', '600x600');
             $('#live-artist-img').attr('src', artUrl);
             $('#artist-bg-layer').css('background-image', 'url(' + artUrl + ')');
+            currentLiveTrack.cover = artUrl;
             callback(true);
         } else { 
             callback(false); 
@@ -789,11 +1975,13 @@ function fetchImage(artistName) {
                     if (!cleanSuccess) {
                         $('#live-artist-img').attr('src', defImg);
                         $('#artist-bg-layer').css('background-image', 'url(' + defImg + ')');
+                        currentLiveTrack.cover = defImg;
                     }
                 });
             } else { 
                 $('#live-artist-img').attr('src', defImg);
                 $('#artist-bg-layer').css('background-image', 'url(' + defImg + ')');
+                currentLiveTrack.cover = defImg;
             }
         }
     });
@@ -850,6 +2038,11 @@ var my_init_updateinfo = function(info) {
         songObj.songtitle = (pos > 0) ? songObj.song.substr(pos + 3) : "";
     }
     expand_song(info);
+    if (info.song) {
+        currentLiveTrack.song = info.song;
+        currentLiveTrack.artist = info.artist;
+        currentLiveTrack.title = info.songtitle;
+    }
     if (info.artist && info.artist !== lastArtist) {
         lastArtist = info.artist;
         updateSearchButtons(info.artist);
