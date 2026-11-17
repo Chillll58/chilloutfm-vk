@@ -7,43 +7,45 @@
     <!-- Предзагрузка критических ресурсов -->
     <link rel="preconnect" href="https://listen8.myradio24.com">
     <link rel="preconnect" href="https://myradio24.com">
+    <link rel="preconnect" href="https://api.jsonbin.io">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://unpkg.com">
 
     <!-- Базовые meta-теги -->
-    <meta name="description" content="ChilloutFM - радиостанция для релаксации. Слушайте лучшую музыку в стиле Chillout и Lounge онлайн 24/7. Успокаивающие мелодии для работы, отдыха и сна.">
+    <meta name="description" content="ChilloutFM - радиостанция для релаксации. Слушайте лучшую музыку в стиле Chillout и Lounge онлайн 24/7.">
     <meta name="keywords" content="радио, chillout, lounge, релакс, музыка, онлайн, прослушивание, радиопоток, ChilloutFM">
     <meta name="author" content="ChilloutFM">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph (только HTTPS) -->
+    <!-- Open Graph -->
     <meta property="og:title" content="ChilloutFM - Радио для релаксации">
-    <meta property="og:description" content="Слушайте лучшую музыку в стиле Chillout и Lounge онлайн. Успокаивающие мелодии для работы, отдыха и сна.">
+    <meta property="og:description" content="Слушайте лучшую музыку в стиле Chillout и Lounge онлайн.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vk.com/chillou_fm">
     <meta property="og:image" content="https://imgs.su/upload/671/2340987012.png">
     <meta property="og:site_name" content="ChilloutFM">
     <meta property="og:locale" content="ru_RU">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ChilloutFM - Радио для релаксации">
-    <meta name="twitter:description" content="Слушайте лучшую музыку в стиле Chillout и Lounge онлайн.">
-    <meta name="twitter:image" content="https://imgs.su/upload/671/2340987012.png">
-
-    <!-- Favicon (по HTTPS) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://imgs.su/upload/671/2340987012.png">
     <link rel="apple-touch-icon" href="https://imgs.su/upload/671/2340987012.png">
 
     <title>ChilloutFM App</title>
 
-    <!-- VK Bridge (обязательно для VK Mini Apps) -->
+    <!-- VK Bridge -->
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <script>
+        var vkUser = { name: "Гость", avatar: "https://imgs.su/upload/671/2340987012.png", id: 0 };
         if (typeof vkBridge !== 'undefined') {
-            vkBridge.send('VKWebAppInit').catch(function(e) {
-                console.warn('VKWebAppInit error:', e);
-            });
+            vkBridge.send('VKWebAppInit').catch(function(e) { console.warn(e); });
+            vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
+                if (data && data.first_name) {
+                    vkUser.name = data.first_name + (data.last_name ? ' ' + data.last_name : '');
+                    vkUser.avatar = data.photo_100 || vkUser.avatar;
+                    vkUser.id = data.id || 0;
+                    if (typeof updateChatUserUI === 'function') updateChatUserUI();
+                }
+            }).catch(function() {});
         }
     </script>
 
@@ -112,12 +114,13 @@
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* ==================== ВКЛАДКИ ==================== */
-        .tabs { display: flex; justify-content: center; background: #1a1a1a; padding: 10px 0; border-bottom: 1px solid #333; position: sticky; top: 90px; z-index: 90; }
+        .tabs { display: flex; justify-content: center; background: #1a1a1a; padding: 10px 0; border-bottom: 1px solid #333; position: sticky; top: 90px; z-index: 90; height: 46px; box-sizing: border-box; }
         @media (max-width: 700px) { .tabs { top: 80px; } }
-        .tab { padding: 8px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; user-select: none; }
+        .tab { padding: 4px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; user-select: none; }
         .tab.active { color: #e8df31; border-bottom: 2px solid #e8df31; }
         .content { display: none; padding-bottom: 40px; }
         .content.active { display: block; }
+        #chat.content.active { padding-bottom: 0; }
 
         /* ==================== ГЛАВНАЯ ==================== */
         .immersive-artist-section { position: relative; padding: 60px 0; overflow: hidden; background: #111; color: #fff; min-height: 600px; display: flex; align-items: center; }
@@ -166,6 +169,188 @@
         .info { flex: 1; overflow: hidden; }
         .info b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; margin-bottom: 3px; }
         .info span { font-size: 12px; color: #888; }
+
+        /* ==================== ПОЛНОЭКРАННЫЙ ЧАТ ==================== */
+        .fullpage-chat {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 136px);
+            width: 100%;
+            background: #121212;
+            position: relative;
+        }
+        @media (max-width: 700px) {
+            .fullpage-chat { height: calc(100vh - 126px); }
+        }
+        .chat-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: #181818;
+            border-bottom: 1px solid #282828;
+            flex-shrink: 0;
+        }
+        .chat-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chat-online-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #4caf50;
+            box-shadow: 0 0 8px #4caf50;
+        }
+        .chat-room-title {
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        .chat-user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #222;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #ccc;
+            cursor: pointer;
+            border: 1px solid #333;
+            transition: 0.2s;
+        }
+        .chat-user-badge:hover { border-color: #e8df31; color: #fff; }
+        .chat-user-badge img {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .chat-messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            scrollbar-width: thin;
+            scrollbar-color: #333 #121212;
+        }
+        .chat-messages-area::-webkit-scrollbar { width: 6px; }
+        .chat-messages-area::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        .chat-msg {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            max-width: 78%;
+            animation: msgFadeIn 0.2s ease;
+        }
+        @keyframes msgFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-msg.own {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .chat-msg-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid #333;
+        }
+        .chat-msg-bubble {
+            background: #1e1e1e;
+            border: 1px solid #2b2b2b;
+            padding: 10px 14px;
+            border-radius: 16px;
+            border-top-left-radius: 4px;
+            color: #eee;
+            font-size: 14px;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .chat-msg.own .chat-msg-bubble {
+            background: #272515;
+            border-color: rgba(232, 223, 49, 0.35);
+            border-top-left-radius: 16px;
+            border-top-right-radius: 4px;
+        }
+        .chat-msg-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .chat-msg-author {
+            font-weight: 700;
+            font-size: 12px;
+            color: #e8df31;
+        }
+        .chat-msg-time {
+            font-size: 10px;
+            color: #777;
+        }
+        .chat-emoji-bar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 24px 0 24px;
+            background: #161616;
+            border-top: 1px solid #262626;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+        .chat-emoji-btn {
+            background: #222;
+            border: 1px solid #303030;
+            border-radius: 14px;
+            padding: 3px 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.15s;
+            user-select: none;
+        }
+        .chat-emoji-btn:hover { background: #333; transform: scale(1.08); }
+        .chat-input-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px 16px 24px;
+            background: #161616;
+            flex-shrink: 0;
+        }
+        .chat-input-field {
+            flex: 1;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 24px;
+            padding: 11px 18px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .chat-input-field:focus { border-color: #e8df31; background: #262626; }
+        .chat-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e8df31;
+            color: #000;
+            border: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .chat-send-btn:hover { transform: scale(1.06); background: #f2e93d; }
+        .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* ==================== КОНТАКТЫ ==================== */
         .contacts-wrapper { background: url('https://images.unsplash.com/photo-1492560704071-7826278858ab?auto=format&fit=crop&w=1000&q=80') center center no-repeat; background-size: cover; position: relative; width: 100%; max-width: 750px; height: auto; min-height: calc(100vh - 140px); margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 40px 20px 20px 20px; color: #fff; text-align: center; }
@@ -279,10 +464,42 @@
     </div>
 </div>
 
-<!-- 3. ЧАТ -->
+<!-- 3. ЧАТ НА ВСЮ СТРАНИЦУ -->
 <div id="chat" class="content">
-    <div style="padding: 20px; max-width: 800px; margin: 0 auto;">
-        <div id="chatovod232163"></div>
+    <div class="fullpage-chat">
+        <div class="chat-topbar">
+            <div class="chat-topbar-left">
+                <span class="chat-online-dot"></span>
+                <span class="chat-room-title">Чат эфира ChilloutFM</span>
+            </div>
+            <div class="chat-user-badge" id="chat-user-profile" title="Нажмите, чтобы изменить имя">
+                <img id="chat-my-avatar" src="https://imgs.su/upload/671/2340987012.png" alt="Avatar">
+                <span id="chat-my-name">Гость</span>
+                <i class="fas fa-pen" style="font-size: 10px; color: #888;"></i>
+            </div>
+        </div>
+
+        <div class="chat-messages-area" id="chat-messages">
+            <p style="text-align:center; color:#777; margin-top: 20px;">Загрузка сообщений...</p>
+        </div>
+
+        <div class="chat-emoji-bar">
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('👋')">👋</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('🔥')">🔥</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('🎧')">🎧</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('❤️')">❤️</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('✨')">✨</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('☕')">☕</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('🌙')">🌙</button>
+            <button type="button" class="chat-emoji-btn" onclick="addEmoji('👍')">👍</button>
+        </div>
+
+        <form class="chat-input-bar" id="chat-form">
+            <input type="text" class="chat-input-field" id="chat-input" placeholder="Написать в эфирный чат..." maxlength="300" autocomplete="off">
+            <button type="submit" class="chat-send-btn" id="chat-send-btn" title="Отправить">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
     </div>
 </div>
 
@@ -315,27 +532,184 @@ var playBtn = document.getElementById('play-btn');
 var volSlider = document.getElementById('vol-slider');
 var isPlay = false;
 var lastArtist = ""; 
-var chatLoaded = false;
+var activeTab = "live";
 
 audio.volume = volSlider.value / 100;
 
 // --- ВКЛАДКИ ---
 window.sw = function(id, el) {
+    activeTab = id;
     $('.content').removeClass('active');
     $('#' + id).addClass('active');
     $('.tab').removeClass('active');
     $(el).addClass('active');
-
-    if (id === 'chat' && !chatLoaded) {
-        chatLoaded = true;
-        var po = document.createElement('script');
-        po.type = 'text/javascript';
-        po.charset = "UTF-8";
-        po.async = true;
-        po.src = 'https://chilloutfm.chatovod.ru/widget.js?height=450&divId=chatovod232163';
-        document.body.appendChild(po);
+    if (id === 'chat') {
+        loadChatMessages(true);
     }
 };
+
+// --- НАСТРОЙКИ JSONBIN ДЛЯ ОБЩЕГО ЧАТА ---
+var JSONBIN_ID = "6afc41feffd5d16053c8448b";
+var JSONBIN_KEY = "$2a$10$BU0xNWjHOC.I.1WfQ2bd2uiijAnAlfOQU9EAlmIh2UbXBHJ7lJpTW";
+var JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_ID;
+var lastRenderedHash = "";
+var isSendingMsg = false;
+
+var savedName = localStorage.getItem('chillout_chat_name');
+if (savedName && vkUser.name === "Гость") {
+    vkUser.name = savedName;
+}
+
+function updateChatUserUI() {
+    $('#chat-my-name').text(vkUser.name);
+    $('#chat-my-avatar').attr('src', vkUser.avatar);
+}
+updateChatUserUI();
+
+$('#chat-user-profile').on('click', function() {
+    var newName = prompt("Введите ваше имя для чата:", vkUser.name);
+    if (newName && newName.trim().length > 0) {
+        vkUser.name = newName.trim().substring(0, 25);
+        localStorage.setItem('chillout_chat_name', vkUser.name);
+        updateChatUserUI();
+    }
+});
+
+window.addEmoji = function(emoji) {
+    var inp = document.getElementById('chat-input');
+    inp.value += emoji;
+    inp.focus();
+};
+
+function escapeHtml(text) {
+    return $('<div>').text(text).html();
+}
+
+function formatTime(ts) {
+    var d = new Date(ts);
+    return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+}
+
+function scrollChatBottom() {
+    var area = document.getElementById('chat-messages');
+    if (area) area.scrollTop = area.scrollHeight;
+}
+
+function renderMessages(list, forceScroll) {
+    if (!Array.isArray(list)) return;
+    var hash = JSON.stringify(list);
+    if (hash === lastRenderedHash && !forceScroll) return;
+    lastRenderedHash = hash;
+
+    var area = $('#chat-messages');
+    var wasAtBottom = (area[0].scrollHeight - area[0].scrollTop - area[0].clientHeight) < 80;
+    area.empty();
+
+    list.forEach(function(m) {
+        var isOwn = (m.uid && m.uid === vkUser.id && vkUser.id !== 0) || (m.author === vkUser.name && m.uid !== -1);
+        var html = '<div class="chat-msg ' + (isOwn ? 'own' : '') + '">' +
+                        '<img class="chat-msg-avatar" src="' + (m.avatar || defImg) + '" onerror="this.src=\'' + defImg + '\'">' +
+                        '<div class="chat-msg-bubble">' +
+                            '<div class="chat-msg-header">' +
+                                '<span class="chat-msg-author">' + escapeHtml(m.author || "Слушатель") + '</span>' +
+                                '<span class="chat-msg-time">' + formatTime(m.time || Date.now()) + '</span>' +
+                            '</div>' +
+                            '<div>' + escapeHtml(m.text || "") + '</div>' +
+                        '</div>' +
+                   '</div>';
+        area.append(html);
+    });
+
+    if (forceScroll || wasAtBottom) {
+        scrollChatBottom();
+    }
+}
+
+function loadChatMessages(forceScroll) {
+    fetch(JSONBIN_URL + '/latest', {
+        method: 'GET',
+        headers: {
+            'X-Master-Key': JSONBIN_KEY,
+            'X-Bin-Meta': 'false'
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        var list = Array.isArray(data) ? data : (data && Array.isArray(data.record) ? data.record : null);
+        if (list) {
+            renderMessages(list, forceScroll);
+        }
+    })
+    .catch(function(err) {
+        console.warn("Ошибка загрузки чата:", err);
+    });
+}
+
+$('#chat-form').on('submit', function(e) {
+    e.preventDefault();
+    if (isSendingMsg) return;
+
+    var inp = $('#chat-input');
+    var sendBtn = $('#chat-send-btn');
+    var text = inp.val().trim();
+    if (!text) return;
+
+    isSendingMsg = true;
+    sendBtn.prop('disabled', true);
+    inp.val('');
+
+    var msgObj = {
+        author: vkUser.name,
+        avatar: vkUser.avatar,
+        text: text,
+        time: Date.now(),
+        uid: vkUser.id
+    };
+
+    // Сначала получаем свежий список из JSONBin, чтобы не затереть чужие сообщения
+    fetch(JSONBIN_URL + '/latest', {
+        method: 'GET',
+        headers: {
+            'X-Master-Key': JSONBIN_KEY,
+            'X-Bin-Meta': 'false'
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        var currentList = Array.isArray(data) ? data : (data && Array.isArray(data.record) ? data.record : []);
+        currentList.push(msgObj);
+        if (currentList.length > 60) {
+            currentList = currentList.slice(-60);
+        }
+        return fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_KEY
+            },
+            body: JSON.stringify(currentList)
+        }).then(function() { return currentList; });
+    })
+    .then(function(updatedList) {
+        renderMessages(updatedList, true);
+    })
+    .catch(function(err) {
+        console.error("Ошибка отправки:", err);
+    })
+    .finally(function() {
+        isSendingMsg = false;
+        sendBtn.prop('disabled', false);
+        inp.focus();
+    });
+});
+
+// Первичная загрузка и автообновление каждые 4 секунды при открытой вкладке чата
+loadChatMessages(true);
+setInterval(function() {
+    if (activeTab === 'chat' && !isSendingMsg) {
+        loadChatMessages(false);
+    }
+}, 4000);
 
 // --- УПРАВЛЕНИЕ ПЛЕЕРОМ ---
 playBtn.addEventListener('click', function() {
