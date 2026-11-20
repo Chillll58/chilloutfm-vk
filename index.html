@@ -7,7 +7,7 @@
     <!-- Предзагрузка критических ресурсов -->
     <link rel="preconnect" href="https://listen8.myradio24.com">
     <link rel="preconnect" href="https://myradio24.com">
-    <link rel="preconnect" href="https://api.jsonbin.io">
+    <link rel="preconnect" href="https://chilloutfm-chat.viena76.workers.dev">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://unpkg.com">
 
@@ -1096,10 +1096,8 @@ window.sw = function(id, el) {
     }
 };
 
-// --- НАСТРОЙКИ JSONBIN ДЛЯ ОБЩЕГО ЧАТА ---
-var JSONBIN_ID = "6afc41feffd5d16053c8448b";
-var JSONBIN_KEY = "$2a$10$BU0xNWjHOC.I.1WfQ2bd2uiijAnAlfOQU9EAlmIh2UbXBHJ7lJpTW";
-var JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_ID;
+// --- НАСТРОЙКИ CLOUDFLARE WORKER ДЛЯ ОБЩЕГО ЧАТА ---
+var CHAT_API_URL = "https://chilloutfm-chat.viena76.workers.dev";
 var lastRenderedHash = "";
 var isSyncing = false;
 var lastHeartbeatSent = 0;
@@ -1126,7 +1124,6 @@ function showChatNotice(msg) {
 function updateChatUserUI() {
     $('#chat-my-name').text(vkUser.name);
     $('#chat-my-avatar').attr('src', vkUser.avatar);
-    // Прямая ссылка на личные аудиозаписи текущего пользователя ВК
     if (vkUser.id && vkUser.id !== 0) {
         $('#vk-open-my-audios').attr('href', 'https://vk.com/audios' + vkUser.id);
     } else {
@@ -1330,7 +1327,6 @@ window.confirmVkMusicAttach = function() {
     var confirmBtn = $('#vk-attach-confirm-btn');
     confirmBtn.prop('disabled', true).text('Поиск обложки...');
 
-    // Подтягиваем обложку по названию трека, если пользователь ввёл название
     if (q && !isPlaylist) {
         fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(q) + '&media=music&limit=1')
             .then(function(r) { return r.json(); })
@@ -1436,16 +1432,42 @@ function scrollChatBottom() {
 function normalizeStore(raw) {
     var data = (raw && raw.record) ? raw.record : raw;
     if (Array.isArray(data)) {
-        return { messages: data, online: {}, bans: [] };
+        return { messages: data, online: {}, bans: [], support: [], echo: [], bottles: [] };
     }
-    if (data && typeof data === 'object') {
+    if (data && typeof data === "object") {
         return {
             messages: Array.isArray(data.messages) ? data.messages : [],
-            online: (data.online && typeof data.online === 'object') ? data.online : {},
-            bans: Array.isArray(data.bans) ? data.bans : []
+            online: (data.online && typeof data.online === "object") ? data.online : {},
+            bans: Array.isArray(data.bans) ? data.bans : [],
+            support: Array.isArray(data.support) ? data.support : [],
+            echo: Array.isArray(data.echo) ? data.echo : [],
+            bottles: Array.isArray(data.bottles) ? data.bottles : []
         };
     }
-    return { messages: [], online: {}, bans: [] };
+    throw new Error("Invalid store format");
+}
+
+function fetchLatestStore() {
+    return fetch(CHAT_API_URL + '?t=' + Date.now(), {
+        method: 'GET',
+        cache: 'no-store'
+    }).then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+    }).then(function(raw) {
+        return normalizeStore(raw);
+    });
+}
+
+function saveStore(store) {
+    return fetch(CHAT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(store)
+    }).then(function(r) {
+        if (!r.ok) throw new Error('Save HTTP ' + r.status);
+        return store;
+    });
 }
 
 function updateOnlineCounter(onlineMap) {
@@ -1606,16 +1628,8 @@ function syncChatState(forceScroll, sendHeartbeat) {
     if (isSyncing) return;
     isSyncing = true;
 
-    fetch(JSONBIN_URL + '/latest', {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': JSONBIN_KEY,
-            'X-Bin-Meta': 'false'
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(raw) {
-        var store = normalizeStore(raw);
+    fetchLatestStore()
+    .then(function(store) {
         currentBanList = store.bans;
         updateAdminUI();
         applyBanStateUI();
@@ -1628,15 +1642,7 @@ function syncChatState(forceScroll, sendHeartbeat) {
             updateOnlineCounter(store.online);
             renderMessages(store.messages, forceScroll);
             lastHeartbeatSent = now;
-
-            return fetch(JSONBIN_URL, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_KEY
-                },
-                body: JSON.stringify(store)
-            });
+            return saveStore(store);
         } else {
             updateOnlineCounter(store.online);
             renderMessages(store.messages, forceScroll);
@@ -1659,16 +1665,8 @@ function banUserFromChat(author, uid, did) {
     if (isSyncing) return;
     isSyncing = true;
 
-    fetch(JSONBIN_URL + '/latest', {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': JSONBIN_KEY,
-            'X-Bin-Meta': 'false'
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(raw) {
-        var store = normalizeStore(raw);
+    fetchLatestStore()
+    .then(function(store) {
         var alreadyBanned = store.bans.some(function(b) {
             return (uid && b.uid === uid) || (did && b.did === did);
         });
@@ -1686,15 +1684,7 @@ function banUserFromChat(author, uid, did) {
             return true;
         });
         store.online = cleanStaleOnline(store.online);
-
-        return fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': JSONBIN_KEY
-            },
-            body: JSON.stringify(store)
-        }).then(function() { return store; });
+        return saveStore(store);
     })
     .then(function(updatedStore) {
         currentBanList = updatedStore.bans;
@@ -1702,6 +1692,7 @@ function banUserFromChat(author, uid, did) {
         renderMessages(updatedStore.messages, false);
         showChatNotice('Пользователь ' + author + ' заблокирован');
     })
+    .catch(function() {})
     .finally(function() {
         isSyncing = false;
     });
@@ -1739,32 +1730,18 @@ function unbanUserByIndex(banIdx) {
     if (!isAdmin || isSyncing) return;
     isSyncing = true;
 
-    fetch(JSONBIN_URL + '/latest', {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': JSONBIN_KEY,
-            'X-Bin-Meta': 'false'
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(raw) {
-        var store = normalizeStore(raw);
+    fetchLatestStore()
+    .then(function(store) {
         store.bans.splice(banIdx, 1);
         store.online = cleanStaleOnline(store.online);
-        return fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': JSONBIN_KEY
-            },
-            body: JSON.stringify(store)
-        }).then(function() { return store; });
+        return saveStore(store);
     })
     .then(function(updatedStore) {
         currentBanList = updatedStore.bans;
         updateAdminUI();
         renderBanListModal();
     })
+    .catch(function() {})
     .finally(function() {
         isSyncing = false;
     });
@@ -1774,16 +1751,8 @@ function deleteSingleMessage(targetId, targetIdx) {
     if (isSyncing) return;
     isSyncing = true;
 
-    fetch(JSONBIN_URL + '/latest', {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': JSONBIN_KEY,
-            'X-Bin-Meta': 'false'
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(raw) {
-        var store = normalizeStore(raw);
+    fetchLatestStore()
+    .then(function(store) {
         var filtered = store.messages.filter(function(m, idx) {
             if (m.id && m.id === targetId) return false;
             if (!m.id && idx === targetIdx) return false;
@@ -1791,15 +1760,7 @@ function deleteSingleMessage(targetId, targetIdx) {
         });
         store.messages = filtered;
         store.online = cleanStaleOnline(store.online);
-
-        return fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': JSONBIN_KEY
-            },
-            body: JSON.stringify(store)
-        }).then(function() { return store; });
+        return saveStore(store);
     })
     .then(function(updatedStore) {
         renderMessages(updatedStore.messages, false);
@@ -1818,31 +1779,24 @@ window.adminClearAllMessages = function() {
     if (isSyncing) return;
     isSyncing = true;
 
-    var freshStore = {
-        messages: [{
+    fetchLatestStore()
+    .then(function(store) {
+        store.messages = [{
             id: 'sys_' + Date.now(),
             author: "ChilloutFM",
             avatar: defImg,
             text: "Чат очищен администратором.",
             time: Date.now(),
             uid: -1
-        }],
-        online: cleanStaleOnline({}),
-        bans: currentBanList
-    };
-
-    fetch(JSONBIN_URL, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': JSONBIN_KEY
-        },
-        body: JSON.stringify(freshStore)
+        }];
+        store.online = cleanStaleOnline(store.online);
+        return saveStore(store);
     })
-    .then(function() {
-        renderMessages(freshStore.messages, true);
-        updateOnlineCounter(freshStore.online);
+    .then(function(updatedStore) {
+        renderMessages(updatedStore.messages, true);
+        updateOnlineCounter(updatedStore.online);
     })
+    .catch(function() {})
     .finally(function() {
         isSyncing = false;
     });
@@ -1916,16 +1870,8 @@ $('#chat-form').on('submit', function(e) {
     clearAttachment();
     clearReply();
 
-    fetch(JSONBIN_URL + '/latest', {
-        method: 'GET',
-        headers: {
-            'X-Master-Key': JSONBIN_KEY,
-            'X-Bin-Meta': 'false'
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(raw) {
-        var store = normalizeStore(raw);
+    fetchLatestStore()
+    .then(function(store) {
         currentBanList = store.bans;
         if (isCurrentUserBanned()) {
             applyBanStateUI();
@@ -1933,20 +1879,13 @@ $('#chat-form').on('submit', function(e) {
         }
 
         store.messages.push(msgObj);
-        if (store.messages.length > 40) {
-            store.messages = store.messages.slice(-40);
+        if (store.messages.length > 50) {
+            store.messages = store.messages.slice(-50);
         }
         store.online = cleanStaleOnline(store.online);
         lastHeartbeatSent = Date.now();
 
-        return fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': JSONBIN_KEY
-            },
-            body: JSON.stringify(store)
-        }).then(function() { return store; });
+        return saveStore(store);
     })
     .then(function(updatedStore) {
         lastMsgSentTime = Date.now();
