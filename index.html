@@ -7,7 +7,7 @@
     <!-- Предзагрузка критических ресурсов -->
     <link rel="preconnect" href="https://listen8.myradio24.com">
     <link rel="preconnect" href="https://myradio24.com">
-    <link rel="preconnect" href="https://chilloutfm-chat.viena76.workers.dev">
+    <link rel="preconnect" href="https://chilloutfm.ru">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://unpkg.com">
 
@@ -1096,8 +1096,8 @@ window.sw = function(id, el) {
     }
 };
 
-// --- НАСТРОЙКИ CLOUDFLARE WORKER ДЛЯ ОБЩЕГО ЧАТА ---
-var CHAT_API_URL = "https://chilloutfm-chat.viena76.workers.dev";
+// --- НАСТРОЙКИ СЕРВЕРНОГО API ДЛЯ ОБЩЕГО ЧАТА ---
+var CHAT_API_URL = "https://chilloutfm.ru/chat-api.php";
 var lastRenderedHash = "";
 var isSyncing = false;
 var lastHeartbeatSent = 0;
@@ -2122,3 +2122,6 @@ var my_init_updateinfo = function(info) {
 
 </body>
 </html>
+```[cite: 5]
+
+Залей обновлённый `chat-api.php` на сервер в корень сайта (`[https://chilloutfm.ru/chat-api.php](https://chilloutfm.ru/chat-api.php)`) и обнови код приложения из `чат.txt`[cite: 5]. Если при открытии вкладки «Чат» что-то пойдёт не так — сразу напиши, посмотрим.
