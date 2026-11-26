@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://listen8.myradio24.com">
     <link rel="preconnect" href="https://myradio24.com">
     <link rel="preconnect" href="https://chilloutfm.ru">
+    <link rel="preconnect" href="https://ice1.somafm.com">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://unpkg.com">
 
@@ -1458,7 +1459,7 @@
         <div class="station-logo"><img src="https://imgs.su/upload/671/2340987012.png" alt="Logo"></div>
         <div class="station-info">
             <h2 class="station-title" id="player-channel-title">ChilloutFM</h2>
-            <div class="station-genre" id="player-channel-genre">Chillout / Lounge · 128 kbps</div>
+            <div class="station-genre" id="player-channel-genre">Chillout · Lounge · 128 kbps</div>
         </div>
         <div class="station-divider"></div>
     </div>
@@ -1746,6 +1747,7 @@ var volSlider = document.getElementById('vol-slider');
 var isPlay = false;
 var lastArtist = ""; 
 var activeTab = "live";
+var mainStationTrack = { song: "ChilloutFM", artist: "ChilloutFM", title: "Музыка для души", img: "" };
 var currentLiveTrack = { song: "ChilloutFM", artist: "ChilloutFM", title: "Музыка для души", cover: defImg };
 var pendingAttachment = null;
 var pendingReply = null;
@@ -1755,11 +1757,12 @@ var playlistItemsCache = [];
 var CHANNELS_DATA = [
     {
         id: "chillout-fm",
+        somaId: null,
         name: "Chillout FM",
         mood: "Радио твоей атмосферы",
         genre: "Chillout · Lounge",
         desc: "Флагманский эфир: мягкий чиллаут, лаунж и даунтемпо 24/7.",
-        track: "Leo Rojas — I'll Be There",
+        track: "Загрузка эфира...",
         listeners: 1243,
         emoji: "🌊",
         streamUrl: "https://listen8.myradio24.com/8795",
@@ -1767,62 +1770,67 @@ var CHANNELS_DATA = [
     },
     {
         id: "ambient-space",
+        somaId: "dronezone",
         name: "Ambient Space",
         mood: "Музыка невесомости",
         genre: "Ambient · Drone",
         desc: "Космические текстуры и глубокие дроны для медитации и отдыха.",
-        track: "Parallelism — A Soft Loop",
+        track: "Ambient Space — Live",
         listeners: 486,
         emoji: "🪐",
-        streamUrl: "https://listen8.myradio24.com/8795",
+        streamUrl: "https://ice1.somafm.com/dronezone-128-mp3",
         isMainWidget: false
     },
     {
         id: "lounge-cafe",
+        somaId: "lush",
         name: "Lounge Café",
         mood: "Вечер в большом городе",
         genre: "Lounge · Nu-Jazz",
         desc: "Мягкий вокал, бархатный грув и вечерняя атмосфера лаунж-бара.",
-        track: "Dive Index — The World Is Kind",
+        track: "Lounge Café — Live",
         listeners: 732,
         emoji: "🍸",
-        streamUrl: "https://listen8.myradio24.com/8795",
+        streamUrl: "https://ice1.somafm.com/lush-128-mp3",
         isMainWidget: false
     },
     {
         id: "deep-focus",
+        somaId: "groovesalad",
         name: "Deep Focus",
         mood: "Код, учёба, поток",
         genre: "Downtempo · Lo-Fi",
         desc: "Ровный ритм и чилл-электроника для концентрации и работы.",
-        track: "Electroslide — Tribal Spirit",
+        track: "Deep Focus — Live",
         listeners: 918,
         emoji: "💻",
-        streamUrl: "https://listen8.myradio24.com/8795",
+        streamUrl: "https://ice1.somafm.com/groovesalad-128-mp3",
         isMainWidget: false
     },
     {
         id: "night-drive",
+        somaId: "deepspaceone",
         name: "Night Drive",
         mood: "Космос и ночной эфир",
-        genre: "Space Ambient · Deep",
+        genre: "Space Ambient · Deep Electronic",
         desc: "Глубокая ночная электроника и атмосферные ландшафты в пути.",
-        track: "William Gregg — Ur-Th",
+        track: "Night Drive — Live",
         listeners: 654,
         emoji: "🌌",
-        streamUrl: "https://listen8.myradio24.com/8795",
+        streamUrl: "https://ice1.somafm.com/deepspaceone-128-mp3",
         isMainWidget: false
     },
     {
         id: "morning-light",
+        somaId: "sonicuniverse",
         name: "Morning Light",
         mood: "Глубокий грув и ритм",
         genre: "Deep Electronic · Downtempo",
         desc: "Свежий утренний грув, тёплые гармонии и лёгкий старт дня.",
-        track: "Klas Lindblad — Soultrance",
+        track: "Morning Light — Live",
         listeners: 389,
         emoji: "🌅",
-        streamUrl: "https://listen8.myradio24.com/8795",
+        streamUrl: "https://ice1.somafm.com/sonicuniverse-128-mp3",
         isMainWidget: false
     }
 ];
@@ -1871,20 +1879,24 @@ function renderCompactChannels() {
     $('#active-channel-badge').text(getActiveChannel().name);
 }
 
-function applyChannelTrackToHero(fullSongStr) {
+function applyChannelTrackToHero(fullSongStr, customSmallCover) {
     if (!fullSongStr) return;
     var sepPos = fullSongStr.indexOf(' - ');
     if (sepPos === -1) sepPos = fullSongStr.indexOf(' — ');
     var artist = sepPos > 0 ? fullSongStr.substr(0, sepPos).trim() : fullSongStr.trim();
-    var title = sepPos > 0 ? fullSongStr.substr(sepPos + 3).trim() : "ChilloutFM";
+    var title = sepPos > 0 ? fullSongStr.substr(sepPos + 3).trim() : getActiveChannel().name;
 
     currentLiveTrack.song = fullSongStr;
     currentLiveTrack.artist = artist;
     currentLiveTrack.title = title;
 
     $('[data-myinfo="song"]').text(fullSongStr);
-    $('#live-artist-name').text(artist || "ChilloutFM");
-    $('#live-track-title').text(title || "ChilloutFM");
+    $('#live-artist-name').text(artist || getActiveChannel().name);
+    $('#live-track-title').text(title || getActiveChannel().genre);
+
+    if (customSmallCover) {
+        $('#artist-cover-img').attr('src', customSmallCover);
+    }
 
     if (artist && artist !== lastArtist) {
         lastArtist = artist;
@@ -1892,6 +1904,38 @@ function applyChannelTrackToHero(fullSongStr) {
         fetchImage(artist);
         startBioSearch(artist);
     }
+}
+
+function refreshSomaChannelsNowPlaying() {
+    fetch('https://api.somafm.com/channels.json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data || !Array.isArray(data.channels)) return;
+            var byId = {};
+            data.channels.forEach(function(item) {
+                if (item && item.id) byId[item.id] = item;
+            });
+
+            var activeCh = getActiveChannel();
+            CHANNELS_DATA.forEach(function(ch) {
+                if (!ch.somaId || !byId[ch.somaId]) return;
+                var remote = byId[ch.somaId];
+                if (remote.lastPlaying) {
+                    ch.track = remote.lastPlaying;
+                }
+                if (remote.listeners) {
+                    var parsedListeners = parseInt(remote.listeners, 10);
+                    if (!isNaN(parsedListeners) && parsedListeners > 0) {
+                        ch.listeners = parsedListeners;
+                    }
+                }
+                if (activeCh.id === ch.id && ch.track) {
+                    applyChannelTrackToHero(ch.track, remote.image || defImg);
+                }
+            });
+            renderCompactChannels();
+        })
+        .catch(function() {});
 }
 
 window.selectChannel = function(channelId, autoPlayIfStopped) {
@@ -1909,8 +1953,14 @@ window.selectChannel = function(channelId, autoPlayIfStopped) {
     $('#player-channel-title').text(ch.name);
     $('#player-channel-genre').text(ch.genre + ' · 128 kbps');
 
-    if (!ch.isMainWidget) {
-        applyChannelTrackToHero(ch.track);
+    if (ch.isMainWidget) {
+        var smallCover = (mainStationTrack.img && mainStationTrack.img !== "img/no_cover.jpg")
+            ? ("https://myradio24.com/" + mainStationTrack.img)
+            : defImg;
+        applyChannelTrackToHero(mainStationTrack.song, smallCover);
+    } else {
+        applyChannelTrackToHero(ch.track, defImg);
+        refreshSomaChannelsNowPlaying();
     }
 
     renderCompactChannels();
@@ -3066,7 +3116,8 @@ function displayBio(text, link) {
 }
 
 function showDefaultText(artist) {
-    $('#live-artist-bio').html('<p>Прямо сейчас на <b>ChilloutFM</b> звучит трек от исполнителя <b>' + artist + '</b>.</p>').css('opacity', '1');
+    var chName = getActiveChannel().name;
+    $('#live-artist-bio').html('<p>Прямо сейчас на канале <b>' + escapeHtml(chName) + '</b> звучит трек от исполнителя <b>' + escapeHtml(artist) + '</b>.</p>').css('opacity', '1');
     $('#live-wiki-link').hide();
     $('#artist-links').css('display', 'flex');
 }
@@ -3090,16 +3141,6 @@ function startBioSearch(fullName) {
 
 var my_init_updateinfo = function(info) {
     updateDaypartBadge();
-    if (info && info.song && CHANNELS_DATA[0]) {
-        CHANNELS_DATA[0].track = info.song;
-        renderCompactChannels();
-    }
-
-    var activeCh = getActiveChannel();
-    if (!activeCh.isMainWidget) {
-        return;
-    }
-
     function expand_song(songObj) {
         if (!songObj || !songObj.song) return;
         var pos = songObj.song.indexOf(' - ');
@@ -3107,21 +3148,17 @@ var my_init_updateinfo = function(info) {
         songObj.songtitle = (pos > 0) ? songObj.song.substr(pos + 3) : "";
     }
     expand_song(info);
-    if (info.song) {
-        currentLiveTrack.song = info.song;
-        currentLiveTrack.artist = info.artist;
-        currentLiveTrack.title = info.songtitle;
+
+    if (info && info.song) {
+        mainStationTrack.song = info.song;
+        mainStationTrack.artist = info.artist;
+        mainStationTrack.title = info.songtitle;
+        mainStationTrack.img = info.img || "";
+        if (CHANNELS_DATA[0]) {
+            CHANNELS_DATA[0].track = info.song;
+            renderCompactChannels();
+        }
     }
-    if (info.artist && info.artist !== lastArtist) {
-        lastArtist = info.artist;
-        updateSearchButtons(info.artist);
-        fetchImage(info.artist);
-        startBioSearch(info.artist);
-    }
-    $('#live-artist-name').text(info.artist || "ChilloutFM");
-    $('#live-track-title').text(info.songtitle || "Музыка для души");
-    var smallCoverUrl = (info.img && info.img !== "img/no_cover.jpg") ? "https://myradio24.com/" + info.img : defImg;
-    $('#artist-cover-img').attr('src', smallCoverUrl);
 
     var songs = info.songs;
     var parsedItems = [];
@@ -3146,6 +3183,27 @@ var my_init_updateinfo = function(info) {
     playlistItemsCache = parsedItems;
     renderFilteredPlaylist();
 
+    // Если сейчас выбран другой канал, не затираем его трек и обложку данными основного потока
+    if (!getActiveChannel().isMainWidget) {
+        return;
+    }
+
+    if (info.song) {
+        currentLiveTrack.song = info.song;
+        currentLiveTrack.artist = info.artist;
+        currentLiveTrack.title = info.songtitle;
+    }
+    if (info.artist && info.artist !== lastArtist) {
+        lastArtist = info.artist;
+        updateSearchButtons(info.artist);
+        fetchImage(info.artist);
+        startBioSearch(info.artist);
+    }
+    $('#live-artist-name').text(info.artist || "ChilloutFM");
+    $('#live-track-title').text(info.songtitle || "Музыка для души");
+    var smallCoverUrl = (info.img && info.img !== "img/no_cover.jpg") ? "https://myradio24.com/" + info.img : defImg;
+    $('#artist-cover-img').attr('src', smallCoverUrl);
+
     $('[data-myinfo]').each(function() {
         var key = $(this).data('myinfo');
         if (key && info[key] !== undefined && key !== 'htmlsongs') {
@@ -3155,6 +3213,8 @@ var my_init_updateinfo = function(info) {
 };
 
 renderCompactChannels();
+refreshSomaChannelsNowPlaying();
+setInterval(refreshSomaChannelsNowPlaying, 25000);
 </script>
 
 <!-- СКРИПТ MYRADIO24 -->
