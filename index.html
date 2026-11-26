@@ -90,7 +90,7 @@
         .controls-row { display: flex; align-items: center; width: 100%; justify-content: center; }
         .artist-circle { width: 44px; height: 44px; border: 1px solid #555; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; overflow: hidden; background: #1a1a1a; flex-shrink: 0; }
         #artist-cover-img { width: 100%; height: 100%; object-fit: cover; }
-        .control-btn { font-size: 22px; margin-right: 20px; cursor: pointer; color: #ccc; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; border-radius: 50%; flex-shrink: 0; transition: 0.2s; user-select: none; }
+        .control-btn { font-size: 20px; margin-right: 20px; cursor: pointer; color: #ccc; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; border-radius: 50%; flex-shrink: 0; transition: 0.2s; user-select: none; }
         .control-btn:hover { color: #e8df31; border-color: #e8df31; transform: scale(1.05); }
         .volume-container { display: flex; align-items: center; width: 120px; }
         .volume-slider { -webkit-appearance: none; width: 100%; height: 5px; background: #333; border-radius: 3px; outline: none; cursor: pointer; }
@@ -1754,7 +1754,7 @@ var currentLiveTrack = { song: "ChilloutFM", artist: "ChilloutFM", title: "Му�
 var pendingAttachment = null;
 var pendingReply = null;
 var playlistItemsCache = [];
-var playbackToken = 0;
+var playbackSeq = 0;
 
 // --- 6 КАНАЛОВ СТАНЦИИ ---
 var CHANNELS_DATA = [
@@ -1958,14 +1958,10 @@ function refreshSomaChannelsNowPlaying() {
         .catch(function() {});
 }
 
-// --- НАДЁЖНОЕ ВОСПРОИЗВЕДЕНИЕ ПОТОКОВ ДЛЯ ВСЕХ КАРТОЧЕК ---
-function setPlayerPlayingVisual(playing, isLoading) {
+// --- ПРЯМОЙ ЗАПУСК ПОТОКА С РЕЗЕРВНЫМИ АДРЕСАМИ ---
+function setPlayerPlayingVisual(playing) {
     isPlay = playing;
-    if (isLoading) {
-        playBtn.innerHTML = "⏳";
-        playBtn.style.color = "#e8df31";
-        playBtn.style.borderColor = "#e8df31";
-    } else if (playing) {
+    if (playing) {
         playBtn.innerHTML = "||";
         playBtn.style.color = "#e8df31";
         playBtn.style.borderColor = "#e8df31";
@@ -1978,113 +1974,104 @@ function setPlayerPlayingVisual(playing, isLoading) {
     renderCompactChannels();
 }
 
-function getStreamErrorText(err) {
-    if (!err) return "ошибка потока";
-    switch (err.code) {
-        case 1: return "загрузка прервана";
-        case 2: return "сетевая ошибка / поток недоступен";
-        case 3: return "ошибка декодирования аудио";
-        case 4: return "формат или адрес потока не поддерживается";
-        default: return "ошибка воспроизведения";
-    }
-}
-
-function tryPlayUrlList(urls, index, token) {
-    if (token !== playbackToken) return;
-    if (!urls || index >= urls.length) {
-        setPlayerPlayingVisual(false, false);
-        showChatNotice("Поток не запустился (проверьте доступ к ice1.somafm.com / listen8.myradio24.com)");
-        return;
-    }
-
-    var url = urls[index];
-    setPlayerPlayingVisual(false, true);
-
+function playSingleStreamUrl(url, onSuccess, onFail) {
     audio.pause();
     audio.removeAttribute('crossorigin');
-    audio.preload = 'auto';
     audio.muted = false;
     audio.volume = volSlider.value / 100;
     audio.src = url;
-    audio.load();
 
-    var switchedNext = false;
-    function nextUrl(reasonText) {
-        if (switchedNext || token !== playbackToken) return;
-        switchedNext = true;
-        console.warn("Stream failed [" + url + "]: " + reasonText);
-        tryPlayUrlList(urls, index + 1, token);
+    var settled = false;
+    function finishSuccess() {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        onSuccess();
     }
-
-    var onErr = function() {
+    function finishFail(errInfo) {
+        if (settled) return;
+        settled = true;
         cleanup();
-        nextUrl(getStreamErrorText(audio.error));
-    };
-
-    var onPlaying = function() {
-        cleanup();
-        if (token !== playbackToken) return;
-        setPlayerPlayingVisual(true, false);
-    };
-
-    var failTimer = setTimeout(function() {
-        if (audio.readyState < 2 && !audio.currentTime) {
-            cleanup();
-            nextUrl("таймаут буферизации");
-        }
-    }, 6000);
-
+        onFail(errInfo);
+    }
+    function onCanPlay() {
+        finishSuccess();
+    }
+    function onPlaying() {
+        finishSuccess();
+    }
+    function onError() {
+        var code = audio.error ? audio.error.code : 0;
+        finishFail("audio error code=" + code);
+    }
     function cleanup() {
-        clearTimeout(failTimer);
-        audio.removeEventListener('error', onErr);
+        audio.removeEventListener('canplay', onCanPlay);
         audio.removeEventListener('playing', onPlaying);
+        audio.removeEventListener('error', onError);
     }
 
-    audio.addEventListener('error', onErr);
+    audio.addEventListener('canplay', onCanPlay);
     audio.addEventListener('playing', onPlaying);
+    audio.addEventListener('error', onError);
 
-    var playPromise = audio.play();
-    if (playPromise && typeof playPromise.then === 'function') {
-        playPromise.then(function() {
-            if (token !== playbackToken) return;
-            cleanup();
-            setPlayerPlayingVisual(true, false);
-        }).catch(function(err) {
-            cleanup();
-            if (token !== playbackToken) return;
-            nextUrl(err && err.message ? err.message : "play() rejected");
+    var p = audio.play();
+    if (p && typeof p.then === 'function') {
+        p.then(function() {
+            finishSuccess();
+        }).catch(function(e) {
+            finishFail(e && e.message ? e.message : "play() error");
         });
     }
 }
 
+function startStreamWithFallback(urls, idx, seq) {
+    if (seq !== playbackSeq) return;
+    if (!urls || idx >= urls.length) {
+        setPlayerPlayingVisual(false);
+        console.warn("Все адреса потока не запустились:", urls);
+        return;
+    }
+
+    var url = urls[idx];
+    console.log("Запуск потока:", url);
+    playSingleStreamUrl(
+        url,
+        function() {
+            if (seq !== playbackSeq) return;
+            setPlayerPlayingVisual(true);
+        },
+        function(reason) {
+            if (seq !== playbackSeq) return;
+            console.warn("Не удалось запустить [" + url + "]:", reason);
+            startStreamWithFallback(urls, idx + 1, seq);
+        }
+    );
+}
+
 function toggleStreamPlayback(forcePlay, customUrls) {
     var shouldPlay = (typeof forcePlay === 'boolean') ? forcePlay : !isPlay;
-    playbackToken++;
-    var currentToken = playbackToken;
+    playbackSeq++;
+    var seq = playbackSeq;
 
     if (!shouldPlay) {
         audio.pause();
         audio.removeAttribute('src');
-        audio.load();
-        setPlayerPlayingVisual(false, false);
+        setPlayerPlayingVisual(false);
         return;
     }
 
     var urls = Array.isArray(customUrls) && customUrls.length
         ? customUrls
-        : (typeof customUrls === 'string' && customUrls
-            ? [customUrls]
-            : (getActiveChannel().streamUrls || ["https://listen8.myradio24.com/8795"]));
+        : (getActiveChannel().streamUrls || ["https://listen8.myradio24.com/8795"]);
 
-    tryPlayUrlList(urls, 0, currentToken);
+    startStreamWithFallback(urls, 0, seq);
 }
 
 window.selectChannel = function(channelId, autoPlayIfStopped) {
     var ch = CHANNELS_DATA.find(function(c) { return c.id === channelId; });
     if (!ch) return;
 
-    var sameChannel = (activeChannelId === ch.id);
-    if (sameChannel && isPlay) {
+    if (activeChannelId === ch.id && isPlay) {
         toggleStreamPlayback(false);
         return;
     }
@@ -3087,12 +3074,6 @@ setInterval(function() {
 
 playBtn.addEventListener('click', function() {
     toggleStreamPlayback();
-});
-
-audio.addEventListener('pause', function() {
-    if (!audio.src || audio.src === window.location.href) {
-        setPlayerPlayingVisual(false, false);
-    }
 });
 
 volSlider.addEventListener('input', function() { 
