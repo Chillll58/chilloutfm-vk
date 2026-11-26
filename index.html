@@ -36,12 +36,16 @@
     <!-- VK Bridge -->
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <script>
-        var vkUser = { name: "Гость", avatar: "https://imgs.su/upload/671/2340987012.png", id: 0 };
+        var vkUser = { name: "", avatar: "https://imgs.su/upload/671/2340987012.png", id: 0 };
         if (typeof vkBridge !== 'undefined') {
             vkBridge.send('VKWebAppInit').catch(function(e) { console.warn(e); });
             vkBridge.send('VKWebAppGetUserInfo').then(function(data) {
                 if (data && data.first_name) {
-                    vkUser.name = data.first_name + (data.last_name ? ' ' + data.last_name : '');
+                    var fullVkName = (data.first_name + (data.last_name ? ' ' + data.last_name : '')).trim();
+                    if (!localStorage.getItem('chillout_chat_name') && fullVkName) {
+                        vkUser.name = fullVkName.substring(0, 25);
+                        localStorage.setItem('chillout_chat_name', vkUser.name);
+                    }
                     vkUser.avatar = data.photo_100 || vkUser.avatar;
                     vkUser.id = data.id || 0;
                     if (typeof updateChatUserUI === 'function') updateChatUserUI();
@@ -915,6 +919,11 @@
             transition: 0.2s;
         }
         .chat-user-badge:hover { border-color: #e8df31; color: #fff; }
+        .chat-user-badge.needs-nick {
+            border-color: rgba(232, 223, 49, 0.7);
+            color: #e8df31;
+            background: rgba(232, 223, 49, 0.08);
+        }
         .chat-user-badge img {
             width: 22px;
             height: 22px;
@@ -922,7 +931,7 @@
             object-fit: cover;
         }
         @media (max-width: 600px) {
-            #chat-my-name { max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            #chat-my-name { max-width: 75px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
             .chat-room-title { display: none; }
             .chat-admin-label { display: none; }
         }
@@ -1354,6 +1363,7 @@
             outline: none;
         }
         .custom-modal-input:focus { border-color: #e8df31; }
+        .custom-modal-input.input-error { border-color: #ff5252; }
         .vk-my-audios-btn {
             display: flex;
             align-items: center;
@@ -1372,10 +1382,13 @@
         }
         .vk-my-audios-btn:hover { background: #1c76de; }
         .vk-modal-hint {
-            font-size: 11px;
-            color: #888;
-            line-height: 1.4;
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.45;
             margin-bottom: 12px;
+        }
+        .vk-modal-hint.error-text {
+            color: #ff8a80;
         }
         .custom-modal-actions {
             display: flex;
@@ -1450,7 +1463,7 @@
 </head>
 <body>
 
-<audio id="stream" preload="none" crossorigin="anonymous"></audio>
+<audio id="stream" preload="none"></audio>
 <input type="file" id="chat-photo-input" accept="image/*" style="display: none;">
 
 <!-- 1. ВЕРХНИЙ ПЛЕЕР -->
@@ -1618,9 +1631,9 @@
                 <button type="button" class="chat-admin-btn" id="chat-admin-toggle" onclick="toggleAdminMode()" title="Режим модератора">
                     <i class="fas fa-shield-alt"></i> <span class="chat-admin-label">Админ</span>
                 </button>
-                <div class="chat-user-badge" id="chat-user-profile" title="Нажмите, чтобы изменить имя">
+                <div class="chat-user-badge" id="chat-user-profile" title="Нажмите, чтобы указать или изменить Имя / Никнейм">
                     <img id="chat-my-avatar" src="https://imgs.su/upload/671/2340987012.png" alt="Avatar">
-                    <span id="chat-my-name">Гость</span>
+                    <span id="chat-my-name">Указать ник</span>
                     <i class="fas fa-pen" style="font-size: 10px; color: #888;"></i>
                 </div>
             </div>
@@ -1671,6 +1684,23 @@
                 <i class="fas fa-paper-plane"></i>
             </button>
         </form>
+    </div>
+</div>
+
+<!-- Модальное окно обязательного указания Имени или Никнейма -->
+<div class="custom-modal-backdrop" id="nickname-modal">
+    <div class="custom-modal-box">
+        <div class="custom-modal-title">
+            <span><i class="fas fa-user-tag"></i> Укажите Имя или Никнейм</span>
+            <i class="fas fa-times" style="cursor:pointer; color:#888;" onclick="closeNicknameModal()"></i>
+        </div>
+        <div class="vk-modal-hint" id="nickname-modal-hint">
+            Для общения в чате обязательно укажите ваше Имя или Никнейм (от 2 до 25 символов).
+        </div>
+        <input type="text" class="custom-modal-input" id="nickname-modal-input" placeholder="Введите ваше Имя или Никнейм..." maxlength="25" autocomplete="off">
+        <div class="custom-modal-actions">
+            <button type="button" class="btn-modal-confirm" id="nickname-save-btn" onclick="confirmNicknameModal()">Сохранить и войти</button>
+        </div>
     </div>
 </div>
 
@@ -1965,9 +1995,8 @@ window.selectChannel = function(channelId, autoPlayIfStopped) {
 
     renderCompactChannels();
 
-    if (isPlay || autoPlayIfStopped) {
-        toggleStreamPlayback(true, ch.streamUrl);
-    }
+    // Запускаем поток синхронно по клику
+    toggleStreamPlayback(true, ch.streamUrl);
 };
 
 $('#compact-channels-grid').on('click', '.compact-ch-card', function() {
@@ -2017,30 +2046,6 @@ function updateHomePlayButtonUI() {
     renderCompactChannels();
 }
 
-// --- ВКЛАДКИ ---
-window.sw = function(id, el) {
-    activeTab = id;
-    $('.content').removeClass('active');
-    $('#' + id).addClass('active');
-    $('.tab').removeClass('active');
-    if (el) {
-        $(el).addClass('active');
-    } else {
-        $('.tab').each(function() {
-            var txt = $(this).text().trim().toLowerCase();
-            if ((id === 'live' && txt === 'главная') ||
-                (id === 'playlist' && txt === 'плейлист') ||
-                (id === 'chat' && txt === 'чат') ||
-                (id === 'contacts' && txt === 'контакты')) {
-                $(this).addClass('active');
-            }
-        });
-    }
-    if (id === 'chat') {
-        syncChatState(true, true);
-    }
-};
-
 // --- НАСТРОЙКИ СЕРВЕРНОГО API ДЛЯ ОБЩЕГО ЧАТА ---
 var CHAT_API_URL = "https://chilloutfm.ru/chat-api.php";
 var lastRenderedHash = "";
@@ -2053,9 +2058,16 @@ if (!deviceId) {
     localStorage.setItem('chillout_did', deviceId);
 }
 
-var savedName = localStorage.getItem('chillout_chat_name');
-if (savedName && vkUser.name === "Гость") {
+var savedName = (localStorage.getItem('chillout_chat_name') || '').trim();
+if (savedName && savedName.toLowerCase() !== "гость") {
     vkUser.name = savedName;
+} else {
+    vkUser.name = "";
+}
+
+function hasValidNickname() {
+    var n = (vkUser.name || '').trim();
+    return n.length >= 2 && n.toLowerCase() !== "гость";
 }
 
 function showChatNotice(msg) {
@@ -2067,7 +2079,9 @@ function showChatNotice(msg) {
 }
 
 function updateChatUserUI() {
-    $('#chat-my-name').text(vkUser.name);
+    var valid = hasValidNickname();
+    $('#chat-my-name').text(valid ? vkUser.name : "Указать ник");
+    $('#chat-user-profile').toggleClass('needs-nick', !valid);
     $('#chat-my-avatar').attr('src', vkUser.avatar);
     if (vkUser.id && vkUser.id !== 0) {
         $('#vk-open-my-audios').attr('href', 'https://vk.com/audios' + vkUser.id);
@@ -2090,6 +2104,75 @@ function updateAdminUI() {
 }
 updateChatUserUI();
 
+window.openNicknameModal = function(requiredMsg) {
+    var input = $('#nickname-modal-input');
+    var hint = $('#nickname-modal-hint');
+    input.val(hasValidNickname() ? vkUser.name : '').removeClass('input-error');
+    hint.text(
+        requiredMsg || 'Для общения в чате обязательно укажите ваше Имя или Никнейм (от 2 до 25 символов).'
+    ).removeClass('error-text');
+    $('#nickname-modal').addClass('active');
+    setTimeout(function() { input.focus(); }, 100);
+};
+
+window.closeNicknameModal = function() {
+    $('#nickname-modal').removeClass('active');
+};
+
+window.confirmNicknameModal = function() {
+    var input = $('#nickname-modal-input');
+    var hint = $('#nickname-modal-hint');
+    var raw = (input.val() || '').trim().substring(0, 25);
+    if (raw.length < 2 || raw.toLowerCase() === "гость") {
+        hint.text('Введите корректное Имя или Никнейм (минимум 2 символа, не «Гость»).').addClass('error-text');
+        input.addClass('input-error').focus();
+        return;
+    }
+    vkUser.name = raw;
+    localStorage.setItem('chillout_chat_name', vkUser.name);
+    updateChatUserUI();
+    closeNicknameModal();
+    $('#chat-input').focus();
+};
+
+$('#nickname-modal-input').on('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        confirmNicknameModal();
+    }
+});
+
+$('#chat-user-profile').on('click', function() {
+    openNicknameModal('Укажите или измените ваше Имя / Никнейм для чата (от 2 до 25 символов).');
+});
+
+// --- ВКЛАДКИ ---
+window.sw = function(id, el) {
+    activeTab = id;
+    $('.content').removeClass('active');
+    $('#' + id).addClass('active');
+    $('.tab').removeClass('active');
+    if (el) {
+        $(el).addClass('active');
+    } else {
+        $('.tab').each(function() {
+            var txt = $(this).text().trim().toLowerCase();
+            if ((id === 'live' && txt === 'главная') ||
+                (id === 'playlist' && txt === 'плейлист') ||
+                (id === 'chat' && txt === 'чат') ||
+                (id === 'contacts' && txt === 'контакты')) {
+                $(this).addClass('active');
+            }
+        });
+    }
+    if (id === 'chat') {
+        if (!hasValidNickname()) {
+            openNicknameModal('Перед отправкой сообщений в чат обязательно укажите Имя или Никнейм.');
+        }
+        syncChatState(true, true);
+    }
+};
+
 function isCurrentUserBanned() {
     if (isAdmin) return false;
     return currentBanList.some(function(b) {
@@ -2106,7 +2189,7 @@ function applyBanStateUI() {
         inp.prop('disabled', true).attr('placeholder', 'Вы заблокированы в чате администратором');
         btn.prop('disabled', true);
     } else {
-        inp.prop('disabled', false).attr('placeholder', 'Написать в эфирный чат...');
+        inp.prop('disabled', false).attr('placeholder', hasValidNickname() ? 'Написать в эфирный чат...' : 'Укажите Имя или Никнейм для общения...');
         if (!floodTimerInterval && !isSyncing) {
             btn.prop('disabled', false);
         }
@@ -2135,15 +2218,6 @@ window.toggleAdminMode = function() {
         }
     }
 };
-
-$('#chat-user-profile').on('click', function() {
-    var newName = prompt("Введите ваше имя для чата:", vkUser.name);
-    if (newName && newName.trim().length > 0) {
-        vkUser.name = newName.trim().substring(0, 25);
-        localStorage.setItem('chillout_chat_name', vkUser.name);
-        updateChatUserUI();
-    }
-});
 
 window.addEmoji = function(emoji) {
     if (isCurrentUserBanned()) return;
@@ -2331,10 +2405,11 @@ window.confirmVkMusicAttach = function() {
         return;
     }
 
+    var ownerLabel = hasValidNickname() ? vkUser.name : 'Слушатель';
     var isPlaylist = /playlist|album/i.test(link);
     var defaultTitle = isPlaylist
-        ? ('Плейлист из ВК (' + vkUser.name + ')')
-        : ('Трек из аудиозаписей (' + vkUser.name + ')');
+        ? ('Плейлист из ВК (' + ownerLabel + ')')
+        : ('Трек из аудиозаписей (' + ownerLabel + ')');
     var title = q || defaultTitle;
 
     var myAudiosFallback = (vkUser.id && vkUser.id !== 0)
@@ -2361,7 +2436,7 @@ window.confirmVkMusicAttach = function() {
                     url: targetUrl,
                     cover: coverUrl,
                     isPlaylist: isPlaylist,
-                    ownerName: vkUser.name
+                    ownerName: ownerLabel
                 });
             })
             .catch(function() {
@@ -2371,7 +2446,7 @@ window.confirmVkMusicAttach = function() {
                     url: targetUrl,
                     cover: '',
                     isPlaylist: isPlaylist,
-                    ownerName: vkUser.name
+                    ownerName: ownerLabel
                 });
             })
             .finally(function() {
@@ -2385,7 +2460,7 @@ window.confirmVkMusicAttach = function() {
             url: targetUrl,
             cover: '',
             isPlaylist: isPlaylist,
-            ownerName: vkUser.name
+            ownerName: ownerLabel
         });
         confirmBtn.prop('disabled', false).text('Прикрепить');
         closeVkMusicModal();
@@ -2553,7 +2628,7 @@ function renderMessages(list, forceScroll) {
 
     list.forEach(function(m, idx) {
         var msgId = m.id || ('idx_' + idx + '_' + (m.time || 0));
-        var isOwn = (m.uid && m.uid === vkUser.id && vkUser.id !== 0) || (m.did && m.did === deviceId && m.uid !== -1) || (m.author === vkUser.name && m.uid !== -1);
+        var isOwn = (m.uid && m.uid === vkUser.id && vkUser.id !== 0) || (m.did && m.did === deviceId && m.uid !== -1) || (hasValidNickname() && m.author === vkUser.name && m.uid !== -1);
         
         var quoteHtml = '';
         if (m.reply && m.reply.author) {
@@ -2850,6 +2925,12 @@ $('#chat-form').on('submit', function(e) {
     e.preventDefault();
     if (isSyncing) return;
 
+    if (!hasValidNickname()) {
+        showChatNotice("Укажите Имя или Никнейм для отправки сообщений");
+        openNicknameModal("Обязательно укажите ваше Имя или Никнейм перед отправкой сообщения.");
+        return;
+    }
+
     if (isCurrentUserBanned()) {
         showChatNotice("Вы заблокированы в чате");
         return;
@@ -2878,7 +2959,7 @@ $('#chat-form').on('submit', function(e) {
 
     var msgObj = {
         id: 'm_' + now + '_' + Math.random().toString(36).substr(2, 5),
-        author: vkUser.name,
+        author: vkUser.name.trim().substring(0, 25),
         avatar: vkUser.avatar,
         text: text,
         att: pendingAttachment,
@@ -2954,19 +3035,26 @@ function toggleStreamPlayback(forcePlay, customUrl) {
         isPlay = false;
         updateHomePlayButtonUI();
     } else {
-        audio.src = customUrl || getActiveChannel().streamUrl || "https://listen8.myradio24.com/8795";
+        var targetUrl = customUrl || getActiveChannel().streamUrl || "https://listen8.myradio24.com/8795";
+        audio.pause();
+        audio.src = targetUrl;
         audio.load();
+
+        playBtn.innerHTML = "||"; 
+        playBtn.style.color = "#e8df31"; 
+        playBtn.style.borderColor = "#e8df31";
+        isPlay = true;
+        updateHomePlayButtonUI();
+
         var p = audio.play();
         if (p !== undefined) {
-            p.then(function() {
-                playBtn.innerHTML = "||"; 
-                playBtn.style.color = "#e8df31"; 
-                playBtn.style.borderColor = "#e8df31";
-                isPlay = true;
-                updateHomePlayButtonUI();
-            }).catch(function(e) { 
-                console.error("Ошибка воспроизведения:", e);
+            p.catch(function(e) { 
+                console.warn("Поток не запустился:", targetUrl, e);
+                showChatNotice("Поток канала недоступен в этом браузере/сети");
                 isPlay = false;
+                playBtn.innerHTML = "▶"; 
+                playBtn.style.color = "#ccc"; 
+                playBtn.style.borderColor = "#444";
                 updateHomePlayButtonUI();
             });
         }
@@ -3183,7 +3271,6 @@ var my_init_updateinfo = function(info) {
     playlistItemsCache = parsedItems;
     renderFilteredPlaylist();
 
-    // Если сейчас выбран другой канал, не затираем его трек и обложку данными основного потока
     if (!getActiveChannel().isMainWidget) {
         return;
     }
