@@ -123,32 +123,254 @@
         #chat.content.active { padding-bottom: 0; }
 
         /* ==================== ГЛАВНАЯ ==================== */
-        .immersive-artist-section { position: relative; padding: 60px 0; overflow: hidden; background: #111; color: #fff; min-height: 600px; display: flex; align-items: center; }
-        .immersive-bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(40px) brightness(0.4); transform: scale(1.1); z-index: 1; transition: background-image 1s ease-in-out; }
-        .immersive-content { position: relative; z-index: 2; }
-        .immersive-cover-wrap { position: relative; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); transition: transform 0.3s ease; aspect-ratio: 1/1; max-width: 280px; margin: 0 auto; background: #000; }
+        .immersive-artist-section {
+            position: relative;
+            padding: 36px 0 48px 0;
+            overflow: hidden;
+            background: #111;
+            color: #fff;
+            min-height: calc(100vh - 136px);
+            display: flex;
+            align-items: center;
+        }
+        .immersive-bg-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(44px) brightness(0.36);
+            transform: scale(1.12);
+            z-index: 1;
+            transition: background-image 1s ease-in-out;
+        }
+        .immersive-content { position: relative; z-index: 2; width: 100%; }
+
+        .home-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        .home-slot-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 17, 23, 0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .home-slot-pill i { color: #e8df31; }
+        .home-slot-bitrate {
+            color: #94a3b8;
+            font-size: 11px;
+            border-left: 1px solid rgba(255, 255, 255, 0.16);
+            padding-left: 8px;
+        }
+
+        .home-glass-card {
+            background: rgba(16, 18, 25, 0.68);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .immersive-cover-wrap {
+            position: relative;
+            border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1/1;
+            max-width: 280px;
+            margin: 0 auto;
+            background: #09090d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
         .immersive-cover-wrap:hover { transform: scale(1.02); }
-        .immersive-cover-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; display: block; }
-        .immersive-info { padding-left: 50px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
-        .immersive-label { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 15px; color: rgba(255,255,255,0.6); display: flex; align-items: center; }
-        .immersive-label::before { content: ''; display: inline-block; width: 8px; height: 8px; background: #e8df31; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #e8df31; animation: pulse-live 2s infinite; }
-        @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        #live-artist-name { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-        #live-track-title { font-size: 24px; font-weight: 300; color: #e8df31; margin-bottom: 30px; opacity: 0.9; }
-        #live-artist-bio { font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 20px; min-height: 50px; }
-        .platform-btn { display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 30px; background: rgba(255,255,255,0.1); color: #fff !important; text-decoration: none !important; font-size: 13px; font-weight: 600; margin: 0 5px 10px 5px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
-        .platform-btn:hover { background: #fff; color: #000 !important; transform: translateY(-2px); }
-        .custom-button { padding: 10px 30px; border-radius: 30px; background: #e8df31; color:#000; border:none; font-weight:bold; text-decoration: none; display: inline-block; }
-        .donate-btn-wrapper { text-align: center; margin-bottom: 40px; }
-        .donate-main-btn { display: inline-flex; align-items: center; padding: 8px 20px; font-size: 12px; font-weight: 700; background: linear-gradient(45deg, #e8df31, #d4c91f); color: #000 !important; text-decoration: none !important; border-radius: 30px; border: none; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(232, 223, 49, 0.3); transition: all 0.3s; }
-        .donate-main-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(232, 223, 49, 0.5); }
-        .donate-main-btn i { margin-right: 8px; font-size: 14px; }
+        .immersive-cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .home-cover-play-btn {
+            margin: 14px auto 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            border-radius: 24px;
+            padding: 8px 18px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .home-cover-play-btn:hover,
+        .home-cover-play-btn.is-playing {
+            background: #e8df31;
+            color: #000;
+            border-color: #e8df31;
+        }
+
+        .immersive-info {
+            padding-left: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        .immersive-label {
+            font-size: 12px;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #e8df31;
+            display: flex;
+            align-items: center;
+        }
+        .immersive-label::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #e8df31;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #e8df31;
+            animation: pulse-live 2s infinite;
+        }
+        @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.45; } 100% { opacity: 1; } }
+        #live-artist-name {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+        #live-track-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e8df31;
+            margin-bottom: 16px;
+        }
+        #live-artist-bio {
+            font-size: 15px;
+            line-height: 1.65;
+            color: #cbd5e1;
+            margin-bottom: 18px;
+            min-height: 44px;
+        }
+        #live-artist-bio p { margin: 0; }
+
+        .home-quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .home-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #f8fafc;
+            border-radius: 22px;
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .home-action-btn:hover {
+            border-color: #e8df31;
+            color: #e8df31;
+            background: rgba(232, 223, 49, 0.1);
+        }
+        .home-action-btn.copied {
+            background: #e8df31;
+            color: #000;
+            border-color: #e8df31;
+        }
+
+        .home-platforms-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .platform-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.08);
+            color: #e2e8f0 !important;
+            text-decoration: none !important;
+            font-size: 12.5px;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.12);
+            transition: all 0.2s;
+        }
+        .platform-btn:hover { background: #fff; color: #000 !important; transform: translateY(-1px); }
+        .custom-button {
+            padding: 8px 20px;
+            border-radius: 22px;
+            background: #e8df31;
+            color:#000 !important;
+            border:none;
+            font-weight:800;
+            text-decoration: none !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            transition: all 0.2s;
+        }
+        .custom-button:hover { opacity: 0.92; transform: translateY(-1px); }
+
+        .donate-main-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            font-size: 12px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #e8df31, #d4c91f);
+            color: #000 !important;
+            text-decoration: none !important;
+            border-radius: 24px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(232, 223, 49, 0.25);
+            transition: all 0.25s;
+        }
+        .donate-main-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(232, 223, 49, 0.45); }
+        .donate-main-btn i { margin-right: 7px; font-size: 13px; }
+
         @media (max-width: 991px) {
-            .immersive-artist-section { padding: 40px 0; text-align: center; }
-            .immersive-info { padding-left: 0; padding-top: 30px; }
-            .immersive-cover-wrap { width: 80%; max-width: 260px; }
+            .immersive-artist-section { padding: 24px 0 36px 0; text-align: center; }
+            .home-glass-card { padding: 22px 18px; border-radius: 18px; }
+            .home-top-bar { justify-content: center; }
+            .immersive-info { padding-left: 0; padding-top: 22px; align-items: center; }
+            .immersive-cover-wrap { max-width: 220px; }
             .immersive-label { justify-content: center; }
-            #live-artist-name { font-size: 32px; }
+            .home-quick-actions, .home-platforms-row { justify-content: center; }
+            #live-artist-name { font-size: 30px; }
+            #live-track-title { font-size: 17px; }
         }
 
         /* ==================== ПЛЕЙЛИСТ ==================== */
@@ -257,7 +479,6 @@
         #playlist-list::-webkit-scrollbar-track { background: transparent; }
         #playlist-list::-webkit-scrollbar-thumb { background-color: #3a3a3a; border-radius: 3px; }
 
-        /* Перебиваем bootstrap .row внутри плейлиста для ровной сетки */
         .list-container .playlist-track-row {
             display: flex;
             align-items: center;
@@ -514,7 +735,6 @@
             .chat-admin-label { display: none; }
         }
 
-        /* Уведомление об антифлуде / статусе */
         .chat-toast-notice {
             display: none;
             position: absolute;
@@ -650,7 +870,6 @@
         }
         .chat-ban-btn:hover { background: #ff9800; color: #000; }
 
-        /* Кликабельная цитата ответа внутри сообщения */
         .chat-quote-box {
             background: rgba(255, 255, 255, 0.06);
             border-left: 3px solid #e8df31;
@@ -691,7 +910,6 @@
             max-width: 240px;
         }
 
-        /* Карточка вложения в сообщении */
         .chat-att-track {
             display: flex;
             align-items: center;
@@ -768,7 +986,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Панель предпросмотра ответа и вложения */
         .chat-preview-strip {
             display: none;
             align-items: center;
@@ -807,7 +1024,6 @@
         }
         .chat-preview-remove:hover { color: #ff5252; }
 
-        /* Панель инструментов и эмодзи */
         .chat-tools-bar {
             display: flex;
             align-items: center;
@@ -1087,30 +1303,57 @@
     <section class="immersive-artist-section" id="currentartist">
         <div class="immersive-bg-layer" id="artist-bg-layer" style="background-image: url('https://imgs.su/upload/671/2340987012.png');"></div>
         <div class="container immersive-content">
-            <div class="row align-items-center">
-                <div class="col-12 donate-btn-wrapper">
-                    <a href="https://vk.com/chillou_fm?w=app6471849_-46701989" target="_blank" rel="noopener noreferrer" class="donate-main-btn">
-                        <i class="fas fa-coffee"></i> Админу на кофе
-                    </a>
+            <div class="home-top-bar">
+                <div class="home-slot-pill">
+                    <i class="fas fa-moon"></i>
+                    <span id="home-daypart-label">Эфир 24/7</span>
+                    <span class="home-slot-bitrate">128 kbps</span>
                 </div>
-                <div class="col-lg-5 col-md-12">
-                    <div class="immersive-cover-wrap">
-                        <img id="live-artist-img" src="https://imgs.su/upload/671/2340987012.png" alt="Live Art">
+                <a href="https://vk.com/chillou_fm?w=app6471849_-46701989" target="_blank" rel="noopener noreferrer" class="donate-main-btn">
+                    <i class="fas fa-coffee"></i> Админу на кофе
+                </a>
+            </div>
+
+            <div class="home-glass-card">
+                <div class="row align-items-center">
+                    <div class="col-lg-4 col-md-12 text-center">
+                        <div class="immersive-cover-wrap">
+                            <img id="live-artist-img" src="https://imgs.su/upload/671/2340987012.png" alt="Live Art">
+                        </div>
+                        <button type="button" id="home-play-toggle" class="home-cover-play-btn" onclick="playBtn.click()">
+                            <i class="fas fa-play" id="home-play-icon"></i>
+                            <span id="home-play-text">Слушать эфир</span>
+                        </button>
                     </div>
-                </div>
-                <div class="col-lg-7 col-md-12">
-                    <div class="immersive-info">
-                        <div class="immersive-label">Сейчас в эфире</div>
-                        <h3 id="live-artist-name">Загрузка...</h3>
-                        <div id="live-track-title">ChilloutFM</div>
-                        <div id="live-artist-bio"><p>Ожидание данных...</p></div>
-                        <div id="controls-container" class="text-center">
-                            <div id="artist-links" style="display:none; margin-top: 10px; margin-bottom: 25px;">
-                                <a id="btn-sc" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">SoundCloud</a>
-                                <a id="btn-sp" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Spotify</a>
-                                <a id="btn-gl" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Google</a>
+                    <div class="col-lg-8 col-md-12">
+                        <div class="immersive-info">
+                            <div class="immersive-label">Сейчас в эфире</div>
+                            <h3 id="live-artist-name">Загрузка...</h3>
+                            <div id="live-track-title">ChilloutFM</div>
+                            <div id="live-artist-bio"><p>Ожидание данных...</p></div>
+
+                            <div class="home-quick-actions">
+                                <button type="button" id="home-vk-search-btn" class="home-action-btn" onclick="openLiveTrackInVk()">
+                                    <i class="fab fa-vk"></i> Найти в ВК
+                                </button>
+                                <button type="button" class="home-action-btn" onclick="sendLiveTrackToChat()">
+                                    <i class="fas fa-comment-dots"></i> В чат
+                                </button>
+                                <button type="button" id="home-copy-btn" class="home-action-btn" onclick="copyLiveTrackTitle()">
+                                    <i class="far fa-copy"></i> <span id="home-copy-label">Копировать</span>
+                                </button>
                             </div>
-                            <a id="live-wiki-link" href="#" target="_blank" rel="noopener noreferrer" class="custom-button" style="display: none; margin-bottom: 25px;">Подробнее</a>
+
+                            <div class="home-platforms-row">
+                                <div id="artist-links" style="display:none; gap: 8px; flex-wrap: wrap;">
+                                    <a id="btn-sc" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">SoundCloud</a>
+                                    <a id="btn-sp" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Spotify</a>
+                                    <a id="btn-gl" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Google</a>
+                                </div>
+                                <a id="live-wiki-link" href="#" target="_blank" rel="noopener noreferrer" class="custom-button" style="display: none;">
+                                    <i class="fab fa-wikipedia-w"></i> Подробнее
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1316,6 +1559,36 @@ var floodTimerInterval = null;
 var currentBanList = [];
 
 audio.volume = volSlider.value / 100;
+
+function updateDaypartBadge() {
+    var hour = new Date().getHours();
+    var slot = { icon: "fa-moon", label: "Ночной горизонт" };
+    if (hour >= 5 && hour < 11) {
+        slot = { icon: "fa-sun", label: "Утренний поток" };
+    } else if (hour >= 11 && hour < 17) {
+        slot = { icon: "fa-headphones", label: "Дневной лаунж" };
+    } else if (hour >= 17 && hour < 23) {
+        slot = { icon: "fa-cloud-moon", label: "Вечерний релакс" };
+    }
+    $('#home-daypart-label').text(slot.label);
+    $('#home-slot-pill i').attr('class', 'fas ' + slot.icon);
+}
+updateDaypartBadge();
+
+function updateHomePlayButtonUI() {
+    var btn = $('#home-play-toggle');
+    var icon = $('#home-play-icon');
+    var txt = $('#home-play-text');
+    if (isPlay) {
+        btn.addClass('is-playing');
+        icon.attr('class', 'fas fa-pause');
+        txt.text('На паузе / Остановить');
+    } else {
+        btn.removeClass('is-playing');
+        icon.attr('class', 'fas fa-play');
+        txt.text('Слушать эфир');
+    }
+}
 
 // --- ВКЛАДКИ ---
 window.sw = function(id, el) {
@@ -1525,19 +1798,72 @@ window.clearAttachment = function() {
     $('#chat-photo-input').val('');
 };
 
-window.attachCurrentLiveTrack = function() {
+function getCurrentSongLabel() {
     var rawSong = $('[data-myinfo="song"]').first().text().trim();
     if (!rawSong || rawSong === "Загрузка...") {
         rawSong = currentLiveTrack.song;
     }
+    return rawSong;
+}
+
+window.attachCurrentLiveTrack = function() {
+    var rawSong = getCurrentSongLabel();
     var cover = $('#live-artist-img').attr('src') || defImg;
-    setAttachment({
+    return setAttachment({
         type: 'live',
         song: rawSong,
         cover: cover,
         url: 'https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(rawSong)
     });
 };
+
+window.sendLiveTrackToChat = function() {
+    if (attachCurrentLiveTrack()) {
+        window.sw('chat', null);
+    }
+};
+
+window.openLiveTrackInVk = function() {
+    var rawSong = getCurrentSongLabel();
+    if (!rawSong || rawSong === "Загрузка...") return;
+    window.open("https://vk.com/search?c[section]=audio&c[q]=" + encodeURIComponent(rawSong), '_blank', 'noopener,noreferrer');
+};
+
+window.copyLiveTrackTitle = function() {
+    var rawSong = getCurrentSongLabel();
+    if (!rawSong || rawSong === "Загрузка...") return;
+
+    function markCopied() {
+        var btn = $('#home-copy-btn');
+        var lbl = $('#home-copy-label');
+        btn.addClass('copied');
+        lbl.text('Скопировано');
+        setTimeout(function() {
+            btn.removeClass('copied');
+            lbl.text('Копировать');
+        }, 1600);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(rawSong).then(markCopied).catch(function() {
+            fallbackCopy(rawSong, markCopied);
+        });
+    } else {
+        fallbackCopy(rawSong, markCopied);
+    }
+};
+
+function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    if (done) done();
+}
 
 window.sendPlaylistTrackToChat = function(index) {
     var item = playlistItemsCache[index];
@@ -2198,6 +2524,7 @@ playBtn.addEventListener('click', function() {
         playBtn.style.color = "#ccc"; 
         playBtn.style.borderColor = "#444";
         isPlay = false;
+        updateHomePlayButtonUI();
     } else {
         audio.src = "https://listen8.myradio24.com/8795";
         audio.load();
@@ -2208,9 +2535,11 @@ playBtn.addEventListener('click', function() {
                 playBtn.style.color = "#e8df31"; 
                 playBtn.style.borderColor = "#e8df31";
                 isPlay = true;
+                updateHomePlayButtonUI();
             }).catch(function(e) { 
                 console.error("Ошибка воспроизведения:", e);
-                isPlay = false; 
+                isPlay = false;
+                updateHomePlayButtonUI();
             });
         }
     }
@@ -2221,9 +2550,7 @@ volSlider.addEventListener('input', function() {
 });
 
 $('#vk-btn').on('click', function() {
-    var txt = $('[data-myinfo="song"]').text();
-    if (!txt || txt === "Загрузка...") return;
-    window.open("https://vk.com/search?c[section]=audio&c[q]=" + encodeURIComponent(txt), '_blank', 'noopener,noreferrer');
+    openLiveTrackInVk();
 });
 
 // --- ПЛЕЙЛИСТ: ПОИСК И ОТРИСОВКА ---
@@ -2352,14 +2679,14 @@ function tryWiki(term, callback) {
 
 function displayBio(text, link) {
     $('#live-artist-bio').html('<p>' + truncateText(text.replace(/<[^>]*>/g, ''), 300) + '</p>').css('opacity', '1');
-    if (link) $('#live-wiki-link').attr('href', link).show();
+    if (link) $('#live-wiki-link').attr('href', link).css('display', 'inline-flex');
     $('#artist-links').hide();
 }
 
 function showDefaultText(artist) {
     $('#live-artist-bio').html('<p>Прямо сейчас на <b>ChilloutFM</b> звучит трек от исполнителя <b>' + artist + '</b>.</p>').css('opacity', '1');
     $('#live-wiki-link').hide();
-    $('#artist-links').show();
+    $('#artist-links').css('display', 'flex');
 }
 
 function startBioSearch(fullName) {
@@ -2380,6 +2707,7 @@ function startBioSearch(fullName) {
 }
 
 var my_init_updateinfo = function(info) {
+    updateDaypartBadge();
     function expand_song(songObj) {
         if (!songObj || !songObj.song) return;
         var pos = songObj.song.indexOf(' - ');
