@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
     <!-- Предзагрузка критических ресурсов -->
     <link rel="preconnect" href="https://listen8.myradio24.com">
     <link rel="preconnect" href="https://myradio24.com">
     <link rel="preconnect" href="https://chilloutfm.ru">
-    <link rel="preconnect" href="https://ice1.somafm.com">
-    <link rel="preconnect" href="https://ice2.somafm.com">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://unpkg.com">
 
@@ -58,87 +56,62 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        body { 
-            font-family: 'Open Sans', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            background: #121216; 
-            color: #fff; 
-            padding-top: 90px; 
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #121216;
+            color: #fff;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
-        /* ==================== ПЛЕЕР ==================== */
-        .radio-player-container { 
-            position: fixed; top: 0; left: 0; z-index: 99999; 
-            display: flex; align-items: center; justify-content: space-between; 
-            background-color: #09090c; color: #ffffff; 
-            height: 90px; width: 100%; box-sizing: border-box; 
-            border-bottom: 1px solid rgba(255,255,255,0.09); box-shadow: 0 4px 15px rgba(0,0,0,0.6); 
-        }
-        .player-left { display: flex; align-items: center; padding-left: 20px; flex-shrink: 0; }
-        .station-logo img { width: 50px; height: 50px; border-radius: 50%; margin-right: 12px; object-fit: cover; }
-        .station-title { margin: 0; font-size: 16px; font-weight: 700; color: #fff; line-height: 1.2; }
-        .station-genre { font-size: 11px; color: #888; }
-        .station-divider { width: 1px; height: 40px; background: #333; margin: 0 20px; }
-        .player-center { display: flex; flex-direction: column; align-items: center; flex-grow: 1; justify-content: center; padding: 0 10px; overflow: hidden; }
-        .track-info-top { display: flex; align-items: center; justify-content: center; margin-bottom: 6px; width: 100%; }
-        .status-label { color: #888; margin-right: 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; }
-        .status-label::after { content: ''; display: inline-block; width: 6px; height: 6px; background-color: #ff0000; border-radius: 50%; margin-left: 6px; box-shadow: 0 0 5px #ff0000; animation: live-dot-pulse 1.5s infinite ease-in-out; }
-        @keyframes live-dot-pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-        .track-name { color: #fff; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 350px; }
-        .controls-row { display: flex; align-items: center; width: 100%; justify-content: center; }
-        .artist-circle { width: 44px; height: 44px; border: 1px solid #555; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; overflow: hidden; background: #1a1a1a; flex-shrink: 0; }
-        #artist-cover-img { width: 100%; height: 100%; object-fit: cover; }
-        .control-btn { font-size: 20px; margin-right: 20px; cursor: pointer; color: #ccc; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; border-radius: 50%; flex-shrink: 0; transition: 0.2s; user-select: none; }
-        .control-btn:hover { color: #e8df31; border-color: #e8df31; transform: scale(1.05); }
-        .volume-container { display: flex; align-items: center; width: 120px; }
-        .volume-slider { -webkit-appearance: none; width: 100%; height: 5px; background: #333; border-radius: 3px; outline: none; cursor: pointer; }
-        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #e8df31; cursor: pointer; }
-        .player-right { display: flex; height: 100%; align-items: center; padding-right: 15px; }
-        .menu-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 15px; cursor: pointer; color: #888; transition: 0.2s; }
-        .menu-item:hover { color: #fff; }
-        .menu-icon { font-size: 18px; margin-bottom: 3px; }
-        .menu-text { font-size: 10px; text-transform: uppercase; font-weight: 600; }
 
-        @media (max-width: 700px) { 
-            .player-left, .status-label, .volume-container, .station-divider { display: none !important; } 
-            .radio-player-container { padding: 0 10px; height: 80px; } 
-            body { padding-top: 80px; } 
-            .player-center { flex-direction: row; justify-content: flex-start; padding: 0; } 
-            .controls-row { width: auto; margin-right: 10px; } 
-            .artist-circle { margin-right: 10px; width: 48px; height: 48px; } 
-            .control-btn { margin-right: 0; width: 40px; height: 40px; font-size: 16px; background: #222; border: none; } 
-            .track-info-top { display: block; overflow: hidden; white-space: nowrap; margin-bottom: 0; } 
-            .track-name { font-size: 14px; animation: marquee 10s linear infinite; display: inline-block; padding-left: 100%; } 
-            .player-right { margin-left: auto; } 
+        /* ==================== ВКЛАДКИ НА САМОМ ВЕРХУ ==================== */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: #0e0e13;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.09);
+            position: sticky;
+            top: 0;
+            z-index: 120;
+            height: 44px;
+            box-sizing: border-box;
         }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        /* ==================== ВКЛАДКИ ==================== */
-        .tabs { display: flex; justify-content: center; background: #18181d; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 90px; z-index: 90; height: 46px; box-sizing: border-box; }
-        @media (max-width: 700px) { .tabs { top: 80px; } }
-        .tab { padding: 4px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; user-select: none; }
-        .tab.active { color: #e8df31; border-bottom: 2px solid #e8df31; }
-        .content { display: none; padding-bottom: 32px; }
+        .tab {
+            padding: 4px 20px;
+            font-weight: 700;
+            color: #888;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: 0.2s;
+            user-select: none;
+        }
+        .tab.active {
+            color: #e8df31;
+            border-bottom: 2px solid #e8df31;
+        }
+        .content { display: none; padding-bottom: 28px; }
         .content.active { display: block; }
         #chat.content.active { padding-bottom: 0; }
 
-        /* ==================== КОМПАКТНАЯ ГЛАВНАЯ ==================== */
+        /* ==================== ГЛАВНАЯ И КАРТОЧКА CHILLOUT FM ==================== */
         .immersive-artist-section {
             position: relative;
-            padding: 18px 0 32px 0;
+            padding: 14px 0 28px 0;
             overflow: hidden;
             background: #121216;
             color: #fff;
-            min-height: calc(100vh - 136px);
+            min-height: calc(100vh - 44px);
         }
         .immersive-bg-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
-            filter: blur(46px) brightness(0.34);
+            filter: blur(48px) brightness(0.32);
             transform: scale(1.12);
             z-index: 1;
             transition: background-image 1s ease-in-out;
@@ -151,13 +124,13 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .home-slot-pill {
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            background: rgba(18, 18, 22, 0.78);
+            background: rgba(18, 18, 22, 0.82);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -175,67 +148,236 @@
             padding-left: 7px;
         }
 
-        .home-glass-card {
-            background: rgba(18, 18, 22, 0.76);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 18px;
-            padding: 18px 22px;
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+        .donate-main-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 13px;
+            font-size: 11px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #e8df31, #d4c91f);
+            color: #000 !important;
+            text-decoration: none !important;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(232, 223, 49, 0.22);
+            transition: all 0.2s;
+        }
+        .donate-main-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(232, 223, 49, 0.38); }
+        .donate-main-btn i { margin-right: 6px; font-size: 11.5px; }
+
+        /* Карточка станции со скриншота + управление эфиром */
+        .station-hero-card {
+            background: linear-gradient(160deg, rgba(16, 36, 52, 0.92), rgba(14, 17, 27, 0.95));
+            border: 1.5px solid rgba(34, 211, 238, 0.75);
+            box-shadow: 0 0 24px rgba(34, 211, 238, 0.14), 0 12px 28px rgba(0, 0, 0, 0.45);
+            border-radius: 16px;
+            padding: 15px 18px;
+            margin-bottom: 12px;
+        }
+        .station-hero-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .station-tag-badge {
+            display: inline-block;
+            background: rgba(34, 211, 238, 0.16);
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            color: #67e8f9;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            padding: 2px 9px;
+            border-radius: 6px;
+        }
+        .station-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+        .station-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ff2a2a;
+            box-shadow: 0 0 7px #ff2a2a;
+            animation: live-dot-pulse 1.5s infinite ease-in-out;
+        }
+        @keyframes live-dot-pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.35; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .station-brand-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+        .station-brand-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.16);
+            flex-shrink: 0;
+        }
+        .station-brand-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+        }
+        .station-brand-genre {
+            font-size: 12px;
+            font-weight: 700;
+            color: #818cf8;
+            margin-bottom: 6px;
+        }
+        .station-brand-desc {
+            margin: 0 0 10px 0;
+            font-size: 12.5px;
+            line-height: 1.42;
+            color: #94a3b8;
+        }
+        .station-ritual-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 11.5px;
+            line-height: 1.38;
+            color: #cbd5e1;
+            margin-bottom: 11px;
+        }
+        .station-now-bar {
+            background: rgba(9, 12, 20, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 12px;
+            padding: 9px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .station-now-meta {
+            min-width: 0;
+            flex: 1;
+        }
+        .station-now-kicker {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+        .station-now-track {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #f8fafc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .station-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .station-vol-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        .station-vol-slider {
+            -webkit-appearance: none;
+            width: 76px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+        .station-vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #22d3ee;
+            cursor: pointer;
+        }
+        .station-play-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: #22d3ee;
+            color: #04131a;
+            font-size: 13px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 14px rgba(34, 211, 238, 0.35);
+            flex-shrink: 0;
+        }
+        .station-play-btn:hover { transform: scale(1.06); background: #67e8f9; }
+        .station-play-btn.is-playing {
+            background: #e8df31;
+            color: #000;
+            box-shadow: 0 0 14px rgba(232, 223, 49, 0.35);
         }
 
+        /* Карточка текущего исполнителя */
+        .home-glass-card {
+            background: rgba(18, 18, 22, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.11);
+            border-radius: 16px;
+            padding: 15px 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.38);
+        }
         .immersive-cover-wrap {
             position: relative;
-            border-radius: 14px;
-            box-shadow: 0 12px 26px rgba(0,0,0,0.55);
-            transition: transform 0.25s ease;
+            border-radius: 12px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.5);
             aspect-ratio: 1/1;
-            max-width: 176px;
+            max-width: 132px;
             margin: 0 auto;
             background: #09090d;
             border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
         }
-        .immersive-cover-wrap:hover { transform: scale(1.02); }
         .immersive-cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        .home-cover-play-btn {
-            margin: 10px auto 0 auto;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #fff;
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 11.5px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .home-cover-play-btn:hover,
-        .home-cover-play-btn.is-playing {
-            background: #e8df31;
-            color: #000;
-            border-color: #e8df31;
-        }
-
         .immersive-info {
-            padding-left: 20px;
+            padding-left: 14px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             height: 100%;
         }
         .immersive-label {
-            font-size: 10.5px;
-            letter-spacing: 1.3px;
+            font-size: 10px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             font-weight: 800;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             color: #e8df31;
             display: flex;
             align-items: center;
@@ -243,35 +385,31 @@
         .immersive-label::before {
             content: '';
             display: inline-block;
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             background: #e8df31;
             border-radius: 50%;
-            margin-right: 7px;
-            box-shadow: 0 0 8px #e8df31;
-            animation: pulse-live 2s infinite;
+            margin-right: 6px;
         }
-        @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.45; } 100% { opacity: 1; } }
         #live-artist-name {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 800;
             line-height: 1.12;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             text-transform: uppercase;
             color: #fff;
         }
         #live-track-title {
-            font-size: 15.5px;
+            font-size: 14px;
             font-weight: 600;
             color: #e8df31;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         #live-artist-bio {
-            font-size: 13px;
-            line-height: 1.45;
+            font-size: 12.5px;
+            line-height: 1.4;
             color: #cbd5e1;
-            margin-bottom: 10px;
-            min-height: 0;
+            margin-bottom: 9px;
         }
         #live-artist-bio p { margin: 0; }
 
@@ -279,17 +417,17 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 7px;
         }
         .home-action-btn {
             display: inline-flex;
             align-items: center;
             gap: 5px;
             background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #f8fafc;
-            border-radius: 18px;
-            padding: 5px 11px;
+            border-radius: 16px;
+            padding: 4px 10px;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
@@ -305,7 +443,6 @@
             color: #000;
             border-color: #e8df31;
         }
-
         .home-platforms-row {
             display: flex;
             flex-wrap: wrap;
@@ -315,8 +452,8 @@
         .platform-btn {
             display: inline-flex;
             align-items: center;
-            padding: 5px 11px;
-            border-radius: 18px;
+            padding: 4px 10px;
+            border-radius: 16px;
             background: rgba(255,255,255,0.08);
             color: #e2e8f0 !important;
             text-decoration: none !important;
@@ -325,10 +462,10 @@
             border: 1px solid rgba(255,255,255,0.12);
             transition: all 0.2s;
         }
-        .platform-btn:hover { background: #fff; color: #000 !important; transform: translateY(-1px); }
+        .platform-btn:hover { background: #fff; color: #000 !important; }
         .custom-button {
-            padding: 5px 13px;
-            border-radius: 18px;
+            padding: 4px 12px;
+            border-radius: 16px;
             background: #e8df31;
             color:#000 !important;
             border:none;
@@ -338,39 +475,18 @@
             align-items: center;
             gap: 5px;
             font-size: 11px;
-            transition: all 0.2s;
         }
-        .custom-button:hover { opacity: 0.92; transform: translateY(-1px); }
 
-        .donate-main-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 14px;
-            font-size: 11px;
-            font-weight: 800;
-            background: linear-gradient(45deg, #e8df31, #d4c91f);
-            color: #000 !important;
-            text-decoration: none !important;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(232, 223, 49, 0.22);
-            transition: all 0.25s;
-        }
-        .donate-main-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(232, 223, 49, 0.4); }
-        .donate-main-btn i { margin-right: 6px; font-size: 11.5px; }
-
-        /* ==================== КОМПАКТНАЯ ПРОГРАММА CHILLOUT FM ==================== */
+        /* ==================== ПРОГРАММА CHILLOUT FM ==================== */
         .program-schedule-section {
-            margin-top: 14px;
+            margin-top: 12px;
             background: rgba(11, 14, 22, 0.88);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: 18px;
-            padding: 16px 18px;
-            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.44);
+            border-radius: 16px;
+            padding: 15px 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
         }
         .program-top-bar {
             display: flex;
@@ -417,28 +533,26 @@
             box-shadow: 0 0 7px #f43f5e;
         }
         .program-main-heading {
-            margin: 0 0 11px 0;
-            font-size: 20px;
+            margin: 0 0 10px 0;
+            font-size: 19px;
             font-weight: 800;
             letter-spacing: -0.3px;
             color: #ffffff;
             line-height: 1.15;
         }
-
         .program-now-banner {
             background: linear-gradient(135deg, rgba(16, 48, 64, 0.72), rgba(14, 23, 36, 0.88));
             border: 1px solid rgba(34, 211, 238, 0.36);
-            border-radius: 14px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.07);
+            border-radius: 12px;
+            padding: 11px 14px;
+            margin-bottom: 10px;
         }
         .program-now-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
         .program-now-badge {
             display: inline-block;
@@ -450,11 +564,11 @@
             letter-spacing: 0.6px;
             padding: 2px 8px;
             border-radius: 6px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .program-now-title {
             margin: 0;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 800;
             color: #ffffff;
             line-height: 1.2;
@@ -465,8 +579,8 @@
             font-variant-numeric: tabular-nums;
         }
         .program-now-sub {
-            margin: 3px 0 0 0;
-            font-size: 11.5px;
+            margin: 2px 0 0 0;
+            font-size: 11px;
             color: #94a3b8;
         }
         .program-countdown-box {
@@ -477,19 +591,17 @@
             display: block;
             font-size: 10px;
             color: #94a3b8;
-            margin-bottom: 1px;
         }
         .program-countdown-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: #38bdf8;
             line-height: 1.1;
-            letter-spacing: 0.4px;
         }
         .program-progress-track {
-            margin-top: 10px;
+            margin-top: 8px;
             width: 100%;
-            height: 5px;
+            height: 4px;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.1);
             overflow: hidden;
@@ -501,30 +613,23 @@
             background: linear-gradient(90deg, #06b6d4, #38bdf8);
             transition: width 0.6s ease;
         }
-
         .program-slots-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
+            gap: 9px;
         }
         .program-slot-card {
             background: rgba(18, 22, 34, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 11px 13px;
-            transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+            border-radius: 11px;
+            padding: 10px 12px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
-        }
-        .program-slot-card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
+            gap: 2px;
         }
         .program-slot-card.is-current {
             background: linear-gradient(145deg, rgba(16, 44, 58, 0.9), rgba(16, 24, 38, 0.95));
             border-color: rgba(34, 211, 238, 0.65);
-            box-shadow: 0 0 18px rgba(34, 211, 238, 0.12);
         }
         .program-slot-header {
             display: flex;
@@ -533,10 +638,9 @@
             gap: 6px;
         }
         .program-slot-time {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             font-variant-numeric: tabular-nums;
-            line-height: 1.2;
         }
         .program-tag-now {
             display: inline-flex;
@@ -547,9 +651,7 @@
             color: #fda4af;
             font-size: 9px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 1px 7px;
+            padding: 1px 6px;
             border-radius: 10px;
         }
         .program-tag-next {
@@ -560,73 +662,60 @@
             color: #cbd5e1;
             font-size: 9px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 1px 7px;
+            padding: 1px 6px;
             border-radius: 10px;
         }
         .program-slot-name {
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 800;
             color: #f8fafc;
-            line-height: 1.25;
         }
         .program-slot-subtitle {
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 600;
             color: #94a3b8;
         }
         .program-slot-desc {
-            margin: 1px 0 0 0;
+            margin: 0;
             font-size: 11px;
-            line-height: 1.38;
+            line-height: 1.35;
             color: #64748b;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        .program-slot-card.is-current .program-slot-desc {
-            color: #94a3b8;
-        }
 
         @media (max-width: 991px) {
             .program-slots-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .immersive-artist-section { padding: 14px 0 28px 0; }
-            .home-glass-card { padding: 15px 14px; border-radius: 16px; }
-            .home-top-bar { justify-content: center; }
-            .immersive-info { padding-left: 0; padding-top: 12px; align-items: center; text-align: center; }
-            .immersive-cover-wrap { max-width: 156px; }
-            .immersive-label { justify-content: center; }
-            .home-quick-actions, .home-platforms-row { justify-content: center; }
-            #live-artist-name { font-size: 22px; }
-            #live-track-title { font-size: 14px; }
+            .immersive-info { padding-left: 0; padding-top: 10px; align-items: center; text-align: center; }
+            .immersive-label, .home-quick-actions, .home-platforms-row { justify-content: center; }
         }
         @media (max-width: 600px) {
             .program-slots-grid { grid-template-columns: 1fr; }
-            .program-schedule-section { padding: 13px 12px; border-radius: 14px; }
-            .program-main-heading { font-size: 18px; }
+            .station-now-bar { flex-wrap: wrap; }
+            .station-controls-group { width: 100%; justify-content: space-between; }
             .program-countdown-box { text-align: left; }
         }
 
         /* ==================== ПЛЕЙЛИСТ ==================== */
-        .list-container { max-width: 820px; margin: 0 auto; padding: 20px; }
+        .list-container { max-width: 820px; margin: 0 auto; padding: 18px; }
         .playlist-glass-card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.09);
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
         .playlist-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 16px;
+            padding-bottom: 14px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -638,11 +727,7 @@
             font-weight: 800;
             color: #fff;
         }
-        .playlist-header-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .playlist-header-actions { display: flex; flex-wrap: wrap; gap: 8px; }
         .archive-link {
             color: #e8df31;
             text-decoration: none !important;
@@ -650,7 +735,7 @@
             font-size: 12px;
             border: 1px solid rgba(232, 223, 49, 0.65);
             background: rgba(232, 223, 49, 0.06);
-            padding: 6px 13px;
+            padding: 5px 12px;
             border-radius: 20px;
             transition: all 0.2s;
             display: inline-flex;
@@ -658,11 +743,7 @@
             gap: 5px;
         }
         .archive-link:hover { background: #e8df31; color: #000 !important; border-color: #e8df31; }
-
-        .playlist-search-wrap {
-            position: relative;
-            margin-bottom: 14px;
-        }
+        .playlist-search-wrap { position: relative; margin-bottom: 12px; }
         .playlist-search-icon {
             position: absolute;
             left: 14px;
@@ -677,16 +758,12 @@
             background: rgba(15, 17, 23, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 24px;
-            padding: 9px 36px 9px 38px;
+            padding: 8px 36px 8px 38px;
             color: #fff;
             font-size: 13.5px;
             outline: none;
-            transition: border-color 0.2s, background 0.2s;
         }
-        .playlist-search-input:focus {
-            border-color: #e8df31;
-            background: rgba(22, 25, 34, 0.95);
-        }
+        .playlist-search-input:focus { border-color: #e8df31; }
         .playlist-search-clear {
             display: none;
             position: absolute;
@@ -700,89 +777,54 @@
             cursor: pointer;
             padding: 4px 6px;
         }
-        .playlist-search-clear:hover { color: #e8df31; }
         .playlist-search-clear.visible { display: block; }
-
         #playlist-list {
-            max-height: calc(100vh - 310px);
+            max-height: calc(100vh - 220px);
             min-height: 220px;
             overflow-y: auto;
             padding-right: 4px;
-            scrollbar-width: thin;
-            scrollbar-color: #3a3a3a transparent;
         }
-        #playlist-list::-webkit-scrollbar { width: 6px; }
-        #playlist-list::-webkit-scrollbar-track { background: transparent; }
-        #playlist-list::-webkit-scrollbar-thumb { background-color: #3a3a3a; border-radius: 3px; }
-
         .list-container .playlist-track-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 10px 12px;
+            padding: 9px 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             background: rgba(18, 20, 26, 0.65);
-            transition: background 0.2s, border-color 0.2s, transform 0.15s;
             border-radius: 12px;
-            margin: 0 0 8px 0;
-        }
-        .list-container .playlist-track-row:last-child { margin-bottom: 0; }
-        .list-container .playlist-track-row:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(232, 223, 49, 0.35);
+            margin-bottom: 8px;
         }
         .list-container .playlist-track-row.is-latest {
             border-color: rgba(232, 223, 49, 0.45);
             background: rgba(232, 223, 49, 0.06);
         }
-        .playlist-track-main {
-            display: flex;
-            align-items: center;
-            min-width: 0;
-            flex: 1;
-        }
+        .playlist-track-main { display: flex; align-items: center; min-width: 0; flex: 1; }
         .time-col {
             font-size: 12px;
             color: #9aa0a6;
             font-weight: 700;
             min-width: 48px;
-            text-align: left;
             margin-right: 12px;
-            flex-shrink: 0;
             font-variant-numeric: tabular-nums;
         }
         .mini-cover {
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
             background: #252525;
             border-radius: 8px;
-            margin-right: 14px;
+            margin-right: 12px;
             object-fit: cover;
             flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .info { flex: 1; min-width: 0; overflow: hidden; }
-        .info-top-line {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 2px;
-        }
-        .info b {
-            font-size: 14px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #f8fafc;
-        }
+        .info-top-line { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+        .info b { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f8fafc; }
         .playlist-latest-badge {
             flex-shrink: 0;
             font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
             background: #e8df31;
             color: #000;
             padding: 1px 7px;
@@ -796,12 +838,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .playlist-track-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-shrink: 0;
-        }
+        .playlist-track-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         .playlist-action-btn {
             display: inline-flex;
             align-items: center;
@@ -815,50 +852,18 @@
             font-weight: 600;
             text-decoration: none !important;
             cursor: pointer;
-            transition: all 0.15s;
-            white-space: nowrap;
         }
-        .playlist-action-btn:hover {
-            border-color: #e8df31;
-            color: #e8df31 !important;
-            background: rgba(232, 223, 49, 0.1);
-        }
-        .playlist-empty-state {
-            text-align: center;
-            color: #94a3b8;
-            padding: 28px 16px;
-            font-size: 13.5px;
-        }
-
-        @media (max-width: 600px) {
-            .list-container { padding: 14px 12px; }
-            .playlist-glass-card { padding: 14px; border-radius: 14px; }
-            .list-container .playlist-track-row {
-                flex-wrap: wrap;
-                padding: 10px;
-                gap: 8px;
-            }
-            .playlist-track-main { width: 100%; }
-            .time-col { min-width: 42px; margin-right: 8px; font-size: 11.5px; }
-            .mini-cover { width: 42px; height: 42px; margin-right: 10px; }
-            .playlist-track-actions {
-                width: 100%;
-                justify-content: flex-end;
-                padding-left: 50px;
-            }
-        }
+        .playlist-action-btn:hover { border-color: #e8df31; color: #e8df31 !important; }
+        .playlist-empty-state { text-align: center; color: #94a3b8; padding: 24px 16px; font-size: 13.5px; }
 
         /* ==================== ПОЛНОЭКРАННЫЙ ЧАТ ==================== */
         .fullpage-chat {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 136px);
+            height: calc(100vh - 44px);
             width: 100%;
             background: #121212;
             position: relative;
-        }
-        @media (max-width: 700px) {
-            .fullpage-chat { height: calc(100vh - 126px); }
         }
         .chat-topbar {
             display: flex;
@@ -870,30 +875,9 @@
             flex-shrink: 0;
             gap: 8px;
         }
-        .chat-topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-        }
-        .chat-online-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #4caf50;
-            box-shadow: 0 0 8px #4caf50;
-            flex-shrink: 0;
-        }
-        .chat-room-title {
-            font-weight: 700;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .chat-topbar-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .chat-online-dot { width: 9px; height: 9px; border-radius: 50%; background: #4caf50; box-shadow: 0 0 8px #4caf50; }
+        .chat-room-title { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; }
         .chat-online-badge {
             background: rgba(76, 175, 80, 0.14);
             border: 1px solid rgba(76, 175, 80, 0.4);
@@ -903,14 +887,8 @@
             padding: 3px 9px;
             border-radius: 14px;
             white-space: nowrap;
-            flex-shrink: 0;
         }
-        .chat-topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-shrink: 0;
-        }
+        .chat-topbar-right { display: flex; align-items: center; gap: 6px; }
         .chat-admin-btn {
             background: #222;
             border: 1px solid #333;
@@ -920,17 +898,11 @@
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 5px;
         }
-        .chat-admin-btn:hover { border-color: #e8df31; color: #fff; }
-        .chat-admin-btn.active {
-            background: rgba(255, 82, 82, 0.15);
-            border-color: #ff5252;
-            color: #ff5252;
-        }
+        .chat-admin-btn.active { background: rgba(255, 82, 82, 0.15); border-color: #ff5252; color: #ff5252; }
         .chat-admin-extra {
             display: none;
             background: #2a1d1d;
@@ -941,9 +913,7 @@
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.15s;
         }
-        .chat-admin-extra:hover { background: #ff5252; color: #fff; }
         .chat-admin-extra.visible { display: inline-flex; align-items: center; gap: 4px; }
         .chat-user-badge {
             display: flex;
@@ -956,21 +926,12 @@
             color: #ccc;
             cursor: pointer;
             border: 1px solid #333;
-            transition: 0.2s;
         }
-        .chat-user-badge:hover { border-color: #e8df31; color: #fff; }
-        .chat-user-badge img {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+        .chat-user-badge img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
         @media (max-width: 600px) {
             #chat-my-name { max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-            .chat-room-title { display: none; }
-            .chat-admin-label { display: none; }
+            .chat-room-title, .chat-admin-label { display: none; }
         }
-
         .chat-toast-notice {
             display: none;
             position: absolute;
@@ -984,10 +945,8 @@
             font-size: 12px;
             font-weight: 600;
             z-index: 50;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             white-space: nowrap;
         }
-
         .chat-messages-area {
             flex: 1;
             overflow-y: auto;
@@ -995,32 +954,11 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            scrollbar-width: thin;
-            scrollbar-color: #333 #121212;
             scroll-behavior: smooth;
         }
-        .chat-messages-area::-webkit-scrollbar { width: 6px; }
-        .chat-messages-area::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-        .chat-msg {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            max-width: 85%;
-            animation: msgFadeIn 0.2s ease;
-        }
-        @keyframes msgFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-msg.own {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-        .chat-msg-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 1px solid #333;
-        }
+        .chat-msg { display: flex; align-items: flex-start; gap: 10px; max-width: 85%; }
+        .chat-msg.own { align-self: flex-end; flex-direction: row-reverse; }
+        .chat-msg-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid #333; }
         .chat-msg-bubble {
             background: #1e1e1e;
             border: 1px solid #2b2b2b;
@@ -1031,8 +969,6 @@
             font-size: 14px;
             line-height: 1.45;
             word-break: break-word;
-            position: relative;
-            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
         }
         .chat-msg.own .chat-msg-bubble {
             background: #272515;
@@ -1045,44 +981,13 @@
             box-shadow: 0 0 18px rgba(232, 223, 49, 0.45);
             background-color: #302d16 !important;
         }
-
-        .chat-msg-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 4px;
-        }
-        .chat-msg-meta {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .chat-msg-author {
-            font-weight: 700;
-            font-size: 12px;
-            color: #e8df31;
-        }
-        .chat-msg-time {
-            font-size: 10px;
-            color: #777;
-        }
-        .chat-msg-actions {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .chat-reply-btn {
-            background: transparent;
-            border: none;
-            color: #777;
-            font-size: 11px;
-            cursor: pointer;
-            padding: 2px 5px;
-            border-radius: 4px;
-            transition: 0.15s;
-        }
-        .chat-reply-btn:hover { color: #e8df31; background: rgba(255,255,255,0.06); }
+        .chat-msg-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+        .chat-msg-meta { display: flex; align-items: center; gap: 7px; }
+        .chat-msg-author { font-weight: 700; font-size: 12px; color: #e8df31; }
+        .chat-msg-time { font-size: 10px; color: #777; }
+        .chat-msg-actions { display: flex; align-items: center; gap: 5px; }
+        .chat-reply-btn { background: transparent; border: none; color: #777; font-size: 11px; cursor: pointer; padding: 2px 5px; }
+        .chat-reply-btn:hover { color: #e8df31; }
         .chat-mod-btn {
             background: rgba(255, 82, 82, 0.14);
             border: 1px solid rgba(255, 82, 82, 0.35);
@@ -1091,9 +996,7 @@
             cursor: pointer;
             padding: 2px 6px;
             border-radius: 6px;
-            transition: 0.15s;
         }
-        .chat-mod-btn:hover { background: #ff5252; color: #fff; }
         .chat-ban-btn {
             background: rgba(255, 152, 0, 0.14);
             border: 1px solid rgba(255, 152, 0, 0.35);
@@ -1102,10 +1005,7 @@
             cursor: pointer;
             padding: 2px 6px;
             border-radius: 6px;
-            transition: 0.15s;
         }
-        .chat-ban-btn:hover { background: #ff9800; color: #000; }
-
         .chat-quote-box {
             background: rgba(255, 255, 255, 0.06);
             border-left: 3px solid #e8df31;
@@ -1115,13 +1015,6 @@
             font-size: 12px;
             color: #bbb;
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-        }
-        .chat-quote-box:hover {
-            background: rgba(232, 223, 49, 0.14);
-        }
-        .chat-quote-box:active {
-            transform: scale(0.99);
         }
         .chat-quote-author {
             font-weight: 700;
@@ -1131,21 +1024,9 @@
             align-items: center;
             justify-content: space-between;
             gap: 6px;
-            margin-bottom: 1px;
         }
-        .chat-quote-jump-hint {
-            font-size: 9px;
-            color: #888;
-            font-weight: 400;
-        }
-        .chat-quote-text {
-            display: block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 240px;
-        }
-
+        .chat-quote-jump-hint { font-size: 9px; color: #888; font-weight: 400; }
+        .chat-quote-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
         .chat-att-track {
             display: flex;
             align-items: center;
@@ -1157,20 +1038,8 @@
             margin-top: 6px;
             text-decoration: none !important;
             color: #fff !important;
-            transition: 0.2s;
         }
-        .chat-att-track:hover {
-            border-color: #e8df31;
-            background: rgba(232, 223, 49, 0.08);
-        }
-        .chat-att-cover {
-            width: 44px;
-            height: 44px;
-            border-radius: 8px;
-            object-fit: cover;
-            flex-shrink: 0;
-            background: #2a2a2a;
-        }
+        .chat-att-cover { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
         .chat-att-icon-box {
             width: 44px;
             height: 44px;
@@ -1183,45 +1052,11 @@
             font-size: 18px;
             flex-shrink: 0;
         }
-        .chat-att-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .chat-att-badge {
-            font-size: 9px;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #e8df31;
-            display: block;
-            margin-bottom: 2px;
-        }
-        .chat-att-title {
-            font-size: 13px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #fff;
-        }
-        .chat-att-sub {
-            font-size: 11px;
-            color: #999;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .chat-att-photo {
-            margin-top: 6px;
-            max-width: 240px;
-            max-height: 220px;
-            border-radius: 12px;
-            display: block;
-            cursor: pointer;
-            object-fit: cover;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
+        .chat-att-info { flex: 1; min-width: 0; }
+        .chat-att-badge { font-size: 9px; text-transform: uppercase; font-weight: 700; color: #e8df31; display: block; margin-bottom: 2px; }
+        .chat-att-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+        .chat-att-sub { font-size: 11px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-att-photo { margin-top: 6px; max-width: 240px; max-height: 220px; border-radius: 12px; display: block; cursor: pointer; object-fit: cover; }
         .chat-preview-strip {
             display: none;
             align-items: center;
@@ -1235,31 +1070,9 @@
             flex-shrink: 0;
         }
         .chat-preview-strip.active { display: flex; }
-        .chat-preview-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow: hidden;
-            min-width: 0;
-        }
-        .chat-preview-thumb {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        .chat-preview-remove {
-            background: transparent;
-            border: none;
-            color: #aaa;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 2px 8px;
-            flex-shrink: 0;
-        }
-        .chat-preview-remove:hover { color: #ff5252; }
-
+        .chat-preview-info { display: flex; align-items: center; gap: 10px; overflow: hidden; min-width: 0; }
+        .chat-preview-thumb { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+        .chat-preview-remove { background: transparent; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 2px 8px; }
         .chat-tools-bar {
             display: flex;
             align-items: center;
@@ -1285,20 +1098,10 @@
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: 0.15s;
             flex-shrink: 0;
         }
-        .chat-action-pill:hover {
-            background: #e8df31;
-            color: #000;
-            border-color: #e8df31;
-        }
-        .chat-tools-divider {
-            width: 1px;
-            height: 18px;
-            background: #333;
-            flex-shrink: 0;
-        }
+        .chat-action-pill:hover { background: #e8df31; color: #000; border-color: #e8df31; }
+        .chat-tools-divider { width: 1px; height: 18px; background: #333; flex-shrink: 0; }
         .chat-emoji-btn {
             background: #222;
             border: 1px solid #303030;
@@ -1306,12 +1109,8 @@
             padding: 3px 9px;
             font-size: 14px;
             cursor: pointer;
-            transition: 0.15s;
-            user-select: none;
             flex-shrink: 0;
         }
-        .chat-emoji-btn:hover { background: #333; transform: scale(1.08); }
-
         .chat-input-bar {
             display: flex;
             align-items: center;
@@ -1329,10 +1128,8 @@
             color: #fff;
             font-size: 14px;
             outline: none;
-            transition: 0.2s;
         }
-        .chat-input-field:focus { border-color: #e8df31; background: #262626; }
-        .chat-input-field:disabled { opacity: 0.5; cursor: not-allowed; }
+        .chat-input-field:focus { border-color: #e8df31; }
         .chat-send-btn {
             min-width: 44px;
             height: 44px;
@@ -1348,9 +1145,7 @@
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            transition: 0.2s;
         }
-        .chat-send-btn:hover:not(:disabled) { transform: scale(1.05); background: #f2e93d; }
         .chat-send-btn:disabled { opacity: 0.45; cursor: not-allowed; background: #555; color: #ccc; }
 
         /* Модальные окна */
@@ -1377,119 +1172,33 @@
             display: flex;
             flex-direction: column;
         }
-        .custom-modal-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 14px;
-            color: #e8df31;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .custom-modal-input {
-            width: 100%;
-            background: #262626;
-            border: 1px solid #3a3a3a;
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: #fff;
-            font-size: 14px;
-            margin-bottom: 10px;
-            outline: none;
-        }
-        .custom-modal-input:focus { border-color: #e8df31; }
-        .vk-my-audios-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            background: #2787F5;
-            color: #fff !important;
-            text-decoration: none !important;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            transition: 0.2s;
-        }
-        .vk-my-audios-btn:hover { background: #1c76de; }
-        .vk-modal-hint {
-            font-size: 11px;
-            color: #888;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-        .custom-modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 6px;
-        }
-        .btn-modal-cancel {
-            background: #2b2b2b;
-            color: #ccc;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 18px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .btn-modal-confirm {
-            background: #e8df31;
-            color: #000;
-            font-weight: 700;
-            border: none;
-            border-radius: 20px;
-            padding: 8px 20px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .ban-list-scroll {
-            overflow-y: auto;
-            max-height: 260px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        .ban-list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #252525;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 13px;
-        }
-        .btn-unban {
-            background: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .custom-modal-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; color: #e8df31; display: flex; align-items: center; justify-content: space-between; }
+        .custom-modal-input { width: 100%; background: #262626; border: 1px solid #3a3a3a; border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 14px; margin-bottom: 10px; outline: none; }
+        .vk-my-audios-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #2787F5; color: #fff !important; text-decoration: none !important; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+        .vk-modal-hint { font-size: 11px; color: #888; line-height: 1.4; margin-bottom: 12px; }
+        .custom-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+        .btn-modal-cancel { background: #2b2b2b; color: #ccc; border: none; border-radius: 20px; padding: 8px 18px; font-size: 13px; cursor: pointer; }
+        .btn-modal-confirm { background: #e8df31; color: #000; font-weight: 700; border: none; border-radius: 20px; padding: 8px 20px; font-size: 13px; cursor: pointer; }
+        .ban-list-scroll { overflow-y: auto; max-height: 260px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .ban-list-item { display: flex; align-items: center; justify-content: space-between; background: #252525; padding: 8px 12px; border-radius: 10px; font-size: 13px; }
+        .btn-unban { background: #4caf50; color: #fff; border: none; border-radius: 14px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
 
         /* ==================== КОНТАКТЫ ==================== */
-        .contacts-wrapper { background: url('https://images.unsplash.com/photo-1492560704071-7826278858ab?auto=format&fit=crop&w=1000&q=80') center center no-repeat; background-size: cover; position: relative; width: 100%; max-width: 750px; height: auto; min-height: calc(100vh - 140px); margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 40px 20px 20px 20px; color: #fff; text-align: center; }
+        .contacts-wrapper { background: url('https://images.unsplash.com/photo-1492560704071-7826278858ab?auto=format&fit=crop&w=1000&q=80') center center no-repeat; background-size: cover; position: relative; width: 100%; max-width: 750px; min-height: calc(100vh - 50px); margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 36px 20px 20px 20px; color: #fff; text-align: center; }
         .contacts-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1; }
         .contacts-content { position: relative; z-index: 2; width: 100%; }
-        .footer-socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .footer-socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 28px; }
         .social-link { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; font-size: 22px; transition: all 0.3s; }
-        .social-link:hover { background: #e8df31; color: #000; transform: translateY(-5px); border-color: #e8df31; }
-        .max-icon-img { width: 60%; height: auto; transition: all 0.3s; }
+        .social-link:hover { background: #e8df31; color: #000; transform: translateY(-4px); border-color: #e8df31; }
+        .max-icon-img { width: 60%; height: auto; }
         .social-link:hover .max-icon-img { filter: brightness(0); }
-        .footer-contacts-wrap { display: flex; flex-direction: column; gap: 20px; max-width: 500px; margin: 0 auto 30px auto; }
-        .contact-item { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; }
-        .contact-icon { font-size: 24px; margin-bottom: 10px; color: #e8df31; }
-        .contact-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
+        .footer-contacts-wrap { display: flex; flex-direction: column; gap: 16px; max-width: 500px; margin: 0 auto 26px auto; }
+        .contact-item { background: rgba(255,255,255,0.05); padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; }
+        .contact-icon { font-size: 22px; margin-bottom: 8px; color: #e8df31; }
+        .contact-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
         .contact-item a { color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; }
         .contact-item a:hover { color: #e8df31; }
-        .footer-copyright { font-size: 11px; color: #555; margin-top: 10px; border-top: 1px solid #222; padding-top: 20px; padding-bottom: 10px; }
+        .footer-copyright { font-size: 11px; color: #555; margin-top: 10px; border-top: 1px solid #222; padding-top: 18px; }
     </style>
 </head>
 <body>
@@ -1497,36 +1206,7 @@
 <audio id="stream" preload="auto"></audio>
 <input type="file" id="chat-photo-input" accept="image/*" style="display: none;">
 
-<!-- 1. ВЕРХНИЙ ПЛЕЕР -->
-<div class="radio-player-container">
-    <div class="player-left">
-        <div class="station-logo"><img src="https://imgs.su/upload/671/2340987012.png" alt="Logo"></div>
-        <div class="station-info">
-            <h2 class="station-title" id="player-channel-title">ChilloutFM</h2>
-            <div class="station-genre" id="player-channel-genre">Chillout · Lounge · 128 kbps</div>
-        </div>
-        <div class="station-divider"></div>
-    </div>
-    <div class="player-center">
-        <div class="track-info-top">
-            <span class="status-label">В эфире:</span>
-            <div id="track-marquee"><span class="track-name" data-myinfo="song">Загрузка...</span></div>
-        </div>
-        <div class="controls-row">
-            <div class="artist-circle"><img id="artist-cover-img" src="https://imgs.su/upload/671/2340987012.png" alt="Cover"></div>
-            <div class="control-btn" id="play-btn">▶</div>
-            <div class="volume-container"><input type="range" min="0" max="100" value="80" class="volume-slider" id="vol-slider"></div>
-        </div>
-    </div>
-    <div class="player-right">
-        <div class="menu-item" id="vk-btn">
-            <div class="menu-icon">⌖</div>
-            <div class="menu-text">Поиск</div>
-        </div>
-    </div>
-</div>
-
-<!-- ВКЛАДКИ -->
+<!-- ВКЛАДКИ (БЕЗ ВЕРХНЕГО ПЛЕЕРА) -->
 <div class="tabs">
     <div class="tab active" onclick="sw('live', this)">Главная</div>
     <div class="tab" onclick="sw('playlist', this)">Плейлист</div>
@@ -1550,19 +1230,50 @@
                 </a>
             </div>
 
-            <!-- ОСНОВНАЯ КАРТОЧКА -->
+            <!-- ОСНОВНАЯ КАРТОЧКА CHILLOUT FM СО СКРИНШОТА + КНОПКА ЗАПУСКА -->
+            <div class="station-hero-card">
+                <div class="station-hero-top">
+                    <span class="station-tag-badge">РАДИО ТВОЕЙ АТМОСФЕРЫ</span>
+                    <span class="station-live-pill">
+                        <span class="station-live-dot"></span> ЭФИР 128 KBPS
+                    </span>
+                </div>
+                <div class="station-brand-row">
+                    <img class="station-brand-icon" src="https://imgs.su/upload/671/2340987012.png" alt="Chillout FM">
+                    <h1 class="station-brand-title">Chillout FM</h1>
+                </div>
+                <div class="station-brand-genre">Chillout · Lounge</div>
+                <p class="station-brand-desc">
+                    Флагманский эфир: мягкий чиллаут, лаунж и даунтемпо. Тот самый звук Сургута.
+                </p>
+                <div class="station-ritual-box">
+                    <i class="fas fa-mug-hot" style="color:#34d399; margin-right:5px;"></i>
+                    <b>Ритуал:</b> зелёный чай с жасмином, приглушённый свет и 20 минут без телефона.
+                </div>
+                <div class="station-now-bar">
+                    <div class="station-now-meta">
+                        <div class="station-now-kicker">СЕЙЧАС НА КАНАЛЕ</div>
+                        <div class="station-now-track" data-myinfo="song">Загрузка...</div>
+                    </div>
+                    <div class="station-controls-group">
+                        <div class="station-vol-wrap">
+                            <i class="fas fa-volume-up"></i>
+                            <input type="range" min="0" max="100" value="80" class="station-vol-slider" id="vol-slider" title="Громкость">
+                        </div>
+                        <button type="button" class="station-play-btn" id="play-btn" title="Слушать эфир">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КАРТОЧКА ТЕКУЩЕГО ИСПОЛНИТЕЛЯ -->
             <div class="home-glass-card">
-                <div class="row align-items-center g-3">
-                    <div class="col-lg-3 col-md-4 col-12 text-center">
+                <div class="row align-items-center g-2">
+                    <div class="col-lg-2 col-md-3 col-12 text-center">
                         <div class="immersive-cover-wrap">
                             <img id="live-artist-img" src="https://imgs.su/upload/671/2340987012.png" alt="Live Art">
                         </div>
-                        <button type="button" id="home-play-toggle" class="home-cover-play-btn" onclick="playBtn.click()">
-                            <i class="fas fa-play" id="home-play-icon"></i>
-                            <span id="home-play-text">Слушать эфир</span>
-                        </button>
                     </div>
-                    <div class="col-lg-9 col-md-8 col-12">
+                    <div class="col-lg-10 col-md-9 col-12">
                         <div class="immersive-info">
                             <div class="immersive-label">Сейчас в эфире</div>
                             <h3 id="live-artist-name">Загрузка...</h3>
@@ -1596,7 +1307,7 @@
                 </div>
             </div>
 
-            <!-- КОМПАКТНАЯ ПРОГРАММА CHILLOUT FM -->
+            <!-- ПРОГРАММА CHILLOUT FM -->
             <div class="program-schedule-section" id="program-schedule">
                 <div class="program-top-bar">
                     <div class="program-kicker">
@@ -1797,7 +1508,7 @@
     <div class="contacts-wrapper">
         <div class="contacts-overlay"></div>
         <div class="contacts-content">
-            <h2 style="margin-bottom:30px; font-weight:800; text-transform:uppercase;">Наши контакты</h2>
+            <h2 style="margin-bottom:28px; font-weight:800; text-transform:uppercase;">Наши контакты</h2>
             <div class="footer-socials">
                 <a href="https://vk.com/chillou_fm" target="_blank" rel="noopener noreferrer" class="social-link" title="ВКонтакте"><i class="fab fa-vk"></i></a>
                 <a href="https://max.ru/chillou_fm" target="_blank" rel="noopener noreferrer" class="social-link" title="MAX"><img src="https://imgs.su/upload/820/278324543.png" class="max-icon-img" alt="MAX"></a>
@@ -1820,7 +1531,7 @@ var audio = document.getElementById('stream');
 var playBtn = document.getElementById('play-btn');
 var volSlider = document.getElementById('vol-slider');
 var isPlay = false;
-var lastArtist = ""; 
+var lastArtist = "";
 var activeTab = "live";
 var mainStationTrack = { song: "ChilloutFM", artist: "ChilloutFM", title: "Музыка для души", img: "" };
 var currentLiveTrack = { song: "ChilloutFM", artist: "ChilloutFM", title: "Музыка для души", cover: defImg };
@@ -1903,8 +1614,7 @@ var PROGRAM_SLOTS = [
 
 function getUtc5NowParts() {
     var now = new Date();
-    var utc5Ms = now.getTime() + (5 * 60 * 60 * 1000);
-    var d = new Date(utc5Ms);
+    var d = new Date(now.getTime() + (5 * 60 * 60 * 1000));
     var h = d.getUTCHours();
     var m = d.getUTCMinutes();
     var s = d.getUTCSeconds();
@@ -1960,9 +1670,7 @@ function renderProgramSchedule() {
     $('#program-now-title').html(
         escapeHtml(currentSlot.title) + ' · <span class="program-now-slot-time">' + escapeHtml(currentSlot.rangeLabel) + ' (UTC+5)</span>'
     );
-    $('#program-now-sub').text(
-        currentSlot.subtitle + ' — ' + currentSlot.desc
-    );
+    $('#program-now-sub').text(currentSlot.subtitle + ' — ' + currentSlot.desc);
     $('#program-countdown').text(formatHms(remainingSec));
     $('#program-progress-fill').css('width', progressPct + '%');
 
@@ -2002,14 +1710,11 @@ function setPlayerPlayingVisual(playing) {
     isPlay = playing;
     if (playing) {
         playBtn.innerHTML = "||";
-        playBtn.style.color = "#e8df31";
-        playBtn.style.borderColor = "#e8df31";
+        playBtn.classList.add('is-playing');
     } else {
         playBtn.innerHTML = "▶";
-        playBtn.style.color = "#ccc";
-        playBtn.style.borderColor = "#444";
+        playBtn.classList.remove('is-playing');
     }
-    updateHomePlayButtonUI();
 }
 
 function toggleStreamPlayback(forcePlay) {
@@ -2053,21 +1758,6 @@ var currentBanList = [];
 
 audio.volume = volSlider.value / 100;
 
-function updateHomePlayButtonUI() {
-    var btn = $('#home-play-toggle');
-    var icon = $('#home-play-icon');
-    var txt = $('#home-play-text');
-    if (isPlay) {
-        btn.addClass('is-playing');
-        icon.attr('class', 'fas fa-pause');
-        txt.text('На паузе / Остановить');
-    } else {
-        btn.removeClass('is-playing');
-        icon.attr('class', 'fas fa-play');
-        txt.text('Слушать эфир');
-    }
-}
-
 // --- ВКЛАДКИ ---
 window.sw = function(id, el) {
     activeTab = id;
@@ -2092,7 +1782,7 @@ window.sw = function(id, el) {
     }
 };
 
-// --- НАСТРОЙКИ СЕРВЕРНОГО API ДЛЯ ОБЩЕГО ЧАТА ---
+// --- СЕРВЕРНЫЙ API ДЛЯ ОБЩЕГО ЧАТА ---
 var CHAT_API_URL = "https://chilloutfm.ru/chat-api.php";
 var lastRenderedHash = "";
 var isSyncing = false;
@@ -2112,9 +1802,7 @@ if (savedName && vkUser.name === "Гость") {
 function showChatNotice(msg) {
     var el = $('#chat-toast');
     el.stop(true, true).text(msg).fadeIn(150);
-    setTimeout(function() {
-        el.fadeOut(300);
-    }, 2600);
+    setTimeout(function() { el.fadeOut(300); }, 2600);
 }
 
 function updateChatUserUI() {
@@ -2203,16 +1891,11 @@ window.addEmoji = function(emoji) {
     inp.focus();
 };
 
-// --- ОТВЕТЫ ПОЛЬЗОВАТЕЛЯМ И КЛИКАБЕЛЬНЫЙ ПЕРЕХОД К ЦИТАТЕ ---
 window.setReplyTo = function(msgId, author, text) {
     if (isCurrentUserBanned()) return;
     var cleanSnippet = (text && text.trim()) ? text.trim() : "Вложение";
     if (cleanSnippet.length > 80) cleanSnippet = cleanSnippet.substr(0, 80) + "...";
-    pendingReply = {
-        msgId: msgId,
-        author: author,
-        text: cleanSnippet
-    };
+    pendingReply = { msgId: msgId, author: author, text: cleanSnippet };
     $('#chat-reply-preview-content').html(
         '<i class="fas fa-reply" style="color:#e8df31;"></i>' +
         '<div><b style="color:#e8df31;">Ответ ' + escapeHtml(author) + ':</b> ' + escapeHtml(cleanSnippet) + '</div>'
@@ -2239,12 +1922,9 @@ window.jumpToQuotedMessage = function(targetMsgId) {
     }
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     $(targetEl).addClass('highlighted');
-    setTimeout(function() {
-        $(targetEl).removeClass('highlighted');
-    }, 1600);
+    setTimeout(function() { $(targetEl).removeClass('highlighted'); }, 1600);
 };
 
-// --- ВЛОЖЕНИЯ В ЧАТ ---
 function setAttachment(att) {
     if (isCurrentUserBanned()) {
         showChatNotice("Вы заблокированы в чате");
@@ -2381,17 +2061,14 @@ window.confirmVkMusicAttach = function() {
         alert('Укажите название трека/плейлиста или вставьте ссылку из ВК');
         return;
     }
-
     var isPlaylist = /playlist|album/i.test(link);
     var defaultTitle = isPlaylist
         ? ('Плейлист из ВК (' + vkUser.name + ')')
         : ('Трек из аудиозаписей (' + vkUser.name + ')');
     var title = q || defaultTitle;
-
     var myAudiosFallback = (vkUser.id && vkUser.id !== 0)
         ? ('https://vk.com/audios' + vkUser.id)
         : 'https://vk.com/audio';
-
     var targetUrl = (link && /^https?:\/\//i.test(link))
         ? link
         : (q ? ('https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(q)) : myAudiosFallback);
@@ -2406,38 +2083,17 @@ window.confirmVkMusicAttach = function() {
                 var coverUrl = (data && data.results && data.results.length > 0)
                     ? data.results[0].artworkUrl100.replace('100x100', '300x300')
                     : '';
-                setAttachment({
-                    type: 'vkmusic',
-                    title: title,
-                    url: targetUrl,
-                    cover: coverUrl,
-                    isPlaylist: isPlaylist,
-                    ownerName: vkUser.name
-                });
+                setAttachment({ type: 'vkmusic', title: title, url: targetUrl, cover: coverUrl, isPlaylist: isPlaylist, ownerName: vkUser.name });
             })
             .catch(function() {
-                setAttachment({
-                    type: 'vkmusic',
-                    title: title,
-                    url: targetUrl,
-                    cover: '',
-                    isPlaylist: isPlaylist,
-                    ownerName: vkUser.name
-                });
+                setAttachment({ type: 'vkmusic', title: title, url: targetUrl, cover: '', isPlaylist: isPlaylist, ownerName: vkUser.name });
             })
             .finally(function() {
                 confirmBtn.prop('disabled', false).text('Прикрепить');
                 closeVkMusicModal();
             });
     } else {
-        setAttachment({
-            type: 'vkmusic',
-            title: title,
-            url: targetUrl,
-            cover: '',
-            isPlaylist: isPlaylist,
-            ownerName: vkUser.name
-        });
+        setAttachment({ type: 'vkmusic', title: title, url: targetUrl, cover: '', isPlaylist: isPlaylist, ownerName: vkUser.name });
         confirmBtn.prop('disabled', false).text('Прикрепить');
         closeVkMusicModal();
     }
@@ -2456,22 +2112,15 @@ document.getElementById('chat-photo-input').addEventListener('change', function(
         var img = new Image();
         img.onload = function() {
             var maxSide = 480;
-            var w = img.width;
-            var h = img.height;
+            var w = img.width, h = img.height;
             if (w > maxSide || h > maxSide) {
                 if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
                 else { w = Math.round(w * maxSide / h); h = maxSide; }
             }
             var canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, w, h);
-            var compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
-            setAttachment({
-                type: 'photo',
-                dataUrl: compressedDataUrl
-            });
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            setAttachment({ type: 'photo', dataUrl: canvas.toDataURL('image/jpeg', 0.65) });
         };
         img.src = ev.target.result;
     };
@@ -2483,19 +2132,14 @@ window.openPhotoModal = function(src) {
     $('#photo-view-modal').addClass('active');
 };
 
-function escapeHtml(text) {
-    return $('<div>').text(text).html();
-}
-
+function escapeHtml(text) { return $('<div>').text(text).html(); }
 function escapeAttr(text) {
     return String(text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
-
 function formatTime(ts) {
     var d = new Date(ts);
     return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
 }
-
 function scrollChatBottom() {
     var area = document.getElementById('chat-messages');
     if (area) area.scrollTop = area.scrollHeight;
@@ -2520,15 +2164,9 @@ function normalizeStore(raw) {
 }
 
 function fetchLatestStore() {
-    return fetch(CHAT_API_URL + '?t=' + Date.now(), {
-        method: 'GET',
-        cache: 'no-store'
-    }).then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-    }).then(function(raw) {
-        return normalizeStore(raw);
-    });
+    return fetch(CHAT_API_URL + '?t=' + Date.now(), { method: 'GET', cache: 'no-store' })
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(raw) { return normalizeStore(raw); });
 }
 
 function saveStore(store) {
@@ -2536,33 +2174,22 @@ function saveStore(store) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(store)
-    }).then(function(r) {
-        if (!r.ok) throw new Error('Save HTTP ' + r.status);
-        return store;
-    });
+    }).then(function(r) { if (!r.ok) throw new Error('Save HTTP ' + r.status); return store; });
 }
 
 function updateOnlineCounter(onlineMap) {
-    var now = Date.now();
-    var count = 0;
+    var now = Date.now(), count = 0;
     if (onlineMap) {
-        Object.keys(onlineMap).forEach(function(k) {
-            if (now - onlineMap[k] < 35000) {
-                count++;
-            }
-        });
+        Object.keys(onlineMap).forEach(function(k) { if (now - onlineMap[k] < 35000) count++; });
     }
-    if (count < 1) count = 1;
-    $('#chat-online-count').text(count);
+    $('#chat-online-count').text(count < 1 ? 1 : count);
 }
 
 function renderAttachmentHtml(att) {
     if (!att || !att.type) return '';
     if (att.type === 'live') {
-        var safeUrl = escapeHtml(att.url || 'https://vk.com/audio');
-        var safeCover = escapeHtml(att.cover || defImg);
-        return '<a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
-                    '<img class="chat-att-cover" src="' + safeCover + '" onerror="this.src=\'' + defImg + '\'">' +
+        return '<a href="' + escapeHtml(att.url || 'https://vk.com/audio') + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
+                    '<img class="chat-att-cover" src="' + escapeHtml(att.cover || defImg) + '" onerror="this.src=\'' + defImg + '\'">' +
                     '<div class="chat-att-info">' +
                         '<span class="chat-att-badge"><i class="fas fa-broadcast-tower"></i> Эфир / Плейлист</span>' +
                         '<div class="chat-att-title">' + escapeHtml(att.song || '') + '</div>' +
@@ -2571,13 +2198,12 @@ function renderAttachmentHtml(att) {
                '</a>';
     }
     if (att.type === 'vkmusic') {
-        var vkUrl = escapeHtml(att.url || 'https://vk.com/audio');
         var badgeText = att.isPlaylist ? 'Плейлист из ВК' : 'Из плейлиста ВК';
         var subText = att.isPlaylist ? 'Открыть плейлист в ВК →' : 'Слушать в ВК →';
         var mediaLeftHtml = att.cover
             ? '<img class="chat-att-cover" src="' + escapeHtml(att.cover) + '" onerror="this.src=\'' + defImg + '\'">'
             : '<div class="chat-att-icon-box"><i class="fab fa-vk"></i></div>';
-        return '<a href="' + vkUrl + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
+        return '<a href="' + escapeHtml(att.url || 'https://vk.com/audio') + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
                     mediaLeftHtml +
                     '<div class="chat-att-info">' +
                         '<span class="chat-att-badge"><i class="fab fa-vk"></i> ' + badgeText + '</span>' +
@@ -2605,19 +2231,13 @@ function renderMessages(list, forceScroll) {
     list.forEach(function(m, idx) {
         var msgId = m.id || ('idx_' + idx + '_' + (m.time || 0));
         var isOwn = (m.uid && m.uid === vkUser.id && vkUser.id !== 0) || (m.did && m.did === deviceId && m.uid !== -1) || (m.author === vkUser.name && m.uid !== -1);
-        
         var quoteHtml = '';
         if (m.reply && m.reply.author) {
-            var targetIdAttr = escapeAttr(m.reply.msgId || '');
-            quoteHtml = '<div class="chat-quote-box" data-jumpid="' + targetIdAttr + '" title="Нажмите, чтобы перейти к сообщению">' +
-                            '<span class="chat-quote-author">' +
-                                '<span><i class="fas fa-reply"></i> ' + escapeHtml(m.reply.author) + '</span>' +
-                                '<span class="chat-quote-jump-hint">перейти ↑</span>' +
-                            '</span>' +
+            quoteHtml = '<div class="chat-quote-box" data-jumpid="' + escapeAttr(m.reply.msgId || '') + '" title="Нажмите, чтобы перейти к сообщению">' +
+                            '<span class="chat-quote-author"><span><i class="fas fa-reply"></i> ' + escapeHtml(m.reply.author) + '</span><span class="chat-quote-jump-hint">перейти ↑</span></span>' +
                             '<span class="chat-quote-text">' + escapeHtml(m.reply.text || '') + '</span>' +
                         '</div>';
         }
-
         var textHtml = m.text ? '<div>' + escapeHtml(m.text) + '</div>' : '';
         var attHtml = renderAttachmentHtml(m.att);
         var snippetForReply = m.text || (m.att && m.att.song) || (m.att && m.att.title) || (m.att && m.att.type === 'photo' ? 'Фотография' : '');
@@ -2631,67 +2251,42 @@ function renderMessages(list, forceScroll) {
             adminBtnsHtml = '<button type="button" class="chat-mod-btn" data-msgid="' + escapeAttr(msgId) + '" data-idx="' + idx + '" title="Удалить сообщение"><i class="fas fa-trash"></i></button>';
         }
 
-        var html = '<div class="chat-msg ' + (isOwn ? 'own' : '') + '" id="msg_' + escapeAttr(msgId) + '">' +
-                        '<img class="chat-msg-avatar" src="' + (m.avatar || defImg) + '" onerror="this.src=\'' + defImg + '\'">' +
-                        '<div class="chat-msg-bubble">' +
-                            '<div class="chat-msg-header">' +
-                                '<div class="chat-msg-meta">' +
-                                    '<span class="chat-msg-author">' + escapeHtml(m.author || "Слушатель") + '</span>' +
-                                    '<span class="chat-msg-time">' + formatTime(m.time || Date.now()) + '</span>' +
-                                '</div>' +
-                                '<div class="chat-msg-actions">' +
-                                    '<button type="button" class="chat-reply-btn" data-msgid="' + escapeAttr(msgId) + '" data-author="' + escapeAttr(m.author || 'Слушатель') + '" data-snippet="' + escapeAttr(snippetForReply) + '" title="Ответить"><i class="fas fa-reply"></i></button>' +
-                                    adminBtnsHtml +
-                                '</div>' +
-                            '</div>' +
-                            quoteHtml +
-                            textHtml +
-                            attHtml +
+        area.append(
+            '<div class="chat-msg ' + (isOwn ? 'own' : '') + '" id="msg_' + escapeAttr(msgId) + '">' +
+                '<img class="chat-msg-avatar" src="' + (m.avatar || defImg) + '" onerror="this.src=\'' + defImg + '\'">' +
+                '<div class="chat-msg-bubble">' +
+                    '<div class="chat-msg-header">' +
+                        '<div class="chat-msg-meta"><span class="chat-msg-author">' + escapeHtml(m.author || "Слушатель") + '</span><span class="chat-msg-time">' + formatTime(m.time || Date.now()) + '</span></div>' +
+                        '<div class="chat-msg-actions">' +
+                            '<button type="button" class="chat-reply-btn" data-msgid="' + escapeAttr(msgId) + '" data-author="' + escapeAttr(m.author || 'Слушатель') + '" data-snippet="' + escapeAttr(snippetForReply) + '" title="Ответить"><i class="fas fa-reply"></i></button>' +
+                            adminBtnsHtml +
                         '</div>' +
-                   '</div>';
-        area.append(html);
+                    '</div>' +
+                    quoteHtml + textHtml + attHtml +
+                '</div>' +
+            '</div>'
+        );
     });
 
-    if (forceScroll || wasAtBottom) {
-        scrollChatBottom();
-    }
+    if (forceScroll || wasAtBottom) scrollChatBottom();
 }
 
 $('#chat-messages').on('click', '.chat-reply-btn', function() {
-    var msgId = $(this).data('msgid');
-    var author = $(this).data('author');
-    var snippet = $(this).data('snippet');
-    setReplyTo(msgId, author, snippet);
+    setReplyTo($(this).data('msgid'), $(this).data('author'), $(this).data('snippet'));
 });
-
 $('#chat-messages').on('click', '.chat-quote-box', function() {
-    var jumpId = $(this).data('jumpid');
-    jumpToQuotedMessage(jumpId);
+    jumpToQuotedMessage($(this).data('jumpid'));
 });
-
 $('#chat-messages').on('click', '.chat-mod-btn', function() {
-    if (!isAdmin) return;
-    var targetId = $(this).data('msgid');
-    var targetIdx = parseInt($(this).data('idx'), 10);
-    deleteSingleMessage(targetId, targetIdx);
+    if (isAdmin) deleteSingleMessage($(this).data('msgid'), parseInt($(this).data('idx'), 10));
 });
-
 $('#chat-messages').on('click', '.chat-ban-btn', function() {
-    if (!isAdmin) return;
-    var author = $(this).data('author');
-    var uid = parseInt($(this).data('uid'), 10) || 0;
-    var did = $(this).data('did') || '';
-    banUserFromChat(author, uid, did);
+    if (isAdmin) banUserFromChat($(this).data('author'), parseInt($(this).data('uid'), 10) || 0, $(this).data('did') || '');
 });
 
 function cleanStaleOnline(onlineMap) {
-    var now = Date.now();
-    var fresh = {};
-    Object.keys(onlineMap || {}).forEach(function(k) {
-        if (now - onlineMap[k] < 35000) {
-            fresh[k] = onlineMap[k];
-        }
-    });
+    var now = Date.now(), fresh = {};
+    Object.keys(onlineMap || {}).forEach(function(k) { if (now - onlineMap[k] < 35000) fresh[k] = onlineMap[k]; });
     fresh[deviceId] = now;
     return fresh;
 }
@@ -2699,16 +2294,12 @@ function cleanStaleOnline(onlineMap) {
 function syncChatState(forceScroll, sendHeartbeat) {
     if (isSyncing) return;
     isSyncing = true;
-
-    fetchLatestStore()
-    .then(function(store) {
+    fetchLatestStore().then(function(store) {
         currentBanList = store.bans;
         updateAdminUI();
         applyBanStateUI();
-
         var now = Date.now();
         var needHeartbeat = sendHeartbeat || (now - lastHeartbeatSent > 25000);
-
         if (needHeartbeat && activeTab === 'chat') {
             store.online = cleanStaleOnline(store.online);
             updateOnlineCounter(store.online);
@@ -2719,36 +2310,17 @@ function syncChatState(forceScroll, sendHeartbeat) {
             updateOnlineCounter(store.online);
             renderMessages(store.messages, forceScroll);
         }
-    })
-    .catch(function(err) {
-        console.warn("Ошибка синхронизации чата:", err);
-    })
-    .finally(function() {
-        isSyncing = false;
-    });
+    }).catch(function() {}).finally(function() { isSyncing = false; });
 }
 
 function banUserFromChat(author, uid, did) {
-    if (!uid && !did) {
-        alert("У этого старого сообщения нет идентификатора пользователя.");
-        return;
-    }
+    if (!uid && !did) { alert("У этого старого сообщения нет идентификатора пользователя."); return; }
     if (!confirm('Забанить пользователя «' + author + '» и удалить его сообщения?')) return;
     if (isSyncing) return;
     isSyncing = true;
-
-    fetchLatestStore()
-    .then(function(store) {
-        var alreadyBanned = store.bans.some(function(b) {
-            return (uid && b.uid === uid) || (did && b.did === did);
-        });
-        if (!alreadyBanned) {
-            store.bans.push({
-                author: author,
-                uid: uid,
-                did: did,
-                time: Date.now()
-            });
+    fetchLatestStore().then(function(store) {
+        if (!store.bans.some(function(b) { return (uid && b.uid === uid) || (did && b.did === did); })) {
+            store.bans.push({ author: author, uid: uid, did: did, time: Date.now() });
         }
         store.messages = store.messages.filter(function(m) {
             if (uid && uid !== 0 && m.uid === uid) return false;
@@ -2757,29 +2329,17 @@ function banUserFromChat(author, uid, did) {
         });
         store.online = cleanStaleOnline(store.online);
         return saveStore(store);
-    })
-    .then(function(updatedStore) {
-        currentBanList = updatedStore.bans;
+    }).then(function(updated) {
+        currentBanList = updated.bans;
         updateAdminUI();
         applyBanStateUI();
-        renderMessages(updatedStore.messages, false);
+        renderMessages(updated.messages, false);
         showChatNotice('Пользователь ' + author + ' заблокирован');
-    })
-    .catch(function() {})
-    .finally(function() {
-        isSyncing = false;
-    });
+    }).finally(function() { isSyncing = false; });
 }
 
-window.openBanListModal = function() {
-    if (!isAdmin) return;
-    renderBanListModal();
-    $('#banlist-modal').addClass('active');
-};
-
-window.closeBanListModal = function() {
-    $('#banlist-modal').removeClass('active');
-};
+window.openBanListModal = function() { if (isAdmin) { renderBanListModal(); $('#banlist-modal').addClass('active'); } };
+window.closeBanListModal = function() { $('#banlist-modal').removeClass('active'); };
 
 function renderBanListModal() {
     var box = $('#banlist-container');
@@ -2789,9 +2349,8 @@ function renderBanListModal() {
         return;
     }
     currentBanList.forEach(function(b, idx) {
-        var idInfo = b.uid ? ('VK ID: ' + b.uid) : 'Гость';
         var item = $('<div class="ban-list-item"></div>');
-        item.append('<div><b>' + escapeHtml(b.author || 'Пользователь') + '</b><div style="font-size:11px; color:#888;">' + idInfo + '</div></div>');
+        item.append('<div><b>' + escapeHtml(b.author || 'Пользователь') + '</b><div style="font-size:11px; color:#888;">' + (b.uid ? ('VK ID: ' + b.uid) : 'Гость') + '</div></div>');
         var unbanBtn = $('<button type="button" class="btn-unban">Разбанить</button>');
         unbanBtn.on('click', function() { unbanUserByIndex(idx); });
         item.append(unbanBtn);
@@ -2802,85 +2361,48 @@ function renderBanListModal() {
 function unbanUserByIndex(banIdx) {
     if (!isAdmin || isSyncing) return;
     isSyncing = true;
-
-    fetchLatestStore()
-    .then(function(store) {
+    fetchLatestStore().then(function(store) {
         store.bans.splice(banIdx, 1);
         store.online = cleanStaleOnline(store.online);
         return saveStore(store);
-    })
-    .then(function(updatedStore) {
-        currentBanList = updatedStore.bans;
+    }).then(function(updated) {
+        currentBanList = updated.bans;
         updateAdminUI();
         renderBanListModal();
-    })
-    .catch(function() {})
-    .finally(function() {
-        isSyncing = false;
-    });
+    }).finally(function() { isSyncing = false; });
 }
 
 function deleteSingleMessage(targetId, targetIdx) {
     if (isSyncing) return;
     isSyncing = true;
-
-    fetchLatestStore()
-    .then(function(store) {
-        var filtered = store.messages.filter(function(m, idx) {
+    fetchLatestStore().then(function(store) {
+        store.messages = store.messages.filter(function(m, idx) {
             if (m.id && m.id === targetId) return false;
             if (!m.id && idx === targetIdx) return false;
             return true;
         });
-        store.messages = filtered;
         store.online = cleanStaleOnline(store.online);
         return saveStore(store);
-    })
-    .then(function(updatedStore) {
-        renderMessages(updatedStore.messages, false);
-    })
-    .catch(function(err) {
-        console.error("Ошибка удаления сообщения:", err);
-    })
-    .finally(function() {
-        isSyncing = false;
-    });
+    }).then(function(updated) { renderMessages(updated.messages, false); }).finally(function() { isSyncing = false; });
 }
 
 window.adminClearAllMessages = function() {
-    if (!isAdmin) return;
-    if (!confirm("Удалить всю переписку в чате?")) return;
-    if (isSyncing) return;
+    if (!isAdmin || !confirm("Удалить всю переписку в чате?") || isSyncing) return;
     isSyncing = true;
-
-    fetchLatestStore()
-    .then(function(store) {
-        store.messages = [{
-            id: 'sys_' + Date.now(),
-            author: "ChilloutFM",
-            avatar: defImg,
-            text: "Чат очищен администратором.",
-            time: Date.now(),
-            uid: -1
-        }];
+    fetchLatestStore().then(function(store) {
+        store.messages = [{ id: 'sys_' + Date.now(), author: "ChilloutFM", avatar: defImg, text: "Чат очищен администратором.", time: Date.now(), uid: -1 }];
         store.online = cleanStaleOnline(store.online);
         return saveStore(store);
-    })
-    .then(function(updatedStore) {
-        renderMessages(updatedStore.messages, true);
-        updateOnlineCounter(updatedStore.online);
-    })
-    .catch(function() {})
-    .finally(function() {
-        isSyncing = false;
-    });
+    }).then(function(updated) {
+        renderMessages(updated.messages, true);
+        updateOnlineCounter(updated.online);
+    }).finally(function() { isSyncing = false; });
 };
 
 function startAntifloodCooldown() {
     if (isAdmin) return;
-    var sendBtn = $('#chat-send-btn');
-    var remaining = ANTIFLOOD_SECONDS;
+    var sendBtn = $('#chat-send-btn'), remaining = ANTIFLOOD_SECONDS;
     sendBtn.prop('disabled', true).text(remaining + 'с');
-
     if (floodTimerInterval) clearInterval(floodTimerInterval);
     floodTimerInterval = setInterval(function() {
         remaining--;
@@ -2888,9 +2410,7 @@ function startAntifloodCooldown() {
             clearInterval(floodTimerInterval);
             floodTimerInterval = null;
             sendBtn.html('<i class="fas fa-paper-plane"></i>');
-            if (!isCurrentUserBanned() && !isSyncing) {
-                sendBtn.prop('disabled', false);
-            }
+            if (!isCurrentUserBanned() && !isSyncing) sendBtn.prop('disabled', false);
         } else {
             sendBtn.text(remaining + 'с');
         }
@@ -2899,139 +2419,78 @@ function startAntifloodCooldown() {
 
 $('#chat-form').on('submit', function(e) {
     e.preventDefault();
-    if (isSyncing) return;
-
-    if (isCurrentUserBanned()) {
-        showChatNotice("Вы заблокированы в чате");
-        return;
-    }
-
-    var inp = $('#chat-input');
-    var sendBtn = $('#chat-send-btn');
-    var text = inp.val().trim();
+    if (isSyncing || isCurrentUserBanned()) return;
+    var inp = $('#chat-input'), sendBtn = $('#chat-send-btn'), text = inp.val().trim();
     if (!text && !pendingAttachment) return;
-
     var now = Date.now();
     if (!isAdmin) {
         var diffSec = Math.ceil((ANTIFLOOD_SECONDS * 1000 - (now - lastMsgSentTime)) / 1000);
-        if (diffSec > 0) {
-            showChatNotice("Не так быстро! Подождите " + diffSec + " сек.");
-            return;
-        }
+        if (diffSec > 0) { showChatNotice("Не так быстро! Подождите " + diffSec + " сек."); return; }
         if (text && text === lastMsgTextSent && !pendingAttachment && (now - lastMsgSentTime < 20000)) {
             showChatNotice("Не отправляйте одинаковые сообщения подряд");
             return;
         }
     }
-
     isSyncing = true;
     sendBtn.prop('disabled', true);
-
     var msgObj = {
         id: 'm_' + now + '_' + Math.random().toString(36).substr(2, 5),
-        author: vkUser.name,
-        avatar: vkUser.avatar,
-        text: text,
-        att: pendingAttachment,
-        reply: pendingReply,
-        time: now,
-        uid: vkUser.id,
-        did: deviceId
+        author: vkUser.name, avatar: vkUser.avatar, text: text,
+        att: pendingAttachment, reply: pendingReply, time: now, uid: vkUser.id, did: deviceId
     };
-
     inp.val('');
     clearAttachment();
     clearReply();
 
-    fetchLatestStore()
-    .then(function(store) {
+    fetchLatestStore().then(function(store) {
         currentBanList = store.bans;
-        if (isCurrentUserBanned()) {
-            applyBanStateUI();
-            throw new Error("USER_BANNED");
-        }
-
+        if (isCurrentUserBanned()) { applyBanStateUI(); throw new Error("USER_BANNED"); }
         store.messages.push(msgObj);
-        if (store.messages.length > 50) {
-            store.messages = store.messages.slice(-50);
-        }
+        if (store.messages.length > 50) store.messages = store.messages.slice(-50);
         store.online = cleanStaleOnline(store.online);
         lastHeartbeatSent = Date.now();
-
         return saveStore(store);
-    })
-    .then(function(updatedStore) {
+    }).then(function(updated) {
         lastMsgSentTime = Date.now();
         lastMsgTextSent = text;
-        updateOnlineCounter(updatedStore.online);
-        renderMessages(updatedStore.messages, true);
+        updateOnlineCounter(updated.online);
+        renderMessages(updated.messages, true);
         startAntifloodCooldown();
-    })
-    .catch(function(err) {
-        if (err && err.message === "USER_BANNED") {
-            showChatNotice("Вы заблокированы в чате");
-        } else {
-            console.error("Ошибка отправки:", err);
-        }
-    })
-    .finally(function() {
+    }).catch(function(err) {
+        if (err && err.message === "USER_BANNED") showChatNotice("Вы заблокированы в чате");
+    }).finally(function() {
         isSyncing = false;
-        if (!floodTimerInterval && !isCurrentUserBanned()) {
-            sendBtn.prop('disabled', false).html('<i class="fas fa-paper-plane"></i>');
-        }
-        if (!isCurrentUserBanned()) {
-            inp.focus();
-        }
+        if (!floodTimerInterval && !isCurrentUserBanned()) sendBtn.prop('disabled', false).html('<i class="fas fa-paper-plane"></i>');
+        if (!isCurrentUserBanned()) inp.focus();
     });
 });
 
 syncChatState(true, false);
-setInterval(function() {
-    if (activeTab === 'chat' && !isSyncing) {
-        syncChatState(false, false);
-    }
-}, 6000);
+setInterval(function() { if (activeTab === 'chat' && !isSyncing) syncChatState(false, false); }, 6000);
 
-playBtn.addEventListener('click', function() {
-    toggleStreamPlayback();
-});
+playBtn.addEventListener('click', function() { toggleStreamPlayback(); });
+volSlider.addEventListener('input', function() { audio.volume = this.value / 100; });
 
-volSlider.addEventListener('input', function() { 
-    audio.volume = this.value / 100; 
-});
-
-$('#vk-btn').on('click', function() {
-    openLiveTrackInVk();
-});
-
-// --- ПЛЕЙЛИСТ: ПОИСК И ОТРИСОВКА ---
 function renderFilteredPlaylist() {
     var query = ($('#playlist-search').val() || '').trim().toLowerCase();
     $('#playlist-search-clear').toggleClass('visible', query.length > 0);
-
     var container = $('#playlist-list');
     if (!playlistItemsCache || playlistItemsCache.length === 0) {
         container.html('<p class="playlist-empty-state">История временно недоступна.</p>');
         return;
     }
-
     var filtered = playlistItemsCache.filter(function(item) {
         if (!query) return true;
-        var hay = (item.time + ' ' + item.artist + ' ' + item.title).toLowerCase();
-        return hay.indexOf(query) !== -1;
+        return (item.time + ' ' + item.artist + ' ' + item.title).toLowerCase().indexOf(query) !== -1;
     });
-
     if (filtered.length === 0) {
         container.html('<p class="playlist-empty-state">По запросу «' + escapeHtml($('#playlist-search').val().trim()) + '» ничего не найдено.</p>');
         return;
     }
-
     var html = '';
     filtered.forEach(function(item) {
-        var searchQuery = encodeURIComponent(item.title ? (item.artist + ' ' + item.title) : item.artist);
-        var vkSearchUrl = 'https://vk.com/search?c[section]=audio&c[q]=' + searchQuery;
+        var vkSearchUrl = 'https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(item.title ? (item.artist + ' ' + item.title) : item.artist);
         var latestBadge = item.isLatest ? '<span class="playlist-latest-badge">Недавно</span>' : '';
-
         html += '<div class="playlist-track-row' + (item.isLatest ? ' is-latest' : '') + '">' +
                     '<div class="playlist-track-main">' +
                         '<div class="time-col">' + escapeHtml(item.time) + '</div>' +
@@ -3042,33 +2501,19 @@ function renderFilteredPlaylist() {
                         '</div>' +
                     '</div>' +
                     '<div class="playlist-track-actions">' +
-                        '<a href="' + vkSearchUrl + '" target="_blank" rel="noopener noreferrer" class="playlist-action-btn" title="Найти в ВКонтакте"><i class="fab fa-vk"></i> В ВК</a>' +
-                        '<button type="button" class="playlist-action-btn" onclick="sendPlaylistTrackToChat(' + item.index + ')" title="Отправить в эфирный чат"><i class="fas fa-comment-dots"></i> В чат</button>' +
+                        '<a href="' + vkSearchUrl + '" target="_blank" rel="noopener noreferrer" class="playlist-action-btn"><i class="fab fa-vk"></i> В ВК</a>' +
+                        '<button type="button" class="playlist-action-btn" onclick="sendPlaylistTrackToChat(' + item.index + ')"><i class="fas fa-comment-dots"></i> В чат</button>' +
                     '</div>' +
                 '</div>';
     });
-
     container.html(html);
 }
 
-window.clearPlaylistSearch = function() {
-    $('#playlist-search').val('');
-    renderFilteredPlaylist();
-    $('#playlist-search').focus();
-};
+window.clearPlaylistSearch = function() { $('#playlist-search').val(''); renderFilteredPlaylist(); $('#playlist-search').focus(); };
+$('#playlist-search').on('input', function() { renderFilteredPlaylist(); });
 
-$('#playlist-search').on('input', function() {
-    renderFilteredPlaylist();
-});
-
-// --- JS ДЛЯ ГЛАВНОЙ СТРАНИЦЫ И ПЛЕЙЛИСТА ---
-function truncateText(str, len) { 
-    return (!str || str.length <= len) ? str : str.substr(0, str.lastIndexOf(" ", len)) + "..."; 
-}
-
-function getCleanName(name) { 
-    return name.split(/\s+(?:feat\.?|ft\.?|x|&|vs\.?|pres\.?)\s+/i)[0].trim(); 
-}
+function truncateText(str, len) { return (!str || str.length <= len) ? str : str.substr(0, str.lastIndexOf(" ", len)) + "..."; }
+function getCleanName(name) { return name.split(/\s+(?:feat\.?|ft\.?|x|&|vs\.?|pres\.?)\s+/i)[0].trim(); }
 
 function updateSearchButtons(artist) {
     var clean = getCleanName(artist);
@@ -3079,18 +2524,16 @@ function updateSearchButtons(artist) {
 
 function doImageSearch(query, callback) {
     fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(query) + '&media=music&entity=album&limit=1')
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-        if (data.results && data.results.length > 0) {
-            var artUrl = data.results[0].artworkUrl100.replace('100x100', '600x600');
-            $('#live-artist-img').attr('src', artUrl);
-            $('#artist-bg-layer').css('background-image', 'url(' + artUrl + ')');
-            currentLiveTrack.cover = artUrl;
-            callback(true);
-        } else { 
-            callback(false); 
-        }
-    }).catch(function() { callback(false); });
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.results && data.results.length > 0) {
+                var artUrl = data.results[0].artworkUrl100.replace('100x100', '600x600');
+                $('#live-artist-img').attr('src', artUrl);
+                $('#artist-bg-layer').css('background-image', 'url(' + artUrl + ')');
+                currentLiveTrack.cover = artUrl;
+                callback(true);
+            } else { callback(false); }
+        }).catch(function() { callback(false); });
 }
 
 function fetchImage(artistName) {
@@ -3105,7 +2548,7 @@ function fetchImage(artistName) {
                         currentLiveTrack.cover = defImg;
                     }
                 });
-            } else { 
+            } else {
                 $('#live-artist-img').attr('src', defImg);
                 $('#artist-bg-layer').css('background-image', 'url(' + defImg + ')');
                 currentLiveTrack.cover = defImg;
@@ -3116,20 +2559,18 @@ function fetchImage(artistName) {
 
 function tryWiki(term, callback) {
     fetch('https://ru.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles=' + encodeURIComponent(term) + '&origin=*')
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-        var page = data.query.pages, pageId = Object.keys(page)[0];
-        if (pageId !== "-1" && page[pageId].extract) {
-            displayBio(page[pageId].extract, 'https://ru.wikipedia.org/?curid=' + pageId);
-            callback(true);
-        } else { 
-            callback(false); 
-        }
-    }).catch(function() { callback(false); });
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var page = data.query.pages, pageId = Object.keys(page)[0];
+            if (pageId !== "-1" && page[pageId].extract) {
+                displayBio(page[pageId].extract, 'https://ru.wikipedia.org/?curid=' + pageId);
+                callback(true);
+            } else { callback(false); }
+        }).catch(function() { callback(false); });
 }
 
 function displayBio(text, link) {
-    $('#live-artist-bio').html('<p>' + truncateText(text.replace(/<[^>]*>/g, ''), 220) + '</p>').css('opacity', '1');
+    $('#live-artist-bio').html('<p>' + truncateText(text.replace(/<[^>]*>/g, ''), 200) + '</p>').css('opacity', '1');
     if (link) $('#live-wiki-link').attr('href', link).css('display', 'inline-flex');
     $('#artist-links').hide();
 }
@@ -3147,12 +2588,8 @@ function startBioSearch(fullName) {
         if (!found) {
             var clean = getCleanName(fullName);
             if (clean !== fullName) {
-                tryWiki(clean, function(foundClean) { 
-                    if (!foundClean) showDefaultText(fullName); 
-                });
-            } else {
-                showDefaultText(fullName);
-            }
+                tryWiki(clean, function(foundClean) { if (!foundClean) showDefaultText(fullName); });
+            } else { showDefaultText(fullName); }
         }
     });
 }
@@ -3181,9 +2618,7 @@ var my_init_updateinfo = function(info) {
         reversed.forEach(function(song, idx) {
             if (Array.isArray(song)) song = {time: song[0], song: song[1], img: song[2]};
             expand_song(song);
-            var coverUrl = (song.img && song.img !== "img/no_cover.jpg")
-                ? ("https://myradio24.com/" + song.img)
-                : defImg;
+            var coverUrl = (song.img && song.img !== "img/no_cover.jpg") ? ("https://myradio24.com/" + song.img) : defImg;
             parsedItems.push({
                 index: idx,
                 time: (song.time || '').substr(0, 5),
@@ -3210,8 +2645,6 @@ var my_init_updateinfo = function(info) {
     }
     $('#live-artist-name').text(info.artist || "ChilloutFM");
     $('#live-track-title').text(info.songtitle || "Музыка для души");
-    var smallCoverUrl = (info.img && info.img !== "img/no_cover.jpg") ? "https://myradio24.com/" + info.img : defImg;
-    $('#artist-cover-img').attr('src', smallCoverUrl);
 
     $('[data-myinfo]').each(function() {
         var key = $(this).data('myinfo');
