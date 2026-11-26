@@ -1452,7 +1452,7 @@
 </head>
 <body>
 
-<audio id="stream" preload="none"></audio>
+<audio id="stream" preload="auto"></audio>
 <input type="file" id="chat-photo-input" accept="image/*" style="display: none;">
 
 <!-- 1. ВЕРХНИЙ ПЛЕЕР -->
@@ -1959,9 +1959,13 @@ function refreshSomaChannelsNowPlaying() {
 }
 
 // --- НАДЁЖНОЕ ВОСПРОИЗВЕДЕНИЕ ПОТОКОВ ДЛЯ ВСЕХ КАРТОЧЕК ---
-function setPlayerPlayingVisual(playing) {
+function setPlayerPlayingVisual(playing, isLoading) {
     isPlay = playing;
-    if (playing) {
+    if (isLoading) {
+        playBtn.innerHTML = "⏳";
+        playBtn.style.color = "#e8df31";
+        playBtn.style.borderColor = "#e8df31";
+    } else if (playing) {
         playBtn.innerHTML = "||";
         playBtn.style.color = "#e8df31";
         playBtn.style.borderColor = "#e8df31";
@@ -1974,32 +1978,82 @@ function setPlayerPlayingVisual(playing) {
     renderCompactChannels();
 }
 
+function getStreamErrorText(err) {
+    if (!err) return "ошибка потока";
+    switch (err.code) {
+        case 1: return "загрузка прервана";
+        case 2: return "сетевая ошибка / поток недоступен";
+        case 3: return "ошибка декодирования аудио";
+        case 4: return "формат или адрес потока не поддерживается";
+        default: return "ошибка воспроизведения";
+    }
+}
+
 function tryPlayUrlList(urls, index, token) {
     if (token !== playbackToken) return;
     if (!urls || index >= urls.length) {
-        setPlayerPlayingVisual(false);
-        showChatNotice("Не удалось запустить поток канала");
+        setPlayerPlayingVisual(false, false);
+        showChatNotice("Поток не запустился (проверьте доступ к ice1.somafm.com / listen8.myradio24.com)");
         return;
     }
 
     var url = urls[index];
+    setPlayerPlayingVisual(false, true);
+
     audio.pause();
     audio.removeAttribute('crossorigin');
-    audio.src = url;
+    audio.preload = 'auto';
+    audio.muted = false;
     audio.volume = volSlider.value / 100;
+    audio.src = url;
     audio.load();
+
+    var switchedNext = false;
+    function nextUrl(reasonText) {
+        if (switchedNext || token !== playbackToken) return;
+        switchedNext = true;
+        console.warn("Stream failed [" + url + "]: " + reasonText);
+        tryPlayUrlList(urls, index + 1, token);
+    }
+
+    var onErr = function() {
+        cleanup();
+        nextUrl(getStreamErrorText(audio.error));
+    };
+
+    var onPlaying = function() {
+        cleanup();
+        if (token !== playbackToken) return;
+        setPlayerPlayingVisual(true, false);
+    };
+
+    var failTimer = setTimeout(function() {
+        if (audio.readyState < 2 && !audio.currentTime) {
+            cleanup();
+            nextUrl("таймаут буферизации");
+        }
+    }, 6000);
+
+    function cleanup() {
+        clearTimeout(failTimer);
+        audio.removeEventListener('error', onErr);
+        audio.removeEventListener('playing', onPlaying);
+    }
+
+    audio.addEventListener('error', onErr);
+    audio.addEventListener('playing', onPlaying);
 
     var playPromise = audio.play();
     if (playPromise && typeof playPromise.then === 'function') {
         playPromise.then(function() {
             if (token !== playbackToken) return;
-            setPlayerPlayingVisual(true);
-        }).catch(function() {
+            cleanup();
+            setPlayerPlayingVisual(true, false);
+        }).catch(function(err) {
+            cleanup();
             if (token !== playbackToken) return;
-            tryPlayUrlList(urls, index + 1, token);
+            nextUrl(err && err.message ? err.message : "play() rejected");
         });
-    } else {
-        setPlayerPlayingVisual(true);
     }
 }
 
@@ -2012,7 +2066,7 @@ function toggleStreamPlayback(forcePlay, customUrls) {
         audio.pause();
         audio.removeAttribute('src');
         audio.load();
-        setPlayerPlayingVisual(false);
+        setPlayerPlayingVisual(false, false);
         return;
     }
 
@@ -3037,7 +3091,7 @@ playBtn.addEventListener('click', function() {
 
 audio.addEventListener('pause', function() {
     if (!audio.src || audio.src === window.location.href) {
-        setPlayerPlayingVisual(false);
+        setPlayerPlayingVisual(false, false);
     }
 });
 
