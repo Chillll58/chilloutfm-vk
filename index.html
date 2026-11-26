@@ -120,14 +120,14 @@
         @media (max-width: 700px) { .tabs { top: 80px; } }
         .tab { padding: 4px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; user-select: none; }
         .tab.active { color: #e8df31; border-bottom: 2px solid #e8df31; }
-        .content { display: none; padding-bottom: 40px; }
+        .content { display: none; padding-bottom: 32px; }
         .content.active { display: block; }
         #chat.content.active { padding-bottom: 0; }
 
-        /* ==================== ГЛАВНАЯ ==================== */
+        /* ==================== КОМПАКТНАЯ ГЛАВНАЯ ==================== */
         .immersive-artist-section {
             position: relative;
-            padding: 32px 0 54px 0;
+            padding: 18px 0 32px 0;
             overflow: hidden;
             background: #121216;
             color: #fff;
@@ -150,48 +150,48 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 12px;
         }
         .home-slot-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(18, 18, 22, 0.75);
+            gap: 7px;
+            background: rgba(18, 18, 22, 0.78);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 24px;
-            padding: 6px 14px;
-            font-size: 12px;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 11.5px;
             font-weight: 600;
             color: #e2e8f0;
         }
         .home-slot-pill i { color: #e8df31; }
         .home-slot-bitrate {
             color: #94a3b8;
-            font-size: 11px;
+            font-size: 10.5px;
             border-left: 1px solid rgba(255, 255, 255, 0.16);
-            padding-left: 8px;
+            padding-left: 7px;
         }
 
         .home-glass-card {
-            background: rgba(18, 18, 22, 0.72);
+            background: rgba(18, 18, 22, 0.76);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 22px;
-            padding: 28px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+            border-radius: 18px;
+            padding: 18px 22px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
         }
 
         .immersive-cover-wrap {
             position: relative;
-            border-radius: 18px;
-            box-shadow: 0 18px 40px rgba(0,0,0,0.6);
-            transition: transform 0.3s ease;
+            border-radius: 14px;
+            box-shadow: 0 12px 26px rgba(0,0,0,0.55);
+            transition: transform 0.25s ease;
             aspect-ratio: 1/1;
-            max-width: 250px;
+            max-width: 176px;
             margin: 0 auto;
             background: #09090d;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -201,17 +201,17 @@
         .immersive-cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .home-cover-play-btn {
-            margin: 14px auto 0 auto;
+            margin: 10px auto 0 auto;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.18);
             color: #fff;
-            border-radius: 24px;
-            padding: 8px 18px;
-            font-size: 12.5px;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 11.5px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
@@ -224,18 +224,18 @@
         }
 
         .immersive-info {
-            padding-left: 32px;
+            padding-left: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             height: 100%;
         }
         .immersive-label {
-            font-size: 12px;
-            letter-spacing: 1.5px;
+            font-size: 10.5px;
+            letter-spacing: 1.3px;
             text-transform: uppercase;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             color: #e8df31;
             display: flex;
             align-items: center;
@@ -243,54 +243,54 @@
         .immersive-label::before {
             content: '';
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: #e8df31;
             border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 10px #e8df31;
+            margin-right: 7px;
+            box-shadow: 0 0 8px #e8df31;
             animation: pulse-live 2s infinite;
         }
         @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.45; } 100% { opacity: 1; } }
         #live-artist-name {
-            font-size: 36px;
+            font-size: 26px;
             font-weight: 800;
             line-height: 1.12;
-            margin-bottom: 6px;
+            margin-bottom: 3px;
             text-transform: uppercase;
             color: #fff;
         }
         #live-track-title {
-            font-size: 19px;
+            font-size: 15.5px;
             font-weight: 600;
             color: #e8df31;
-            margin-bottom: 14px;
+            margin-bottom: 8px;
         }
         #live-artist-bio {
-            font-size: 14.5px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.45;
             color: #cbd5e1;
-            margin-bottom: 16px;
-            min-height: 40px;
+            margin-bottom: 10px;
+            min-height: 0;
         }
         #live-artist-bio p { margin: 0; }
 
         .home-quick-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 14px;
+            gap: 6px;
+            margin-bottom: 8px;
         }
         .home-action-btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: rgba(255, 255, 255, 0.07);
             border: 1px solid rgba(255, 255, 255, 0.16);
             color: #f8fafc;
-            border-radius: 22px;
-            padding: 7px 14px;
-            font-size: 12px;
+            border-radius: 18px;
+            padding: 5px 11px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.15s;
@@ -310,25 +310,25 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .platform-btn {
             display: inline-flex;
             align-items: center;
-            padding: 7px 15px;
-            border-radius: 22px;
+            padding: 5px 11px;
+            border-radius: 18px;
             background: rgba(255,255,255,0.08);
             color: #e2e8f0 !important;
             text-decoration: none !important;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,0.12);
             transition: all 0.2s;
         }
         .platform-btn:hover { background: #fff; color: #000 !important; transform: translateY(-1px); }
         .custom-button {
-            padding: 7px 18px;
-            border-radius: 22px;
+            padding: 5px 13px;
+            border-radius: 18px;
             background: #e8df31;
             color:#000 !important;
             border:none;
@@ -336,8 +336,8 @@
             text-decoration: none !important;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
+            gap: 5px;
+            font-size: 11px;
             transition: all 0.2s;
         }
         .custom-button:hover { opacity: 0.92; transform: translateY(-1px); }
@@ -345,48 +345,48 @@
         .donate-main-btn {
             display: inline-flex;
             align-items: center;
-            padding: 8px 18px;
-            font-size: 12px;
+            padding: 6px 14px;
+            font-size: 11px;
             font-weight: 800;
             background: linear-gradient(45deg, #e8df31, #d4c91f);
             color: #000 !important;
             text-decoration: none !important;
-            border-radius: 24px;
+            border-radius: 20px;
             border: none;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(232, 223, 49, 0.25);
+            box-shadow: 0 4px 12px rgba(232, 223, 49, 0.22);
             transition: all 0.25s;
         }
-        .donate-main-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(232, 223, 49, 0.45); }
-        .donate-main-btn i { margin-right: 7px; font-size: 13px; }
+        .donate-main-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(232, 223, 49, 0.4); }
+        .donate-main-btn i { margin-right: 6px; font-size: 11.5px; }
 
-        /* ==================== ПРОГРАММА CHILLOUT FM (СЕТКА ВЕЩАНИЯ) ==================== */
+        /* ==================== КОМПАКТНАЯ ПРОГРАММА CHILLOUT FM ==================== */
         .program-schedule-section {
-            margin-top: 22px;
-            background: rgba(11, 14, 22, 0.86);
+            margin-top: 14px;
+            background: rgba(11, 14, 22, 0.88);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: 22px;
-            padding: 24px;
-            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48);
+            border-radius: 18px;
+            padding: 16px 18px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.44);
         }
         .program-top-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
+            gap: 8px;
+            margin-bottom: 4px;
         }
         .program-kicker {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            font-size: 11px;
+            gap: 6px;
+            font-size: 10px;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 0.9px;
             text-transform: uppercase;
             color: #7dd3fc;
         }
@@ -394,33 +394,33 @@
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
         .program-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 5px 12px;
-            font-size: 11.5px;
+            border-radius: 14px;
+            padding: 3px 10px;
+            font-size: 10.5px;
             font-weight: 700;
             color: #e2e8f0;
             font-variant-numeric: tabular-nums;
         }
         .program-pill-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #f43f5e;
-            box-shadow: 0 0 8px #f43f5e;
+            box-shadow: 0 0 7px #f43f5e;
         }
         .program-main-heading {
-            margin: 0 0 18px 0;
-            font-size: 28px;
+            margin: 0 0 11px 0;
+            font-size: 20px;
             font-weight: 800;
-            letter-spacing: -0.4px;
+            letter-spacing: -0.3px;
             color: #ffffff;
             line-height: 1.15;
         }
@@ -428,36 +428,36 @@
         .program-now-banner {
             background: linear-gradient(135deg, rgba(16, 48, 64, 0.72), rgba(14, 23, 36, 0.88));
             border: 1px solid rgba(34, 211, 238, 0.36);
-            border-radius: 18px;
-            padding: 20px 22px;
-            margin-bottom: 18px;
-            box-shadow: inset 0 0 28px rgba(34, 211, 238, 0.08);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.07);
         }
         .program-now-top {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 14px;
+            gap: 10px;
         }
         .program-now-badge {
             display: inline-block;
             background: #22d3ee;
             color: #04151c;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.7px;
-            padding: 3px 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            letter-spacing: 0.6px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 4px;
         }
         .program-now-title {
             margin: 0;
-            font-size: 22px;
+            font-size: 17px;
             font-weight: 800;
             color: #ffffff;
-            line-height: 1.25;
+            line-height: 1.2;
         }
         .program-now-slot-time {
             color: #38bdf8;
@@ -465,8 +465,8 @@
             font-variant-numeric: tabular-nums;
         }
         .program-now-sub {
-            margin: 5px 0 0 0;
-            font-size: 13px;
+            margin: 3px 0 0 0;
+            font-size: 11.5px;
             color: #94a3b8;
         }
         .program-countdown-box {
@@ -475,21 +475,21 @@
         }
         .program-countdown-label {
             display: block;
-            font-size: 10.5px;
+            font-size: 10px;
             color: #94a3b8;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
         .program-countdown-value {
-            font-size: 26px;
+            font-size: 20px;
             font-weight: 800;
             color: #38bdf8;
             line-height: 1.1;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
         }
         .program-progress-track {
-            margin-top: 16px;
+            margin-top: 10px;
             width: 100%;
-            height: 6px;
+            height: 5px;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.1);
             overflow: hidden;
@@ -504,18 +504,18 @@
 
         .program-slots-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
         }
         .program-slot-card {
             background: rgba(18, 22, 34, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 18px 20px;
+            border-radius: 12px;
+            padding: 11px 13px;
             transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 3px;
         }
         .program-slot-card:hover {
             border-color: rgba(255, 255, 255, 0.2);
@@ -524,16 +524,16 @@
         .program-slot-card.is-current {
             background: linear-gradient(145deg, rgba(16, 44, 58, 0.9), rgba(16, 24, 38, 0.95));
             border-color: rgba(34, 211, 238, 0.65);
-            box-shadow: 0 0 24px rgba(34, 211, 238, 0.14);
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.12);
         }
         .program-slot-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
+            gap: 6px;
         }
         .program-slot-time {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 800;
             font-variant-numeric: tabular-nums;
             line-height: 1.2;
@@ -541,16 +541,16 @@
         .program-tag-now {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             background: rgba(244, 63, 94, 0.18);
             border: 1px solid rgba(244, 63, 94, 0.45);
             color: #fda4af;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 2px 9px;
-            border-radius: 12px;
+            letter-spacing: 0.4px;
+            padding: 1px 7px;
+            border-radius: 10px;
         }
         .program-tag-next {
             display: inline-flex;
@@ -558,49 +558,54 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.14);
             color: #cbd5e1;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 2px 9px;
-            border-radius: 12px;
+            letter-spacing: 0.4px;
+            padding: 1px 7px;
+            border-radius: 10px;
         }
         .program-slot-name {
-            font-size: 17px;
+            font-size: 14px;
             font-weight: 800;
             color: #f8fafc;
-            line-height: 1.3;
+            line-height: 1.25;
         }
         .program-slot-subtitle {
-            font-size: 12.5px;
+            font-size: 11px;
             font-weight: 600;
             color: #94a3b8;
         }
         .program-slot-desc {
-            margin: 2px 0 0 0;
-            font-size: 12.5px;
-            line-height: 1.48;
+            margin: 1px 0 0 0;
+            font-size: 11px;
+            line-height: 1.38;
             color: #64748b;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         .program-slot-card.is-current .program-slot-desc {
             color: #94a3b8;
         }
 
         @media (max-width: 991px) {
-            .immersive-artist-section { padding: 22px 0 38px 0; }
-            .home-glass-card { padding: 20px 16px; border-radius: 18px; }
+            .program-slots-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .immersive-artist-section { padding: 14px 0 28px 0; }
+            .home-glass-card { padding: 15px 14px; border-radius: 16px; }
             .home-top-bar { justify-content: center; }
-            .immersive-info { padding-left: 0; padding-top: 20px; align-items: center; text-align: center; }
-            .immersive-cover-wrap { max-width: 215px; }
+            .immersive-info { padding-left: 0; padding-top: 12px; align-items: center; text-align: center; }
+            .immersive-cover-wrap { max-width: 156px; }
             .immersive-label { justify-content: center; }
             .home-quick-actions, .home-platforms-row { justify-content: center; }
-            #live-artist-name { font-size: 28px; }
-            #live-track-title { font-size: 17px; }
+            #live-artist-name { font-size: 22px; }
+            #live-track-title { font-size: 14px; }
         }
-        @media (max-width: 767px) {
+        @media (max-width: 600px) {
             .program-slots-grid { grid-template-columns: 1fr; }
-            .program-schedule-section { padding: 16px 14px; border-radius: 16px; }
-            .program-main-heading { font-size: 22px; }
+            .program-schedule-section { padding: 13px 12px; border-radius: 14px; }
+            .program-main-heading { font-size: 18px; }
             .program-countdown-box { text-align: left; }
         }
 
@@ -1547,8 +1552,8 @@
 
             <!-- ОСНОВНАЯ КАРТОЧКА -->
             <div class="home-glass-card">
-                <div class="row align-items-center">
-                    <div class="col-lg-4 col-md-12 text-center">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-3 col-md-4 col-12 text-center">
                         <div class="immersive-cover-wrap">
                             <img id="live-artist-img" src="https://imgs.su/upload/671/2340987012.png" alt="Live Art">
                         </div>
@@ -1557,7 +1562,7 @@
                             <span id="home-play-text">Слушать эфир</span>
                         </button>
                     </div>
-                    <div class="col-lg-8 col-md-12">
+                    <div class="col-lg-9 col-md-8 col-12">
                         <div class="immersive-info">
                             <div class="immersive-label">Сейчас в эфире</div>
                             <h3 id="live-artist-name">Загрузка...</h3>
@@ -1577,7 +1582,7 @@
                             </div>
 
                             <div class="home-platforms-row">
-                                <div id="artist-links" style="display:none; gap: 8px; flex-wrap: wrap;">
+                                <div id="artist-links" style="display:none; gap: 6px; flex-wrap: wrap;">
                                     <a id="btn-sc" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">SoundCloud</a>
                                     <a id="btn-sp" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Spotify</a>
                                     <a id="btn-gl" href="#" target="_blank" rel="noopener noreferrer" class="platform-btn">Google</a>
@@ -1591,7 +1596,7 @@
                 </div>
             </div>
 
-            <!-- ПРОГРАММА CHILLOUT FM ВМЕСТО ДРУГИХ КАРТОЧЕК -->
+            <!-- КОМПАКТНАЯ ПРОГРАММА CHILLOUT FM -->
             <div class="program-schedule-section" id="program-schedule">
                 <div class="program-top-bar">
                     <div class="program-kicker">
@@ -1886,7 +1891,7 @@ var PROGRAM_SLOTS = [
     {
         id: "night-horizon",
         startMin: 23 * 60,
-        endMin: 26 * 60, // до 02:00 следующих суток
+        endMin: 26 * 60,
         rangeLabel: "23:00–02:00",
         title: "Ночной горизонт",
         subtitle: "Полночный эфир · Ежедневно",
@@ -1924,7 +1929,6 @@ function renderProgramSchedule() {
     var clockStr = ('0' + t.hours).slice(-2) + ':' + ('0' + t.minutes).slice(-2) + ' (UTC+5)';
     $('#program-clock-utc5').text(clockStr);
 
-    // Приводим время к интервалу [02:00 .. 26:00) в секундах
     var sec = t.totalSecondsOfDay;
     if (sec < 2 * 3600) {
         sec += 24 * 3600;
@@ -1974,7 +1978,7 @@ function renderProgramSchedule() {
         var isNext = idx === nextIdx;
         var badgeHtml = '';
         if (isCurrent) {
-            badgeHtml = '<span class="program-tag-now"><span class="program-pill-dot" style="width:6px;height:6px;"></span> СЕЙЧАС</span>';
+            badgeHtml = '<span class="program-tag-now"><span class="program-pill-dot" style="width:5px;height:5px;"></span> СЕЙЧАС</span>';
         } else if (isNext) {
             badgeHtml = '<span class="program-tag-next">ДАЛЕЕ</span>';
         }
@@ -3125,7 +3129,7 @@ function tryWiki(term, callback) {
 }
 
 function displayBio(text, link) {
-    $('#live-artist-bio').html('<p>' + truncateText(text.replace(/<[^>]*>/g, ''), 300) + '</p>').css('opacity', '1');
+    $('#live-artist-bio').html('<p>' + truncateText(text.replace(/<[^>]*>/g, ''), 220) + '</p>').css('opacity', '1');
     if (link) $('#live-wiki-link').attr('href', link).css('display', 'inline-flex');
     $('#artist-links').hide();
 }
