@@ -96,6 +96,7 @@
         .content { display: none; padding-bottom: 28px; }
         .content.active { display: block; }
         #chat.content.active { padding-bottom: 0; }
+        #contacts.content.active { padding-bottom: 0; }
 
         /* ==================== ГЛАВНАЯ И КАРТОЧКА CHILLOUT FM ==================== */
         .immersive-artist-section {
@@ -1184,21 +1185,217 @@
         .btn-unban { background: #4caf50; color: #fff; border: none; border-radius: 14px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
 
         /* ==================== КОНТАКТЫ ==================== */
-        .contacts-wrapper { background: url('https://images.unsplash.com/photo-1492560704071-7826278858ab?auto=format&fit=crop&w=1000&q=80') center center no-repeat; background-size: cover; position: relative; width: 100%; max-width: 750px; min-height: calc(100vh - 50px); margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; padding: 36px 20px 20px 20px; color: #fff; text-align: center; }
-        .contacts-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1; }
-        .contacts-content { position: relative; z-index: 2; width: 100%; }
-        .footer-socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 28px; }
-        .social-link { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; font-size: 22px; transition: all 0.3s; }
-        .social-link:hover { background: #e8df31; color: #000; transform: translateY(-4px); border-color: #e8df31; }
-        .max-icon-img { width: 60%; height: auto; }
-        .social-link:hover .max-icon-img { filter: brightness(0); }
-        .footer-contacts-wrap { display: flex; flex-direction: column; gap: 16px; max-width: 500px; margin: 0 auto 26px auto; }
-        .contact-item { background: rgba(255,255,255,0.05); padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; }
-        .contact-icon { font-size: 22px; margin-bottom: 8px; color: #e8df31; }
-        .contact-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 1px; }
-        .contact-item a { color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; }
-        .contact-item a:hover { color: #e8df31; }
-        .footer-copyright { font-size: 11px; color: #555; margin-top: 10px; border-top: 1px solid #222; padding-top: 18px; }
+        .contacts-section {
+            position: relative;
+            min-height: calc(100vh - 44px);
+            padding: 20px 16px 36px 16px;
+            background: #121216;
+            overflow: hidden;
+        }
+        .contacts-ambient-glow {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 560px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(232, 223, 49, 0.12) 0%, rgba(34, 211, 238, 0.08) 45%, transparent 72%);
+            filter: blur(36px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .contacts-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+        .contacts-hero-card {
+            background: linear-gradient(160deg, rgba(22, 26, 38, 0.92), rgba(15, 17, 24, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 22px 20px;
+            text-align: center;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+            margin-bottom: 14px;
+        }
+        .contacts-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #e8df31;
+            background: rgba(232, 223, 49, 0.1);
+            border: 1px solid rgba(232, 223, 49, 0.28);
+            padding: 3px 11px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .contacts-title {
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #fff;
+        }
+        .contacts-subtitle {
+            margin: 0 auto 18px auto;
+            max-width: 500px;
+            font-size: 13px;
+            line-height: 1.45;
+            color: #94a3b8;
+        }
+        .contacts-socials-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .contacts-social-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f8fafc !important;
+            text-decoration: none !important;
+            font-size: 12.5px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .contacts-social-pill:hover {
+            background: #e8df31;
+            color: #000 !important;
+            border-color: #e8df31;
+            transform: translateY(-2px);
+        }
+        .contacts-social-pill img.max-pill-icon {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+        .contacts-social-pill:hover img.max-pill-icon {
+            filter: brightness(0);
+        }
+
+        .contacts-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .contact-glass-card {
+            background: rgba(18, 21, 30, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .contact-glass-card:hover {
+            border-color: rgba(232, 223, 49, 0.42);
+            transform: translateY(-1px);
+        }
+        .contact-glass-card.is-wide {
+            grid-column: 1 / -1;
+        }
+        .contact-card-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+        }
+        .contact-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(232, 223, 49, 0.12);
+            border: 1px solid rgba(232, 223, 49, 0.28);
+            color: #e8df31;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        .contact-meta {
+            min-width: 0;
+        }
+        .contact-card-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #94a3b8;
+            margin-bottom: 3px;
+        }
+        .contact-card-value {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none !important;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .contact-card-value:hover {
+            color: #e8df31;
+        }
+        .contact-action-chip {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #e2e8f0;
+            border-radius: 14px;
+            padding: 6px 11px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-decoration: none !important;
+            transition: all 0.15s ease;
+        }
+        .contact-action-chip:hover {
+            border-color: #e8df31;
+            color: #e8df31 !important;
+            background: rgba(232, 223, 49, 0.1);
+        }
+        .contact-action-chip.copied {
+            background: #e8df31;
+            color: #000 !important;
+            border-color: #e8df31;
+        }
+
+        .contacts-footer-note {
+            text-align: center;
+            font-size: 11.5px;
+            color: #64748b;
+            padding-top: 6px;
+        }
+
+        @media (max-width: 640px) {
+            .contacts-cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-glass-card.is-wide {
+                grid-column: auto;
+            }
+            .contacts-title {
+                font-size: 21px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1505,23 +1702,79 @@
 
 <!-- 4. КОНТАКТЫ -->
 <div id="contacts" class="content">
-    <div class="contacts-wrapper">
-        <div class="contacts-overlay"></div>
-        <div class="contacts-content">
-            <h2 style="margin-bottom:28px; font-weight:800; text-transform:uppercase;">Наши контакты</h2>
-            <div class="footer-socials">
-                <a href="https://vk.com/chillou_fm" target="_blank" rel="noopener noreferrer" class="social-link" title="ВКонтакте"><i class="fab fa-vk"></i></a>
-                <a href="https://max.ru/chillou_fm" target="_blank" rel="noopener noreferrer" class="social-link" title="MAX"><img src="https://imgs.su/upload/820/278324543.png" class="max-icon-img" alt="MAX"></a>
-                <a href="https://t.me/Chillout_FM" target="_blank" rel="noopener noreferrer" class="social-link" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+    <section class="contacts-section">
+        <div class="contacts-ambient-glow"></div>
+        <div class="contacts-inner">
+            <div class="contacts-hero-card">
+                <div class="contacts-kicker">
+                    <i class="fas fa-broadcast-tower"></i> Сургут · Эфир 24/7 · 128 kbps
+                </div>
+                <h2 class="contacts-title">Наши контакты</h2>
+                <p class="contacts-subtitle">
+                    По вопросам сотрудничества, размещения музыки и обратной связи по эфиру ChilloutFM — напишите нам в соцсетях или на почту.
+                </p>
+
+                <div class="contacts-socials-grid">
+                    <a href="https://vk.com/chillou_fm" target="_blank" rel="noopener noreferrer" class="contacts-social-pill">
+                        <i class="fab fa-vk"></i> ВКонтакте
+                    </a>
+                    <a href="https://max.ru/chillou_fm" target="_blank" rel="noopener noreferrer" class="contacts-social-pill">
+                        <img src="https://imgs.su/upload/820/278324543.png" class="max-pill-icon" alt="MAX"> MAX
+                    </a>
+                    <a href="https://t.me/Chillout_FM" target="_blank" rel="noopener noreferrer" class="contacts-social-pill">
+                        <i class="fab fa-telegram-plane"></i> Telegram
+                    </a>
+                </div>
             </div>
-            <div class="footer-contacts-wrap">
-                <div class="contact-item"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-label">Адрес студии</span><a href="https://goo.gl/maps/MffLXrykgBz" target="_blank" rel="noopener noreferrer">г. Сургут, ул. Лермонтова 6/2</a></div>
-                <div class="contact-item"><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-label">Почта</span><a href="mailto:support@chilloutfm.ru">support@chilloutfm.ru</a></div>
-                <div class="contact-item"><span class="contact-icon"><i class="fas fa-phone-alt"></i></span><span class="contact-label">Телефон</span><a href="tel:+79226583167">+7 (922) 658-31-67</a></div>
+
+            <div class="contacts-cards-grid">
+                <div class="contact-glass-card">
+                    <div class="contact-card-left">
+                        <div class="contact-icon-badge"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-meta">
+                            <div class="contact-card-label">Почта</div>
+                            <a href="mailto:support@chilloutfm.ru" class="contact-card-value">support@chilloutfm.ru</a>
+                        </div>
+                    </div>
+                    <button type="button" class="contact-action-chip" onclick="copyContactValue('support@chilloutfm.ru', this)">
+                        <i class="far fa-copy"></i> Копировать
+                    </button>
+                </div>
+
+                <div class="contact-glass-card">
+                    <div class="contact-card-left">
+                        <div class="contact-icon-badge"><i class="fas fa-phone-alt"></i></div>
+                        <div class="contact-meta">
+                            <div class="contact-card-label">Телефон</div>
+                            <a href="tel:+79226583167" class="contact-card-value">+7 (922) 658-31-67</a>
+                        </div>
+                    </div>
+                    <button type="button" class="contact-action-chip" onclick="copyContactValue('+7 (922) 658-31-67', this)">
+                        <i class="far fa-copy"></i> Копировать
+                    </button>
+                </div>
+
+                <div class="contact-glass-card is-wide">
+                    <div class="contact-card-left">
+                        <div class="contact-icon-badge"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="contact-meta">
+                            <div class="contact-card-label">Адрес студии</div>
+                            <a href="https://goo.gl/maps/MffLXrykgBz" target="_blank" rel="noopener noreferrer" class="contact-card-value">
+                                г. Сургут, ул. Лермонтова 6/2
+                            </a>
+                        </div>
+                    </div>
+                    <a href="https://goo.gl/maps/MffLXrykgBz" target="_blank" rel="noopener noreferrer" class="contact-action-chip">
+                        <i class="fas fa-location-arrow"></i> На карте
+                    </a>
+                </div>
             </div>
-            <div class="footer-copyright">&copy; 2026 ChilloutFM. Все права защищены.</div>
+
+            <div class="contacts-footer-note">
+                &copy; 2026 ChilloutFM. Все права защищены.
+            </div>
         </div>
-    </div>
+    </section>
 </div>
 
 <script>
@@ -2008,6 +2261,26 @@ window.copyLiveTrackTitle = function() {
         });
     } else {
         fallbackCopy(rawSong, markCopied);
+    }
+};
+
+window.copyContactValue = function(val, btnEl) {
+    function done() {
+        if (!btnEl) return;
+        var orig = btnEl.innerHTML;
+        btnEl.classList.add('copied');
+        btnEl.innerHTML = '<i class="fas fa-check"></i> Готово';
+        setTimeout(function() {
+            btnEl.classList.remove('copied');
+            btnEl.innerHTML = orig;
+        }, 1500);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done).catch(function() {
+            fallbackCopy(val, done);
+        });
+    } else {
+        fallbackCopy(val, done);
     }
 };
 
