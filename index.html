@@ -60,7 +60,7 @@
             font-family: 'Open Sans', sans-serif; 
             margin: 0; 
             padding: 0; 
-            background: #121212; 
+            background: #121216; 
             color: #fff; 
             padding-top: 90px; 
             overflow-x: hidden;
@@ -70,13 +70,13 @@
         .radio-player-container { 
             position: fixed; top: 0; left: 0; z-index: 99999; 
             display: flex; align-items: center; justify-content: space-between; 
-            background-color: #090909; color: #ffffff; 
+            background-color: #09090c; color: #ffffff; 
             height: 90px; width: 100%; box-sizing: border-box; 
-            border-bottom: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.6); 
+            border-bottom: 1px solid rgba(255,255,255,0.09); box-shadow: 0 4px 15px rgba(0,0,0,0.6); 
         }
         .player-left { display: flex; align-items: center; padding-left: 20px; flex-shrink: 0; }
         .station-logo img { width: 50px; height: 50px; border-radius: 50%; margin-right: 12px; object-fit: cover; }
-        .station-title { margin: 0; font-size: 16px; font-weight: 600; color: #fff; line-height: 1.2; }
+        .station-title { margin: 0; font-size: 16px; font-weight: 700; color: #fff; line-height: 1.2; }
         .station-genre { font-size: 11px; color: #888; }
         .station-divider { width: 1px; height: 40px; background: #333; margin: 0 20px; }
         .player-center { display: flex; flex-direction: column; align-items: center; flex-grow: 1; justify-content: center; padding: 0 10px; overflow: hidden; }
@@ -114,7 +114,7 @@
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* ==================== ВКЛАДКИ ==================== */
-        .tabs { display: flex; justify-content: center; background: #1a1a1a; padding: 10px 0; border-bottom: 1px solid #333; position: sticky; top: 90px; z-index: 90; height: 46px; box-sizing: border-box; }
+        .tabs { display: flex; justify-content: center; background: #18181d; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 90px; z-index: 90; height: 46px; box-sizing: border-box; }
         @media (max-width: 700px) { .tabs { top: 80px; } }
         .tab { padding: 4px 20px; font-weight: 700; color: #888; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s; user-select: none; }
         .tab.active { color: #e8df31; border-bottom: 2px solid #e8df31; }
@@ -125,20 +125,18 @@
         /* ==================== ГЛАВНАЯ ==================== */
         .immersive-artist-section {
             position: relative;
-            padding: 36px 0 48px 0;
+            padding: 32px 0 54px 0;
             overflow: hidden;
-            background: #111;
+            background: #121216;
             color: #fff;
             min-height: calc(100vh - 136px);
-            display: flex;
-            align-items: center;
         }
         .immersive-bg-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
-            filter: blur(44px) brightness(0.36);
+            filter: blur(46px) brightness(0.34);
             transform: scale(1.12);
             z-index: 1;
             transition: background-image 1s ease-in-out;
@@ -151,15 +149,15 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
         .home-slot-pill {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(15, 17, 23, 0.72);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(18, 18, 22, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 24px;
             padding: 6px 14px;
@@ -176,13 +174,13 @@
         }
 
         .home-glass-card {
-            background: rgba(16, 18, 25, 0.68);
+            background: rgba(18, 18, 22, 0.72);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 22px;
-            padding: 32px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
         }
 
         .immersive-cover-wrap {
@@ -191,7 +189,7 @@
             box-shadow: 0 18px 40px rgba(0,0,0,0.6);
             transition: transform 0.3s ease;
             aspect-ratio: 1/1;
-            max-width: 280px;
+            max-width: 250px;
             margin: 0 auto;
             background: #09090d;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -224,7 +222,7 @@
         }
 
         .immersive-info {
-            padding-left: 36px;
+            padding-left: 32px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -232,10 +230,10 @@
         }
         .immersive-label {
             font-size: 12px;
-            letter-spacing: 1.6px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #e8df31;
             display: flex;
             align-items: center;
@@ -253,25 +251,25 @@
         }
         @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.45; } 100% { opacity: 1; } }
         #live-artist-name {
-            font-size: 40px;
+            font-size: 36px;
             font-weight: 800;
             line-height: 1.12;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             color: #fff;
         }
         #live-track-title {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 600;
             color: #e8df31;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         #live-artist-bio {
-            font-size: 15px;
-            line-height: 1.65;
+            font-size: 14.5px;
+            line-height: 1.6;
             color: #cbd5e1;
-            margin-bottom: 18px;
-            min-height: 44px;
+            margin-bottom: 16px;
+            min-height: 40px;
         }
         #live-artist-bio p { margin: 0; }
 
@@ -279,7 +277,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
         .home-action-btn {
             display: inline-flex;
@@ -290,7 +288,7 @@
             color: #f8fafc;
             border-radius: 22px;
             padding: 7px 14px;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.15s;
@@ -315,19 +313,19 @@
         .platform-btn {
             display: inline-flex;
             align-items: center;
-            padding: 8px 16px;
+            padding: 7px 15px;
             border-radius: 22px;
             background: rgba(255,255,255,0.08);
             color: #e2e8f0 !important;
             text-decoration: none !important;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,0.12);
             transition: all 0.2s;
         }
         .platform-btn:hover { background: #fff; color: #000 !important; transform: translateY(-1px); }
         .custom-button {
-            padding: 8px 20px;
+            padding: 7px 18px;
             border-radius: 22px;
             background: #e8df31;
             color:#000 !important;
@@ -337,7 +335,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 12.5px;
+            font-size: 12px;
             transition: all 0.2s;
         }
         .custom-button:hover { opacity: 0.92; transform: translateY(-1px); }
@@ -361,16 +359,209 @@
         .donate-main-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(232, 223, 49, 0.45); }
         .donate-main-btn i { margin-right: 7px; font-size: 13px; }
 
+        /* ==================== КОМПАКТНЫЕ 6 КАНАЛОВ ПОД КАРТОЧКОЙ ==================== */
+        .channels-compact-section {
+            margin-top: 22px;
+            background: rgba(18, 18, 22, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.11);
+            border-radius: 22px;
+            padding: 20px 22px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+        .channels-compact-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .channels-compact-title {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .channels-compact-title i { color: #e8df31; }
+        .channels-active-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(232, 223, 49, 0.1);
+            border: 1px solid rgba(232, 223, 49, 0.35);
+            color: #e8df31;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .channels-active-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #e8df31;
+            box-shadow: 0 0 8px #e8df31;
+        }
+
+        .channels-compact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .compact-ch-card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            padding: 13px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+            text-align: left;
+        }
+        .compact-ch-card:hover {
+            background: rgba(255, 255, 255, 0.065);
+            border-color: rgba(232, 223, 49, 0.45);
+            transform: translateY(-2px);
+        }
+        .compact-ch-card.active {
+            background: rgba(232, 223, 49, 0.08);
+            border-color: #e8df31;
+            box-shadow: 0 0 0 1px rgba(232, 223, 49, 0.25);
+        }
+        .compact-ch-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .compact-ch-mood {
+            font-size: 9.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+        }
+        .compact-ch-card.active .compact-ch-mood {
+            background: #e8df31;
+            color: #000;
+        }
+        .compact-ch-listeners {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .compact-ch-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .compact-ch-emoji {
+            font-size: 17px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .compact-ch-title {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .compact-ch-genre {
+            font-size: 11px;
+            font-weight: 700;
+            color: #e8df31;
+            margin-top: 2px;
+        }
+        .compact-ch-desc {
+            font-size: 11.5px;
+            line-height: 1.4;
+            color: #94a3b8;
+            margin: 6px 0 0 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .compact-ch-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .compact-ch-now {
+            min-width: 0;
+            flex: 1;
+        }
+        .compact-ch-now-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #64748b;
+            display: block;
+        }
+        .compact-ch-track {
+            font-size: 12px;
+            font-weight: 700;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+        .compact-ch-play-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .compact-ch-card.active .compact-ch-play-btn,
+        .compact-ch-card:hover .compact-ch-play-btn {
+            background: #e8df31;
+            color: #000;
+            border-color: #e8df31;
+        }
+
         @media (max-width: 991px) {
-            .immersive-artist-section { padding: 24px 0 36px 0; text-align: center; }
-            .home-glass-card { padding: 22px 18px; border-radius: 18px; }
+            .channels-compact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .immersive-artist-section { padding: 22px 0 38px 0; }
+            .home-glass-card { padding: 20px 16px; border-radius: 18px; }
             .home-top-bar { justify-content: center; }
-            .immersive-info { padding-left: 0; padding-top: 22px; align-items: center; }
-            .immersive-cover-wrap { max-width: 220px; }
+            .immersive-info { padding-left: 0; padding-top: 20px; align-items: center; text-align: center; }
+            .immersive-cover-wrap { max-width: 215px; }
             .immersive-label { justify-content: center; }
             .home-quick-actions, .home-platforms-row { justify-content: center; }
-            #live-artist-name { font-size: 30px; }
+            #live-artist-name { font-size: 28px; }
             #live-track-title { font-size: 17px; }
+        }
+        @media (max-width: 600px) {
+            .channels-compact-grid { grid-template-columns: 1fr; }
+            .channels-compact-section { padding: 15px 14px; border-radius: 16px; }
         }
 
         /* ==================== ПЛЕЙЛИСТ ==================== */
@@ -1266,8 +1457,8 @@
     <div class="player-left">
         <div class="station-logo"><img src="https://imgs.su/upload/671/2340987012.png" alt="Logo"></div>
         <div class="station-info">
-            <h2 class="station-title">ChilloutFM</h2>
-            <div class="station-genre">Chillout / Lounge</div>
+            <h2 class="station-title" id="player-channel-title">ChilloutFM</h2>
+            <div class="station-genre" id="player-channel-genre">Chillout / Lounge · 128 kbps</div>
         </div>
         <div class="station-divider"></div>
     </div>
@@ -1358,6 +1549,20 @@
                     </div>
                 </div>
             </div>
+
+            <!-- КОМПАКТНЫЙ БЛОК 6 КАНАЛОВ ПОД КАРТОЧКОЙ -->
+            <div class="channels-compact-section">
+                <div class="channels-compact-head">
+                    <h4 class="channels-compact-title">
+                        <i class="fas fa-sliders-h"></i> Все каналы станции
+                    </h4>
+                    <div class="channels-active-chip">
+                        <span class="channels-active-dot"></span>
+                        <span>Активен: <strong id="active-channel-badge">Chillout FM</strong></span>
+                    </div>
+                </div>
+                <div class="channels-compact-grid" id="compact-channels-grid"></div>
+            </div>
         </div>
     </section>
 </div>
@@ -1424,7 +1629,6 @@
             <p style="text-align:center; color:#777; margin-top: 20px;">Загрузка сообщений...</p>
         </div>
 
-        <!-- Предпросмотр ответа пользователю -->
         <div class="chat-preview-strip" id="chat-reply-preview">
             <div class="chat-preview-info" id="chat-reply-preview-content"></div>
             <button type="button" class="chat-preview-remove" onclick="clearReply()" title="Отменить ответ">
@@ -1432,7 +1636,6 @@
             </button>
         </div>
 
-        <!-- Предпросмотр прикрепляемого трека или фото -->
         <div class="chat-preview-strip" id="chat-attach-preview">
             <div class="chat-preview-info" id="chat-attach-preview-content"></div>
             <button type="button" class="chat-preview-remove" onclick="clearAttachment()" title="Убрать вложение">
@@ -1440,7 +1643,6 @@
             </button>
         </div>
 
-        <!-- Кнопки прикрепления и быстрые смайлы -->
         <div class="chat-tools-bar">
             <button type="button" class="chat-action-pill" onclick="attachCurrentLiveTrack()" title="Прикрепить трек, который сейчас играет в эфире">
                 <i class="fas fa-compact-disc"></i> В эфире
@@ -1549,6 +1751,180 @@ var pendingAttachment = null;
 var pendingReply = null;
 var playlistItemsCache = [];
 
+// --- 6 КАНАЛОВ СТАНЦИИ ---
+var CHANNELS_DATA = [
+    {
+        id: "chillout-fm",
+        name: "Chillout FM",
+        mood: "Радио твоей атмосферы",
+        genre: "Chillout · Lounge",
+        desc: "Флагманский эфир: мягкий чиллаут, лаунж и даунтемпо 24/7.",
+        track: "Leo Rojas — I'll Be There",
+        listeners: 1243,
+        emoji: "🌊",
+        streamUrl: "https://listen8.myradio24.com/8795",
+        isMainWidget: true
+    },
+    {
+        id: "ambient-space",
+        name: "Ambient Space",
+        mood: "Музыка невесомости",
+        genre: "Ambient · Drone",
+        desc: "Космические текстуры и глубокие дроны для медитации и отдыха.",
+        track: "Parallelism — A Soft Loop",
+        listeners: 486,
+        emoji: "🪐",
+        streamUrl: "https://listen8.myradio24.com/8795",
+        isMainWidget: false
+    },
+    {
+        id: "lounge-cafe",
+        name: "Lounge Café",
+        mood: "Вечер в большом городе",
+        genre: "Lounge · Nu-Jazz",
+        desc: "Мягкий вокал, бархатный грув и вечерняя атмосфера лаунж-бара.",
+        track: "Dive Index — The World Is Kind",
+        listeners: 732,
+        emoji: "🍸",
+        streamUrl: "https://listen8.myradio24.com/8795",
+        isMainWidget: false
+    },
+    {
+        id: "deep-focus",
+        name: "Deep Focus",
+        mood: "Код, учёба, поток",
+        genre: "Downtempo · Lo-Fi",
+        desc: "Ровный ритм и чилл-электроника для концентрации и работы.",
+        track: "Electroslide — Tribal Spirit",
+        listeners: 918,
+        emoji: "💻",
+        streamUrl: "https://listen8.myradio24.com/8795",
+        isMainWidget: false
+    },
+    {
+        id: "night-drive",
+        name: "Night Drive",
+        mood: "Космос и ночной эфир",
+        genre: "Space Ambient · Deep",
+        desc: "Глубокая ночная электроника и атмосферные ландшафты в пути.",
+        track: "William Gregg — Ur-Th",
+        listeners: 654,
+        emoji: "🌌",
+        streamUrl: "https://listen8.myradio24.com/8795",
+        isMainWidget: false
+    },
+    {
+        id: "morning-light",
+        name: "Morning Light",
+        mood: "Глубокий грув и ритм",
+        genre: "Deep Electronic · Downtempo",
+        desc: "Свежий утренний грув, тёплые гармонии и лёгкий старт дня.",
+        track: "Klas Lindblad — Soultrance",
+        listeners: 389,
+        emoji: "🌅",
+        streamUrl: "https://listen8.myradio24.com/8795",
+        isMainWidget: false
+    }
+];
+var activeChannelId = CHANNELS_DATA[0].id;
+
+function getActiveChannel() {
+    return CHANNELS_DATA.find(function(c) { return c.id === activeChannelId; }) || CHANNELS_DATA[0];
+}
+
+function renderCompactChannels() {
+    var grid = $('#compact-channels-grid');
+    if (!grid.length) return;
+
+    var html = '';
+    CHANNELS_DATA.forEach(function(ch) {
+        var isCurrent = ch.id === activeChannelId;
+        var cardPlaying = isCurrent && isPlay;
+        html += '<div class="compact-ch-card' + (isCurrent ? ' active' : '') + '" data-ch-id="' + escapeAttr(ch.id) + '">' +
+                    '<div>' +
+                        '<div class="compact-ch-top">' +
+                            '<span class="compact-ch-mood">' + escapeHtml(ch.mood) + '</span>' +
+                            '<span class="compact-ch-listeners"><i class="fas fa-headphones-alt"></i> ' + ch.listeners + '</span>' +
+                        '</div>' +
+                        '<div class="compact-ch-name-row">' +
+                            '<span class="compact-ch-emoji">' + ch.emoji + '</span>' +
+                            '<div>' +
+                                '<div class="compact-ch-title">' + escapeHtml(ch.name) + '</div>' +
+                                '<div class="compact-ch-genre">' + escapeHtml(ch.genre) + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<p class="compact-ch-desc">' + escapeHtml(ch.desc) + '</p>' +
+                    '</div>' +
+                    '<div class="compact-ch-bottom">' +
+                        '<div class="compact-ch-now">' +
+                            '<span class="compact-ch-now-label">Сейчас на канале</span>' +
+                            '<span class="compact-ch-track">' + escapeHtml(ch.track) + '</span>' +
+                        '</div>' +
+                        '<span class="compact-ch-play-btn">' +
+                            '<i class="fas ' + (cardPlaying ? 'fa-pause' : 'fa-play') + '"></i>' +
+                        '</span>' +
+                    '</div>' +
+                '</div>';
+    });
+
+    grid.html(html);
+    $('#active-channel-badge').text(getActiveChannel().name);
+}
+
+function applyChannelTrackToHero(fullSongStr) {
+    if (!fullSongStr) return;
+    var sepPos = fullSongStr.indexOf(' - ');
+    if (sepPos === -1) sepPos = fullSongStr.indexOf(' — ');
+    var artist = sepPos > 0 ? fullSongStr.substr(0, sepPos).trim() : fullSongStr.trim();
+    var title = sepPos > 0 ? fullSongStr.substr(sepPos + 3).trim() : "ChilloutFM";
+
+    currentLiveTrack.song = fullSongStr;
+    currentLiveTrack.artist = artist;
+    currentLiveTrack.title = title;
+
+    $('[data-myinfo="song"]').text(fullSongStr);
+    $('#live-artist-name').text(artist || "ChilloutFM");
+    $('#live-track-title').text(title || "ChilloutFM");
+
+    if (artist && artist !== lastArtist) {
+        lastArtist = artist;
+        updateSearchButtons(artist);
+        fetchImage(artist);
+        startBioSearch(artist);
+    }
+}
+
+window.selectChannel = function(channelId, autoPlayIfStopped) {
+    var ch = CHANNELS_DATA.find(function(c) { return c.id === channelId; });
+    if (!ch) return;
+
+    var sameChannel = (activeChannelId === ch.id);
+    if (sameChannel && isPlay) {
+        toggleStreamPlayback(false);
+        renderCompactChannels();
+        return;
+    }
+
+    activeChannelId = ch.id;
+    $('#player-channel-title').text(ch.name);
+    $('#player-channel-genre').text(ch.genre + ' · 128 kbps');
+
+    if (!ch.isMainWidget) {
+        applyChannelTrackToHero(ch.track);
+    }
+
+    renderCompactChannels();
+
+    if (isPlay || autoPlayIfStopped) {
+        toggleStreamPlayback(true, ch.streamUrl);
+    }
+};
+
+$('#compact-channels-grid').on('click', '.compact-ch-card', function() {
+    var chId = $(this).data('ch-id');
+    window.selectChannel(chId, true);
+});
+
 // --- НАСТРОЙКИ АДМИНИСТРАТОРА И АНТИФЛУДА ---
 var ADMIN_PASS = "chillout2026";
 var ANTIFLOOD_SECONDS = 3;
@@ -1588,6 +1964,7 @@ function updateHomePlayButtonUI() {
         icon.attr('class', 'fas fa-play');
         txt.text('Слушать эфир');
     }
+    renderCompactChannels();
 }
 
 // --- ВКЛАДКИ ---
@@ -2515,8 +2892,9 @@ setInterval(function() {
 }, 6000);
 
 // --- УПРАВЛЕНИЕ ПЛЕЕРОМ ---
-playBtn.addEventListener('click', function() {
-    if (isPlay) {
+function toggleStreamPlayback(forcePlay, customUrl) {
+    var shouldPlay = (typeof forcePlay === 'boolean') ? forcePlay : !isPlay;
+    if (!shouldPlay) {
         audio.pause(); 
         audio.removeAttribute('src');
         audio.load();
@@ -2526,7 +2904,7 @@ playBtn.addEventListener('click', function() {
         isPlay = false;
         updateHomePlayButtonUI();
     } else {
-        audio.src = "https://listen8.myradio24.com/8795";
+        audio.src = customUrl || getActiveChannel().streamUrl || "https://listen8.myradio24.com/8795";
         audio.load();
         var p = audio.play();
         if (p !== undefined) {
@@ -2543,6 +2921,10 @@ playBtn.addEventListener('click', function() {
             });
         }
     }
+}
+
+playBtn.addEventListener('click', function() {
+    toggleStreamPlayback();
 });
 
 volSlider.addEventListener('input', function() { 
@@ -2708,6 +3090,16 @@ function startBioSearch(fullName) {
 
 var my_init_updateinfo = function(info) {
     updateDaypartBadge();
+    if (info && info.song && CHANNELS_DATA[0]) {
+        CHANNELS_DATA[0].track = info.song;
+        renderCompactChannels();
+    }
+
+    var activeCh = getActiveChannel();
+    if (!activeCh.isMainWidget) {
+        return;
+    }
+
     function expand_song(songObj) {
         if (!songObj || !songObj.song) return;
         var pos = songObj.song.indexOf(' - ');
@@ -2761,6 +3153,8 @@ var my_init_updateinfo = function(info) {
         }
     });
 };
+
+renderCompactChannels();
 </script>
 
 <!-- СКРИПТ MYRADIO24 -->
