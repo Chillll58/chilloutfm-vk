@@ -1671,7 +1671,7 @@
             Откройте свои аудиозаписи или плейлист в ВК, скопируйте название трека или ссылку («Поделиться» → «Копировать ссылку») и вставьте ниже:
         </div>
         <input type="text" class="custom-modal-input" id="vk-track-query" placeholder="Название трека или плейлиста">
-        <input type="text" class="custom-modal-input" id="vk-track-link" placeholder="Ссылка на трек / плейлист ВК (vk.com/audio... или playlist/...)">
+        <input type="text" class="custom-modal-input" id="vk-track-link" placeholder="Ссылка на трек / плейлист ВК (vk.ru/audio... или playlist/...)">
         <div class="custom-modal-actions">
             <button type="button" class="btn-modal-cancel" onclick="closeVkMusicModal()">Отмена</button>
             <button type="button" class="btn-modal-confirm" id="vk-attach-confirm-btn" onclick="confirmVkMusicAttach()">Прикрепить</button>
@@ -1794,6 +1794,10 @@ var playlistItemsCache = [];
 var playbackSeq = 0;
 
 var MAIN_STREAM_URL = "https://listen8.myradio24.com/8795";
+
+function buildVkAudioSearchUrl(query) {
+    return 'https://vk.ru/audios0?q=' + encodeURIComponent(query || '');
+}
 
 // --- СУТОЧНАЯ ПРОГРАММА CHILLOUT FM (UTC+5) ---
 var PROGRAM_SLOTS = [
@@ -2062,9 +2066,9 @@ function updateChatUserUI() {
     $('#chat-my-name').text(vkUser.name);
     $('#chat-my-avatar').attr('src', vkUser.avatar);
     if (vkUser.id && vkUser.id !== 0) {
-        $('#vk-open-my-audios').attr('href', 'https://vk.com/audios' + vkUser.id);
+        $('#vk-open-my-audios').attr('href', 'https://vk.ru/audios' + vkUser.id);
     } else {
-        $('#vk-open-my-audios').attr('href', 'https://vk.com/audio');
+        $('#vk-open-my-audios').attr('href', 'https://vk.ru/audios0');
     }
     updateAdminUI();
     applyBanStateUI();
@@ -2224,7 +2228,7 @@ window.attachCurrentLiveTrack = function() {
         type: 'live',
         song: rawSong,
         cover: cover,
-        url: 'https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(rawSong)
+        url: buildVkAudioSearchUrl(rawSong)
     });
 };
 
@@ -2237,7 +2241,7 @@ window.sendLiveTrackToChat = function() {
 window.openLiveTrackInVk = function() {
     var rawSong = getCurrentSongLabel();
     if (!rawSong || rawSong === "Загрузка...") return;
-    window.open("https://vk.com/search?c[section]=audio&c[q]=" + encodeURIComponent(rawSong), '_blank', 'noopener,noreferrer');
+    window.open(buildVkAudioSearchUrl(rawSong), '_blank', 'noopener,noreferrer');
 };
 
 window.copyLiveTrackTitle = function() {
@@ -2308,7 +2312,7 @@ window.sendPlaylistTrackToChat = function(index) {
         type: 'live',
         song: fullTitle,
         cover: item.cover || defImg,
-        url: 'https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(fullTitle)
+        url: buildVkAudioSearchUrl(fullTitle)
     });
     if (ok) {
         window.sw('chat', null);
@@ -2340,11 +2344,11 @@ window.confirmVkMusicAttach = function() {
         : ('Трек из аудиозаписей (' + vkUser.name + ')');
     var title = q || defaultTitle;
     var myAudiosFallback = (vkUser.id && vkUser.id !== 0)
-        ? ('https://vk.com/audios' + vkUser.id)
-        : 'https://vk.com/audio';
+        ? ('https://vk.ru/audios' + vkUser.id)
+        : 'https://vk.ru/audios0';
     var targetUrl = (link && /^https?:\/\//i.test(link))
         ? link
-        : (q ? ('https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(q)) : myAudiosFallback);
+        : (q ? buildVkAudioSearchUrl(q) : myAudiosFallback);
 
     var confirmBtn = $('#vk-attach-confirm-btn');
     confirmBtn.prop('disabled', true).text('Поиск обложки...');
@@ -2461,7 +2465,7 @@ function updateOnlineCounter(onlineMap) {
 function renderAttachmentHtml(att) {
     if (!att || !att.type) return '';
     if (att.type === 'live') {
-        return '<a href="' + escapeHtml(att.url || 'https://vk.com/audio') + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
+        return '<a href="' + escapeHtml(att.url || 'https://vk.ru/audios0') + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
                     '<img class="chat-att-cover" src="' + escapeHtml(att.cover || defImg) + '" onerror="this.src=\'' + defImg + '\'">' +
                     '<div class="chat-att-info">' +
                         '<span class="chat-att-badge"><i class="fas fa-broadcast-tower"></i> Эфир / Плейлист</span>' +
@@ -2476,7 +2480,7 @@ function renderAttachmentHtml(att) {
         var mediaLeftHtml = att.cover
             ? '<img class="chat-att-cover" src="' + escapeHtml(att.cover) + '" onerror="this.src=\'' + defImg + '\'">'
             : '<div class="chat-att-icon-box"><i class="fab fa-vk"></i></div>';
-        return '<a href="' + escapeHtml(att.url || 'https://vk.com/audio') + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
+        return '<a href="' + escapeHtml(att.url || 'https://vk.ru/audios0') + '" target="_blank" rel="noopener noreferrer" class="chat-att-track">' +
                     mediaLeftHtml +
                     '<div class="chat-att-info">' +
                         '<span class="chat-att-badge"><i class="fab fa-vk"></i> ' + badgeText + '</span>' +
@@ -2762,7 +2766,8 @@ function renderFilteredPlaylist() {
     }
     var html = '';
     filtered.forEach(function(item) {
-        var vkSearchUrl = 'https://vk.com/search?c[section]=audio&c[q]=' + encodeURIComponent(item.title ? (item.artist + ' ' + item.title) : item.artist);
+        var searchLabel = item.title ? (item.artist + ' ' + item.title) : item.artist;
+        var vkSearchUrl = buildVkAudioSearchUrl(searchLabel);
         var latestBadge = item.isLatest ? '<span class="playlist-latest-badge">Недавно</span>' : '';
         html += '<div class="playlist-track-row' + (item.isLatest ? ' is-latest' : '') + '">' +
                     '<div class="playlist-track-main">' +
